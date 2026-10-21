@@ -1,7 +1,7 @@
 // Site configuration: the only place to change owner, repository, version and copyright.
 const CONFIG = {
-  owner: 'OWNER',
-  repo: 'tweakpilot',
+  owner: 'TweakPilot',
+  repo: 'TweakPilot',
   version: '1.1',
   copyright: 'COPYRIGHT_HOLDER',
   // Set to true once img/app.webp, img/before.webp and img/after.webp exist (real screenshots, English UI).

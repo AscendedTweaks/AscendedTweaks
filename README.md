@@ -10,7 +10,7 @@ Open-source Windows tuning that previews every change and can undo everything.
 
 ## Download
 
-Get the latest ZIP from [GitHub Releases](https://github.com/OWNER/tweakpilot/releases/latest).
+Get the latest ZIP from [GitHub Releases](https://github.com/TweakPilot/TweakPilot/releases/latest).
 
 1. Download `TweakPilot-<version>-win-x64.zip` and `SHA256SUMS.txt`.
 2. Check the file (PowerShell): `Get-FileHash .\TweakPilot-<version>-win-x64.zip -Algorithm SHA256`.
@@ -25,7 +25,7 @@ The files are not code-signed yet, so SmartScreen may show "Windows protected yo
 You can also verify that the ZIP was built from this repository:
 
 ```
-gh attestation verify TweakPilot-<version>-win-x64.zip --repo OWNER/tweakpilot
+gh attestation verify TweakPilot-<version>-win-x64.zip --repo TweakPilot/TweakPilot
 ```
 
 Do not turn off Microsoft Defender or SmartScreen for this or any other app.

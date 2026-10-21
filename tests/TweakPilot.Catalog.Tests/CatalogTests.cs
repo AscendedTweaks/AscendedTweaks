@@ -110,7 +110,7 @@ public sealed class CatalogTests
               { "type": "RegistryValueEquals", "hive": "HKCU", "path": "Software\\Test", "name": "Y", "value": 0 } ] }
             """)));
 
-        result.Issues.Should().Contain(i => i.Rule == "apply-detect" && i.Message.Contains("keine passende Aktion"));
+        result.Issues.Should().Contain(i => i.Rule == "apply-detect" && i.Message.Contains("has no matching action"));
     }
 
     [Fact]
@@ -145,7 +145,7 @@ public sealed class CatalogTests
     public void Impact_is_required_and_noticeable_needs_a_measurement()
     {
         Load(Mutate(n => n.Remove("impact"))).Issues.Should().NotBeEmpty("Schema verlangt das Feld");
-        Load(Mutate(n => n["impact"] = "Noticeable")).Issues.Should().Contain(i => i.Rule == "impact" && i.Message.Contains("Messbeleg"));
+        Load(Mutate(n => n["impact"] = "Noticeable")).Issues.Should().Contain(i => i.Rule == "impact" && i.Message.Contains("needs at least one measurement"));
         Load(Mutate(n =>
         {
             n["impact"] = "Noticeable";
@@ -161,13 +161,13 @@ public sealed class CatalogTests
             n["evidence"] = "Disputed";
             n["hiddenByDefault"] = true;
         })).Issues.Should().Contain(i => i.Rule == "impact" && i.Message.Contains("Unclear"));
-        Load(Mutate(n => n["impact"] = "Unclear")).Issues.Should().Contain(i => i.Rule == "impact" && i.Message.Contains("Experten"));
+        Load(Mutate(n => n["impact"] = "Unclear")).Issues.Should().Contain(i => i.Rule == "impact" && i.Message.Contains("expert mode"));
     }
 
     [Theory]
-    [InlineData("Ein Titel mit viel zu vielen Woertern", "Kurz.", "5 Woerter")]
-    [InlineData("Kurz", "Dieser Satz ist absichtlich viel zu lang, damit er die Grenze von neunzig Zeichen ueberschreitet.", "90 Zeichen")]
-    [InlineData("", "Kurz.", "Titel fehlt")]
+    [InlineData("Ein Titel mit viel zu vielen Woertern", "Kurz.", "more than 5 words")]
+    [InlineData("Kurz", "Dieser Satz ist absichtlich viel zu lang, damit er die Grenze von neunzig Zeichen ueberschreitet.", "longer than 90 characters")]
+    [InlineData("", "Kurz.", "Title is missing")]
     public void Plain_texts_respect_the_simple_mode_limits(string title, string description, string expected)
     {
         var texts = Texts();
@@ -305,7 +305,7 @@ public sealed class CatalogTests
             n["detect"] = JsonNode.Parse("""{ "type": "CommandQueryEquals", "command": "fsutil.disablelastaccess", "value": "7" }""");
         });
 
-        Load(command).Issues.Should().Contain(i => i.Rule == "command" && i.Message.Contains("nicht erlaubt"));
+        Load(command).Issues.Should().Contain(i => i.Rule == "command" && i.Message.Contains("is not allowed"));
     }
 
     [Fact]

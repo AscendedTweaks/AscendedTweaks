@@ -96,7 +96,7 @@ public sealed class NetworkDiskTests : IDisposable
         var reader = Engine(TestTweaks.Create("NET-912", new CommandQueryEqualsCondition { Command = "nic.powersaving", Value = "off" }, [new CommandAction { Command = "nic.powersaving", Value = "off" }], TweakScope.Machine));
         var status = reader.GetStatus("NET-912");
         status.State.Should().Be(TweakState.Unavailable);
-        status.Reason.Should().Contain("Administratorrechten");
+        status.Reason.Should().Contain("administrator rights");
         reader.PlanPreview(["NET-912"]).Ready.Should().ContainSingle("die Vorschau behaelt den Tweak, der Helfer prueft echt");
     }
 
@@ -132,7 +132,7 @@ public sealed class NetworkDiskTests : IDisposable
         var runner = new Recorder();
         var maintenance = new Maintenance(runner, new Volumes(), @"C:\Windows\System32");
 
-        ((Action)(() => maintenance.Run(MaintenanceAction.Defrag, 'C'))).Should().Throw<TweakPilotException>().WithMessage("*gesperrt*");
+        ((Action)(() => maintenance.Run(MaintenanceAction.Defrag, 'C'))).Should().Throw<TweakPilotException>().WithMessage("*locked*");
         ((Action)(() => maintenance.Run(MaintenanceAction.Defrag, 'E'))).Should().Throw<TweakPilotException>("unbekannter Medientyp ist gesperrt");
         ((Action)(() => maintenance.Run(MaintenanceAction.ReTrim, 'D'))).Should().Throw<TweakPilotException>();
         ((Action)(() => maintenance.Run(MaintenanceAction.ReTrim, 'Z'))).Should().Throw<TweakPilotException>();

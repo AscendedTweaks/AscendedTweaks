@@ -238,7 +238,7 @@ public sealed class EngineTests : IDisposable
         {
             var apply = _h.Engine(TestTweaks.Dword("PRIV-901", P, "One", 0), TestTweaks.Dword("PRIV-902", P, "Two", 0)).ApplyBatch(["PRIV-902"], _apply);
             apply.Outcome.Should().Be(BatchOutcome.BackupFailed);
-            apply.Error!.Message.Should().Contain("andere");
+            apply.Error!.Message.Should().Contain("Another TweakPilot instance");
 
             var revert = engine.RevertTweak("PRIV-901", _ => ConflictDecision.Cancel);
             revert.Outcome.Should().Be(RevertOutcome.Failed);
@@ -388,7 +388,7 @@ public sealed class EngineTests : IDisposable
         var plan = engine.Plan(["PERF-905"]);
 
         plan.Excluded.Single().Outcome.Should().Be(PreflightOutcome.Unavailable);
-        plan.Excluded.Single().Reason.Should().Contain("nicht installiert");
+        plan.Excluded.Single().Reason.Should().Contain("is not installed");
         engine.ApplyBatch(["PERF-905"], _apply).Outcome.Should().Be(BatchOutcome.NothingToDo);
     }
 
@@ -514,7 +514,7 @@ public sealed class EngineTests : IDisposable
         var result = engine.RevertTweak("UI-901", _ => ConflictDecision.Cancel);
 
         result.Outcome.Should().Be(RevertOutcome.Failed);
-        result.Error!.Message.Should().Contain("Gegenaktion");
+        result.Error!.Message.Should().Contain("reverse action");
     }
 
     [Fact]

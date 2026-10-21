@@ -376,7 +376,7 @@ public sealed partial class FirstStepsViewModel : DialogViewModel<bool>
         IsWorking = true;
         try
         {
-            var result = await Task.Run(() => _workspace.Service.CreateRestorePoint($"{ProductInfo.Name} Ausgangszustand")).ConfigureAwait(true);
+            var result = await Task.Run(() => _workspace.Service.CreateRestorePoint($"{ProductInfo.Name} original state")).ConfigureAwait(true);
             RestorePointStatus = result.Message;
         }
         catch (TweakPilotException ex)

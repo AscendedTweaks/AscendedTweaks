@@ -177,7 +177,7 @@ public sealed class SimpleModeTests : IDisposable
         var settings = AppSettings.FirstStart();
         settings.Theme.Should().Be(ThemeChoice.System);
         settings.ExpertMode.Should().BeFalse();
-        settings.Language.Should().BeOneOf(Localizer.German, Localizer.English);
+        settings.Language.Should().Be(Localizer.English, "V3: English on first start, regardless of Windows");
         new SettingsStore(Path.Combine(Path.GetTempPath(), "TweakPilot.Tests", Guid.NewGuid().ToString("N"), "settings.json")).Load().ExpertMode.Should().BeFalse("erster Start ist Einfach");
     }
 

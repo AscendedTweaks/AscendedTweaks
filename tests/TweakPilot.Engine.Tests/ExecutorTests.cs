@@ -71,7 +71,7 @@ public sealed class ExecutorTests : IDisposable
         var written = executor.Apply(action, executor.Capture(action));
         executor.Verify(action).Should().BeTrue();
         executor.IsAtWrittenState(written).Should().BeTrue();
-        executor.Describe("T", action).New.Should().Contain("entfernt");
+        executor.Describe("T", action).New.Should().Contain("removed");
 
         executor.Restore(written);
         executor.IsAtOriginalState(written).Should().BeTrue();
@@ -122,7 +122,7 @@ public sealed class ExecutorTests : IDisposable
         var written = executor.Apply(action, executor.Capture(action));
         executor.Verify(action).Should().BeTrue();
         executor.IsAtWrittenState(written).Should().BeTrue();
-        executor.Describe("T", action).Current.Should().Be("(nicht vorhanden)");
+        executor.Describe("T", action).Current.Should().Be("(not present)");
 
         executor.Restore(written);
         executor.IsAtOriginalState(written).Should().BeTrue();
@@ -200,7 +200,7 @@ public sealed class ExecutorTests : IDisposable
         var action = new PowerPlanSetAction { SchemeGuid = target, DuplicateFrom = source };
         var executor = _h.Executors.For(action);
 
-        executor.Describe("T", action).New.Should().Contain("angelegt");
+        executor.Describe("T", action).New.Should().Contain("created from");
         var written = executor.Apply(action, executor.Capture(action));
         ((PowerPlanCapture)written).CreatedScheme.Should().Be(target);
 

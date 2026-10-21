@@ -98,7 +98,7 @@ public sealed class WorkspaceTests : IDisposable
     private readonly Harness _h = new();
     private readonly CountingRestarter _restarter = new();
     private readonly TweakCatalog _catalog;
-    private readonly Localizer _localizer = new();
+    private readonly Localizer _localizer = new(Localizer.German);
     private readonly AppSettings _settings = new();
     private ScriptedDialogs _dialogs;
     private TweakService _service;
@@ -373,6 +373,28 @@ public sealed class WorkspaceTests : IDisposable
 
         (await firstSteps.Completion).Should().BeTrue();
         store.Load().FirstStepsCompleted.Should().BeTrue();
+    }
+
+    [Fact]
+    public void First_steps_switches_language_live_and_saves_it()
+    {
+        _settings.Language = Localizer.German;
+        var store = new SettingsStore(Path.Combine(_h.StateRoot, "settings.json"));
+        var firstSteps = new FirstStepsViewModel(_workspace, _settings, store, new SettingsViewModel(_localizer, new NoTheme(), store, _settings));
+        var changed = new List<string?>();
+        firstSteps.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+        firstSteps.StepText.Should().Be("Schritt 1 von 3");
+        firstSteps.Languages.Single(l => l.IsActive).Culture.Should().Be(Localizer.German);
+
+        firstSteps.SelectLanguageCommand.Execute(Localizer.English);
+
+        _localizer.Culture.Should().Be(Localizer.English);
+        _localizer["firststeps.title"].Should().Be("First steps");
+        _localizer["firststeps.next"].Should().Be("Next");
+        firstSteps.StepText.Should().Be("Step 1 of 3");
+        firstSteps.Languages.Single(l => l.IsActive).Culture.Should().Be(Localizer.English);
+        changed.Should().Contain(nameof(FirstStepsViewModel.Languages)).And.Contain(nameof(FirstStepsViewModel.StepText));
+        store.Load().Language.Should().Be(Localizer.English);
     }
 
     [Fact]

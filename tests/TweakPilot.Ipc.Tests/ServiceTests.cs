@@ -394,7 +394,7 @@ public sealed class ServiceTests : IDisposable
     {
         var act = () => Handler().Handle(IpcCommands.ApplyTweaks, Element(new ApplyTweaksRequest { Ids = ["PERF-901", "PRIV-904"] }));
 
-        act.Should().Throw<IpcProtocolException>().WithMessage("*eines Bereichs*");
+        act.Should().Throw<IpcProtocolException>().WithMessage("*one scope*");
     }
 
     [Fact]

@@ -36,7 +36,7 @@ public sealed partial class SettingsViewModel : PageViewModel
         _store = store;
         _settings = settings;
         _loading = true;
-        SelectedLanguage = Languages.FirstOrDefault(l => l.Value == settings.Language) ?? Languages[0];
+        SelectedLanguage = Languages.FirstOrDefault(l => l.Value == settings.Language) ?? Languages.Single(l => l.Value == Localizer.English);
         SelectedTheme = Themes.FirstOrDefault(t => t.Value == settings.Theme) ?? Themes[0];
         ExpertMode = settings.ExpertMode;
         _loading = false;
@@ -44,8 +44,8 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     public IReadOnlyList<Choice<string>> Languages { get; } =
     [
-        new(Localizer.German, "settings.language.de"),
         new(Localizer.English, "settings.language.en"),
+        new(Localizer.German, "settings.language.de"),
     ];
 
     public IReadOnlyList<Choice<ThemeChoice>> Themes { get; } =

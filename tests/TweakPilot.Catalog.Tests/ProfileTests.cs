@@ -38,7 +38,7 @@ public sealed class ProfileTests
         Get("cleanup").Tweaks.Should().BeEmpty();
         Get("cleanup").Cleanup.Should().HaveCount(20);
         var imported = """{"schemaVersion":1,"name":"X","tweaks":[{"id":"PRIV-001"}],"cleanup":["CLEAN-001"]}""";
-        ((Action)(() => ProfileCodec.Parse(Encoding.UTF8.GetBytes(imported), Catalog))).Should().Throw<TweakPilotException>().WithMessage("*vorgefertigten*");
+        ((Action)(() => ProfileCodec.Parse(Encoding.UTF8.GetBytes(imported), Catalog))).Should().Throw<TweakPilotException>().WithMessage("*built-in presets*");
     }
 
     [Fact]

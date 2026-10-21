@@ -52,7 +52,7 @@ public sealed class V24Tests : IDisposable
         _h.Environment.HasBattery = true;
         var status = Engine(PowerTweak("POWR-904")).GetStatus("POWR-904");
         status.State.Should().Be(TweakState.Unavailable);
-        status.Reason.Should().Contain("Akku");
+        status.Reason.Should().Contain("battery");
 
         _h.Environment.HasBattery = false;
         var missing = TestTweaks.Create("POWR-905", new PowerSettingEqualsCondition { Subgroup = Processor, Setting = Guid.NewGuid(), Value = 1 }, [new PowerSettingSetAction { Subgroup = Processor, Setting = Guid.NewGuid(), Value = 1 }], TweakScope.Machine);
@@ -90,7 +90,7 @@ public sealed class V24Tests : IDisposable
         _defender.Load = null;
         var status = engine.GetStatus("DEFN-901");
         status.State.Should().Be(TweakState.Unavailable);
-        status.Reason.Should().Contain("Richtlinie");
+        status.Reason.Should().Contain("policy");
     }
 
     [Theory]

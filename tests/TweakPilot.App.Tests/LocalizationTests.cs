@@ -1,5 +1,9 @@
+using System.Globalization;
+using System.IO;
 using System.Text.RegularExpressions;
 using FluentAssertions;
+using TweakPilot.App.Services;
+using TweakPilot.Catalog;
 using TweakPilot.Localization;
 using Xunit;
 
@@ -16,6 +20,11 @@ public sealed class LocalizationTests
         new(@"\d+\s*%", RegexOptions.None),
         new(@"\b(boost|turbo|maximale Leistung|beste Leistung aller)\b", RegexOptions.IgnoreCase),
     ];
+
+    /// <summary>V3 2.2 (c): short German stop words that never appear in natural English UI text.</summary>
+    private static readonly Regex GermanWords = new(
+        @"\b(der|die|das|und|nicht|oder|mit|fuer|für|ist|wird|werden|bitte|auch|noch|Änderung|Aenderung|Datei|Dateien|Einstellungen|Neustart|zurück)\b",
+        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
     [Fact]
     public void Both_languages_have_the_same_keys()
@@ -69,18 +78,59 @@ public sealed class LocalizationTests
     }
 
     [Fact]
+    public void English_is_the_default_even_when_windows_is_german()
+    {
+        var culture = CultureInfo.CurrentCulture;
+        var uiCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("de-DE");
+
+            new Localizer().Culture.Should().Be(Localizer.English);
+            new AppSettings().Language.Should().Be(Localizer.English);
+            AppSettings.FirstStart().Language.Should().Be(Localizer.English);
+            var missing = Path.Combine(Path.GetTempPath(), "TweakPilot.Tests", Guid.NewGuid().ToString("N"), "settings.json");
+            new SettingsStore(missing).Load().Language.Should().Be(Localizer.English);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = uiCulture;
+        }
+    }
+
+    [Fact]
+    public void English_texts_contain_no_german()
+    {
+        var bundles = new List<(string Source, IReadOnlyDictionary<string, string> Texts)> { ("ui", Localizer.Bundle(Localizer.English)) };
+        bundles.Add(("catalog", CatalogLoader.LoadEmbedded().Texts[Localizer.English].Texts));
+
+        foreach (var (source, texts) in bundles)
+        {
+            foreach (var (key, text) in texts)
+            {
+                Regex.IsMatch(text, "[äöüÄÖÜß]").Should().BeFalse($"{source}/{key}: \"{text}\" has umlauts");
+                GermanWords.IsMatch(text).Should().BeFalse($"{source}/{key}: \"{text}\" looks German");
+            }
+        }
+    }
+
+    [Fact]
     public void Culture_switch_notifies_bindings_and_falls_back()
     {
         var localizer = new Localizer("fr-FR");
         var changed = new List<string?>();
         localizer.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
 
-        localizer.Culture.Should().Be(Localizer.German);
-        localizer.SetCulture(Localizer.English);
-        localizer.SetCulture(Localizer.English);
+        localizer.Culture.Should().Be(Localizer.English);
+        localizer.SetCulture(Localizer.German);
+        localizer.SetCulture(Localizer.German);
         localizer.SetCulture("xx-XX");
 
         changed.Should().Equal("Culture", "Item[]");
+        localizer.Culture.Should().Be(Localizer.German);
+        localizer.SetCulture(Localizer.English);
         localizer["nav.disk"].Should().Be("Storage");
         localizer["does.not.exist"].Should().Be("[does.not.exist]");
     }

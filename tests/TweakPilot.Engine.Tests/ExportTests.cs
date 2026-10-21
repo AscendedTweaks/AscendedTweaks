@@ -60,7 +60,7 @@ public sealed class ExportTests : IDisposable
 
         export.Exported.Should().BeEmpty();
         export.Skipped.Select(s => s.Id).Should().Equal("PERF-905", "PRIV-999");
-        export.ApplyPs1.Should().Contain("# Nicht exportiert: PERF-905").And.NotContain("# ---- PERF-905");
+        export.ApplyPs1.Should().Contain("# Not exported: PERF-905").And.NotContain("# ---- PERF-905");
         export.ApplyReg.Should().BeNull();
     }
 

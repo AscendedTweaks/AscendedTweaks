@@ -69,7 +69,7 @@ public sealed class UpdateCheckerTests : IDisposable
     {
         Publish(Manifest("1.0.0"));
         _transport.Responses[ManifestUri] = Encoding.UTF8.GetBytes(Manifest("9.0.0"));
-        (await Checker().CheckAsync(CancellationToken.None)).Error.Should().Contain("Signatur");
+        (await Checker().CheckAsync(CancellationToken.None)).Error.Should().Contain("signature");
 
         Publish(Manifest("1.0.0"));
         var other = Convert.ToBase64String(new byte[32]);
@@ -102,12 +102,12 @@ public sealed class UpdateCheckerTests : IDisposable
         _authenticode.Result = new SignatureInfo(SignatureStatus.Valid, "Jemand anderes");
         var wrongPublisher = await checker.DownloadAsync(manifest, _directory, CancellationToken.None);
         wrongPublisher.Ok.Should().BeFalse();
-        wrongPublisher.Error.Should().Contain("Herausgeber");
+        wrongPublisher.Error.Should().Contain("publisher");
         File.Exists(ok.InstallerPath!).Should().BeFalse("eine ungueltige Datei wird geloescht");
 
         _authenticode.Result = new SignatureInfo(SignatureStatus.Valid, Publisher);
         _transport.Responses[InstallerUri] = Encoding.ASCII.GetBytes("MZ Beispiel-Installex");
-        (await checker.DownloadAsync(manifest, _directory, CancellationToken.None)).Error.Should().Contain("Pruefsumme");
+        (await checker.DownloadAsync(manifest, _directory, CancellationToken.None)).Error.Should().Contain("checksum");
     }
 
     [Theory]

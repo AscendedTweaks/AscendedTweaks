@@ -147,9 +147,9 @@ public sealed class CoreTests
     }
 
     [Theory]
-    [InlineData("""{ "type": "FileClean" }""", "noch nicht implementiert")]
-    [InlineData("""{ "type": "Format-C" }""", "Unbekannter Typ")]
-    [InlineData("""{ "hive": "HKCU" }""", "'type' fehlt")]
+    [InlineData("""{ "type": "FileClean" }""", "is not implemented in this version yet")]
+    [InlineData("""{ "type": "Format-C" }""", "Unknown type")]
+    [InlineData("""{ "hive": "HKCU" }""", "field 'type' is missing")]
     public void Action_json_errors_are_clear(string json, string message)
     {
         var act = () => JsonSerializer.Deserialize<TweakAction>(json, CoreJson.Options);

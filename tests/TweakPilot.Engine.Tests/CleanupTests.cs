@@ -135,7 +135,7 @@ public sealed class CleanupTests
     [Fact]
     public void Machine_folders_only_allow_permanent_and_only_in_the_helper()
     {
-        ((Action)(() => Machine().Run("CLEAN-002", CleanupMode.RecycleBin))).Should().Throw<TweakPilotException>().WithMessage("*Papierkorb*");
+        ((Action)(() => Machine().Run("CLEAN-002", CleanupMode.RecycleBin))).Should().Throw<TweakPilotException>().WithMessage("*Recycle Bin*");
         ((Action)(() => User().Scan("CLEAN-002"))).Should().Throw<TweakPilotException>().Which.Kind.Should().Be(ErrorKind.PermissionDenied);
         ((Action)(() => Machine().Scan("CLEAN-001"))).Should().Throw<TweakPilotException>().Which.Kind.Should().Be(ErrorKind.PermissionDenied);
         ((Action)(() => User().Scan("CLEAN-999"))).Should().Throw<TweakPilotException>();

@@ -92,11 +92,11 @@ public sealed class ShellTests : IDisposable
         var changed = new List<string?>();
         shell.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
 
-        shell.BannerText.Should().StartWith("Build 26300 wurde");
-        localizer.SetCulture(Localizer.English);
+        shell.BannerText.Should().StartWith("Build 26300 has");
+        localizer.SetCulture(Localizer.German);
 
         changed.Should().Contain(nameof(ShellViewModel.BannerText));
-        shell.BannerText.Should().StartWith("Build 26300 has");
+        shell.BannerText.Should().StartWith("Build 26300 wurde");
     }
 
     [Fact]
@@ -112,13 +112,18 @@ public sealed class ShellTests : IDisposable
         File.Exists(store.Path).Should().BeFalse();
 
         vm.SelectedTheme = vm.Themes.Single(t => t.Value == ThemeChoice.Light);
-        vm.SelectedLanguage = vm.Languages.Single(l => l.Value == Localizer.English);
+        vm.SelectedLanguage = vm.Languages.Single(l => l.Value == Localizer.German);
 
         theme.Applied.Should().Equal(ThemeChoice.Light);
-        localizer.Culture.Should().Be(Localizer.English);
+        localizer.Culture.Should().Be(Localizer.German);
         var reloaded = store.Load();
         reloaded.Theme.Should().Be(ThemeChoice.Light);
-        reloaded.Language.Should().Be(Localizer.English);
+        reloaded.Language.Should().Be(Localizer.German);
+
+        // V3 2.2 (e): the next start uses the saved language.
+        var nextStart = new Localizer(reloaded.Language);
+        nextStart.Culture.Should().Be(Localizer.German);
+        new SettingsViewModel(nextStart, theme, store, reloaded).SelectedLanguage!.Value.Should().Be(Localizer.German);
     }
 
     [Fact]
@@ -131,14 +136,14 @@ public sealed class ShellTests : IDisposable
         var settings = new SettingsStore(path).Load();
 
         settings.Theme.Should().Be(ThemeChoice.Dark);
-        settings.Language.Should().Be(Localizer.German);
+        settings.Language.Should().Be(Localizer.English);
         settings.FirstStepsCompleted.Should().BeFalse();
     }
 
     [Fact]
     public void Design_catalog_texts_are_localized()
     {
-        var vm = new DesignCatalogViewModel(new Localizer());
+        var vm = new DesignCatalogViewModel(new Localizer(Localizer.German));
 
         vm.UnavailableTooltip.Should().Be("Auf deinem System nicht verfügbar: Dienst Fax ist nicht installiert.");
         vm.PendingText.Should().Be("3 Änderungen ausstehend");

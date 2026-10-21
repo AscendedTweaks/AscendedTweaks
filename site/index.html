@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TweakPilot - Tune Windows. Undo anything.</title>
+  <meta name="description" content="Open-source Windows tuning that previews every change and can undo everything. No telemetry.">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TweakPilot - Tune Windows. Undo anything.">
+  <meta property="og:description" content="Open-source Windows tuning that previews every change and can undo everything. No telemetry.">
+  <meta property="og:image" content="https://OWNER.github.io/tweakpilot/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav" aria-label="Main">
+    <a class="brand" href="#top"><img src="favicon.svg" alt="" width="28" height="28">TweakPilot</a>
+    <ul class="nav-links">
+      <li><a href="#top">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#presets">Presets</a></li>
+      <li><a href="#download">Download</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="btn btn-glass btn-small" data-link="repo" href="https://github.com/">
+        <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span class="gh-label">GitHub</span>
+      </a>
+      <a class="btn btn-primary btn-small" href="#download">Download</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="hero wrap" id="top">
+      <span class="pill-label">TWEAKPILOT <span data-text="version">1.1</span></span>
+      <h1>Tune Windows. Undo anything.</h1>
+      <p class="lead">Open source and free of telemetry. Every change is previewed first and can be reversed with one click.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" data-link="latest" href="https://github.com/">Download for Windows</a>
+        <a class="btn btn-glass" data-link="repo" href="https://github.com/">View on GitHub</a>
+        <a class="btn btn-glass" href="#features">How it works</a>
+      </div>
+      <ul class="points">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Preview every change</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/></svg>Undo everything</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>No telemetry</li>
+      </ul>
+      <!-- Screenshots load only when CONFIG.screenshots in app.js is true (English UI from the app's SnapshotRenderer). -->
+      <img class="shot" data-screenshot="img/app.webp" width="1280" height="800" alt="TweakPilot start page in simple mode with presets" hidden>
+    </div>
+
+    <section id="compare" hidden aria-labelledby="compare-title">
+      <div class="wrap">
+        <p class="eyebrow">See the difference</p>
+        <h2 id="compare-title">Drag to compare</h2>
+        <p class="section-lead">The same page before and after applying a preset. Real screenshots from the app.</p>
+        <div class="compare" style="--pos: 50%">
+          <img data-screenshot="img/before.webp" width="1280" height="800" alt="Before applying the preset">
+          <img class="after" data-screenshot="img/after.webp" width="1280" height="800" alt="After applying the preset">
+          <span class="handle" aria-hidden="true"></span>
+          <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+        </div>
+        <div class="compare-labels" aria-hidden="true"><span>Before</span><span>After</span></div>
+      </div>
+    </section>
+
+    <section id="features" aria-labelledby="safety-title">
+      <div class="wrap">
+        <p class="eyebrow">Safety first</p>
+        <h2 id="safety-title">Every change has a way back.</h2>
+        <p class="section-lead">TweakPilot shows what will change, saves what was there before and lets you return to it.</p>
+        <div class="grid">
+          <div class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v6H4zM4 14h16v6H4z"/><path d="M8 7h.01M8 17h.01"/></svg></div>
+            <h3>Backup before every change</h3>
+            <p>The current values are saved with checksums before anything is written.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <h3>Dry-run preview</h3>
+            <p>See every setting with its current and new value. Nothing changes until you confirm.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/></svg></div>
+            <h3>One-click undo</h3>
+            <p>Reset a single tweak, a whole preset or everything at once.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <h3>Security stays on</h3>
+            <p>Defender, the firewall and Windows Update are never turned off.</p>
+          </div>
+        </div>
+        <p class="note">Limits: deleted files and removed apps cannot always be restored. The app tells you before you confirm.</p>
+      </div>
+    </section>
+
+    <section id="presets" aria-labelledby="presets-title">
+      <div class="wrap">
+        <p class="eyebrow">Presets</p>
+        <h2 id="presets-title">Pick a goal, not a registry key.</h2>
+        <p class="section-lead">Seven presets, each in three levels. Many tweaks help a little, some not at all. The app says which effects are proven.</p>
+        <div class="grid">
+          <div class="card reveal"><h3>Safe &amp; Fast</h3><p>Proven, safe settings for a faster, calmer PC.</p><p class="levels">Gentle · Standard · Strong</p></div>
+          <div class="card reveal"><h3>Gaming</h3><p>More precise mouse, fewer interruptions and less background while gaming.</p><p class="levels">Gentle · Standard · Strong</p></div>
+          <div class="card reveal"><h3>Competitive Gaming</h3><p>Everything from Gaming and more for competitive shooters. Never security features.</p><p class="levels">Gentle · Standard · Strong</p></div>
+          <div class="card reveal"><h3>Laptop Battery</h3><p>Less background. The power plan stays at default so the battery lasts.</p><p class="levels">Gentle · Standard · Strong</p></div>
+          <div class="card reveal"><h3>Privacy</h3><p>Less data to Microsoft and fewer ads. Side effects are shown in the preview.</p><p class="levels">Gentle · Standard · Strong</p></div>
+          <div class="card reveal"><h3>Clean Up</h3><p>Deletes temp files, caches and update leftovers. Changes no settings.</p><p class="levels">Gentle · Standard · Strong</p></div>
+          <div class="card reveal"><h3>Quiet Office</h3><p>Fewer notices and suggestions, file extensions visible, no restart during the day.</p><p class="levels">Gentle · Standard · Strong</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cleanup" aria-labelledby="cleanup-title">
+      <div class="wrap">
+        <p class="eyebrow">Smart cleanup</p>
+        <h2 id="cleanup-title">Frees space without guessing.</h2>
+        <p class="section-lead">The large-file search sorts what it finds and explains why. Nothing is preselected, files go to the Recycle Bin, and game folders and your personal libraries are never offered for deletion.</p>
+      </div>
+    </section>
+
+    <section id="open-source" aria-labelledby="free-title">
+      <div class="wrap free">
+        <div class="card reveal">
+          <p class="eyebrow">Free and open source</p>
+          <h2 id="free-title" class="big">Free forever.</h2>
+          <p>No account, no subscription, no ads. The full source code is on GitHub, and every tweak lists where its effect is documented.</p>
+        </div>
+        <div class="card reveal">
+          <h3>Check what you run</h3>
+          <p>Each release comes with SHA-256 checksums and a build attestation, so you can verify the ZIP was built from the public code.</p>
+          <p style="margin-top:16px"><a data-link="repo" href="https://github.com/">Read the source code</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="download" aria-labelledby="download-title">
+      <div class="wrap">
+        <p class="eyebrow">Download</p>
+        <h2 id="download-title">Get started in three steps.</h2>
+        <p class="section-lead">Requires Windows 10 22H2 or Windows 11, 64-bit. No installed .NET needed.</p>
+        <ol class="steps">
+          <li class="card reveal"><h3>Download the ZIP</h3><p>Get the ZIP and <code>SHA256SUMS.txt</code> from the latest release.</p><p style="margin-top:16px"><a class="btn btn-primary btn-small" data-link="latest" href="https://github.com/">Latest release</a></p></li>
+          <li class="card reveal"><h3>Check the checksum</h3><p>In PowerShell, compare the result with the line in <code>SHA256SUMS.txt</code>.</p><pre>Get-FileHash .\TweakPilot-*.zip -Algorithm SHA256</pre></li>
+          <li class="card reveal"><h3>Start TweakPilot.exe</h3><p>Unzip, open the folder and start <code>TweakPilot.exe</code>. Choose Install or Try it portable.</p></li>
+        </ol>
+        <div class="callout"><strong>Why Windows may warn you:</strong> the files are not code-signed yet, so SmartScreen can show "Windows protected your PC". Check the checksum first. Never turn off Defender or SmartScreen for this or any other app.</div>
+      </div>
+    </section>
+
+    <section id="faq" aria-labelledby="faq-title">
+      <div class="wrap faq">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="faq-title">Questions</h2>
+        <details><summary>Is it safe?</summary><p>Every change is previewed, backed up and reversible. Risky tweaks are hidden unless you switch to expert mode. Still, it changes Windows settings, so read the preview before you confirm.</p></details>
+        <details><summary>Will it make my games faster?</summary><p>Sometimes a little, often not measurably. Each tweak shows whether its effect is proven, small or unclear. There are no FPS promises.</p></details>
+        <details><summary>Does it disable Defender?</summary><p>No. Defender, the firewall, UAC, SmartScreen and Windows Update stay on. The only Defender setting it offers is how much CPU a scheduled scan may use.</p></details>
+        <details><summary>Will anti-cheat complain?</summary><p>TweakPilot does not touch game files or inject anything into games, and security features such as Secure Boot and memory integrity stay on.</p></details>
+        <details><summary>Does it collect data?</summary><p>No. The app sends nothing and only goes online when you click "Check for updates". This website sets no cookies and loads nothing from other servers.</p></details>
+        <details><summary>How do I undo?</summary><p>Open Restore in the app and reset a single tweak, a preset or everything. If a change was interrupted, the app detects it on the next start.</p></details>
+        <details><summary>Why is Windows warning me?</summary><p>The files are not code-signed yet. Check the SHA-256 checksum from the release page before you start the app.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <ul>
+        <li><a data-link="repo" href="https://github.com/">GitHub</a></li>
+        <li><a data-link="license" href="https://github.com/">License</a></li>
+      </ul>
+      <div>
+        <p>Privacy: This site and the app collect nothing.</p>
+        <p>Not affiliated with Microsoft or any game publisher.</p>
+        <p>&copy; <span data-text="year">2026</span> <span data-text="copyright">COPYRIGHT_HOLDER</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

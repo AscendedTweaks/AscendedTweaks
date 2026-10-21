@@ -348,7 +348,19 @@ public sealed partial class TweakWorkspace : ObservableObject
     private async Task<bool> RunBatchAsync(IReadOnlyList<string> applies, IReadOnlyList<string> reverts, bool previewOnly)
     {
         // Vorschau ist immer der erste Schritt; ohne Bestaetigung wird nichts angewendet.
-        var plan = await Task.Run(() => _service.Preview(applies)).ConfigureAwait(true);
+        BatchPlan plan;
+        try
+        {
+            plan = await Task.Run(() => _service.Preview(applies)).ConfigureAwait(true);
+        }
+        catch (TweakPilotException ex)
+        {
+            // Ist-Wert nicht lesbar (zum Beispiel Netzwerkadapter): im Ergebnis melden statt die App zu beenden.
+            var errorRows = applies.Select(id => new ResultRow(NameOf(id), false, ex.Message)).ToList();
+            await _dialogs.ShowAsync(new ResultDialogViewModel(_localizer["result.title"], Summary(errorRows), errorRows, false)).ConfigureAwait(true);
+            return false;
+        }
+
         var preview = new PreviewDialogViewModel(
             plan.Items.Select(i => new PreviewRow(NameOf(i.TweakId), i.ValueName is null ? i.Target : $"{i.Target} : {i.ValueName}", i.Current, i.New)).ToList(),
             plan.Excluded.Select(e => new NoteRow(NameOf(e.TweakId), e.Reason)).ToList(),
@@ -390,6 +402,11 @@ public sealed partial class TweakWorkspace : ObservableObject
                     Progress = reporter,
                     Cancellation = progress.Token,
                 })).ConfigureAwait(true);
+            }
+            catch (TweakPilotException ex)
+            {
+                // Helfer nicht gestartet, UAC abgelehnt oder Fehler im Helfer: im Ergebnis melden statt die App zu beenden.
+                result = new BatchResult { Outcome = BatchOutcome.Aborted, Plan = plan, Error = ex };
             }
             finally
             {
@@ -467,7 +484,7 @@ public sealed partial class TweakWorkspace : ObservableObject
                 {
                     BatchOutcome.RolledBack => _localizer["result.rolledback"],
                     BatchOutcome.RollbackFailed => _localizer["result.rollbackfailed"] + " " + result.BackupSetPath,
-                    BatchOutcome.Aborted => _localizer["result.cancelled"],
+                    BatchOutcome.Aborted => result.Error?.Message ?? _localizer["result.cancelled"],
                     _ => result.Error?.Message ?? _localizer["result.failed"],
                 });
             }

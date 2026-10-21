@@ -4,6 +4,7 @@ using System.Management;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using TweakPilot.Core;
 
@@ -30,17 +31,24 @@ public sealed class WindowsNetworkAccess : INetworkAccess
 
     public IReadOnlyList<string> PhysicalAdapters()
     {
-        using var searcher = new ManagementObjectSearcher("SELECT GUID FROM Win32_NetworkAdapter WHERE PhysicalAdapter = TRUE AND NetEnabled = TRUE");
         var result = new List<string>();
-        foreach (var item in searcher.Get())
+        try
         {
-            using (item)
+            using var searcher = new ManagementObjectSearcher("SELECT GUID FROM Win32_NetworkAdapter WHERE PhysicalAdapter = TRUE AND NetEnabled = TRUE");
+            foreach (var item in searcher.Get())
             {
-                if (item["GUID"] is string guid && AdapterState.IsAdapterId(guid))
+                using (item)
                 {
-                    result.Add(guid.ToUpperInvariant());
+                    if (item["GUID"] is string guid && AdapterState.IsAdapterId(guid))
+                    {
+                        result.Add(guid.ToUpperInvariant());
+                    }
                 }
             }
+        }
+        catch (Exception ex) when (ex is ManagementException or UnauthorizedAccessException or COMException)
+        {
+            throw new TweakPilotException(ErrorKind.Unavailable, $"Network adapters are not readable: {ex.Message}", innerException: ex);
         }
 
         return result.OrderBy(g => g, StringComparer.Ordinal).ToList();
@@ -56,14 +64,25 @@ public sealed class WindowsNetworkAccess : INetworkAccess
     {
         Guard(adapter);
         var addresses = servers.Select(s => IPAddress.Parse(s)).ToList();
-        var nic = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(n => string.Equals(n.Id, adapter, StringComparison.OrdinalIgnoreCase))
-            ?? throw new TweakPilotException(ErrorKind.Unavailable, $"Adapter {adapter} not found.");
-        var properties = nic.GetIPProperties();
-        Apply("ipv4", properties.GetIPv4Properties()?.Index, addresses.Where(a => a.AddressFamily == AddressFamily.InterNetwork).ToList());
-        if (nic.Supports(NetworkInterfaceComponent.IPv6))
+        int? ipv4;
+        int? ipv6;
+        try
         {
-            Apply("ipv6", properties.GetIPv6Properties()?.Index, addresses.Where(a => a.AddressFamily == AddressFamily.InterNetworkV6).ToList());
+            var nic = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(n => string.Equals(n.Id, adapter, StringComparison.OrdinalIgnoreCase))
+                ?? throw new TweakPilotException(ErrorKind.Unavailable, $"Adapter {adapter} not found.");
+            var properties = nic.GetIPProperties();
+
+            // GetIPv4Properties/GetIPv6Properties werfen, wenn das Protokoll am Adapter fehlt; dann bleibt es unberuehrt.
+            ipv4 = nic.Supports(NetworkInterfaceComponent.IPv4) ? properties.GetIPv4Properties()?.Index : null;
+            ipv6 = nic.Supports(NetworkInterfaceComponent.IPv6) ? properties.GetIPv6Properties()?.Index : null;
         }
+        catch (NetworkInformationException ex)
+        {
+            throw new TweakPilotException(ErrorKind.Unavailable, $"Adapter {adapter} is not readable: {ex.Message}", innerException: ex);
+        }
+
+        Apply("ipv4", ipv4, addresses.Where(a => a.AddressFamily == AddressFamily.InterNetwork).ToList());
+        Apply("ipv6", ipv6, addresses.Where(a => a.AddressFamily == AddressFamily.InterNetworkV6).ToList());
     }
 
     public string? GetAutotuning()

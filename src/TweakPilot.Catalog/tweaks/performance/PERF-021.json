@@ -1,0 +1,48 @@
+{
+  "id": "PERF-021",
+  "category": "Performance.Tasks",
+  "nameKey": "tweak.PERF-021.name",
+  "descriptionKey": "tweak.PERF-021.desc",
+  "sideEffectsKey": "tweak.PERF-021.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ScheduledTaskEnabledEquals",
+    "taskPath": "\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser",
+    "value": false
+  },
+  "apply": [
+    {
+      "type": "ScheduledTaskSetEnabled",
+      "taskPath": "\\Microsoft\\Windows\\Application Experience\\Microsoft Compatibility Appraiser",
+      "enabled": false
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation on turning it off. The task collects compatibility data for feature updates and diagnostic data. Not present on build 26200; there the tweak reports 'not available'.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-021.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-021.plain.title",
+  "plainDescKey": "tweak.PERF-021.plain.desc"
+}

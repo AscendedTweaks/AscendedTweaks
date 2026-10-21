@@ -1,0 +1,53 @@
+{
+  "id": "PRIV-006",
+  "category": "Privacy.Location",
+  "nameKey": "tweak.PRIV-006.name",
+  "descriptionKey": "tweak.PRIV-006.desc",
+  "sideEffectsKey": "tweak.PRIV-006.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy",
+    "name": "LetAppsAccessLocation",
+    "value": 2
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy",
+      "name": "LetAppsAccessLocation",
+      "kind": "DWord",
+      "value": 2
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 18.2 Location: LetAppsAccessLocation = 2 (always deny) under HKLM\\Software\\Policies\\Microsoft\\Windows\\AppPrivacy. The documented policy is used instead of the undocumented ConsentStore value.",
+    "The policy is described in the Policy CSP for Pro, Enterprise and Education; Windows Home reads the same registry value, but Microsoft makes no promise for Home."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-006.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-006.plain.title",
+  "plainDescKey": "tweak.PRIV-006.plain.desc"
+}

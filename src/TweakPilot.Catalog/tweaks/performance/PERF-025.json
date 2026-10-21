@@ -1,0 +1,48 @@
+{
+  "id": "PERF-025",
+  "category": "Performance.Tasks",
+  "nameKey": "tweak.PERF-025.name",
+  "descriptionKey": "tweak.PERF-025.desc",
+  "sideEffectsKey": "tweak.PERF-025.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ScheduledTaskEnabledEquals",
+    "taskPath": "\\Microsoft\\Windows\\Windows Error Reporting\\QueueReporting",
+    "value": false
+  },
+  "apply": [
+    {
+      "type": "ScheduledTaskSetEnabled",
+      "taskPath": "\\Microsoft\\Windows\\Windows Error Reporting\\QueueReporting",
+      "enabled": false
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation on turning it off. The task sends queued error reports. To turn off error reporting completely, use PRIV-020 (documented policy).",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-025.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-025.plain.title",
+  "plainDescKey": "tweak.PERF-025.plain.desc"
+}

@@ -1,0 +1,52 @@
+{
+  "id": "DISK-004",
+  "category": "Disk.StorageSense",
+  "nameKey": "tweak.DISK-004.name",
+  "descriptionKey": "tweak.DISK-004.desc",
+  "sideEffectsKey": "tweak.DISK-004.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\StorageSense\\Parameters\\StoragePolicy",
+    "name": "01",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\StorageSense\\Parameters\\StoragePolicy",
+      "name": "01",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Not documented on Microsoft Learn (only the AllowStorageSenseGlobal policy, which locks the switch, is documented). The value matches the 'Storage Sense' switch (Settings > System > Storage). Visual check still open."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.DISK-004.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.DISK-004.plain.title",
+  "plainDescKey": "tweak.DISK-004.plain.desc"
+}

@@ -1,0 +1,46 @@
+{
+  "id": "PERF-001",
+  "category": "Performance.Power",
+  "nameKey": "tweak.PERF-001.name",
+  "descriptionKey": "tweak.PERF-001.desc",
+  "sideEffectsKey": "tweak.PERF-001.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "PowerPlanActive",
+    "guid": "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+  },
+  "apply": [
+    {
+      "type": "PowerPlanSet",
+      "guid": "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Powercfg command-line options' (/setactive, alias SCHEME_MIN for High performance with GUID 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c). On systems with Modern Standby the plan can be missing; the tweak is then not available.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-001.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-001.plain.title",
+  "plainDescKey": "tweak.PERF-001.plain.desc"
+}

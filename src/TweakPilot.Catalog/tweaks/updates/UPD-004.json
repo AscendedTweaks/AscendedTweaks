@@ -1,0 +1,51 @@
+{
+  "id": "UPD-004",
+  "category": "Updates.Drivers",
+  "nameKey": "tweak.UPD-004.name",
+  "descriptionKey": "tweak.UPD-004.desc",
+  "sideEffectsKey": "tweak.UPD-004.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate",
+    "name": "ExcludeWUDriversInQualityUpdate",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate",
+      "name": "ExcludeWUDriversInQualityUpdate",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Configure Windows Update client policies' (table 'GPO: HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate'). According to the Update Policy CSP for Pro, Enterprise and Education. Section 'Exclude drivers from quality updates': drivers that are part of a security or critical update still arrive."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.UPD-004.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.UPD-004.plain.title",
+  "plainDescKey": "tweak.UPD-004.plain.desc"
+}

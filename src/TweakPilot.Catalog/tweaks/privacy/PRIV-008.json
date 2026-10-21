@@ -1,0 +1,52 @@
+{
+  "id": "PRIV-008",
+  "category": "Privacy.Search",
+  "nameKey": "tweak.PRIV-008.name",
+  "descriptionKey": "tweak.PRIV-008.desc",
+  "sideEffectsKey": "tweak.PRIV-008.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "UserPolicy",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Policies\\Microsoft\\Windows\\Explorer",
+    "name": "DisableSearchBoxSuggestions",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Policies\\Microsoft\\Windows\\Explorer",
+      "name": "DisableSearchBoxSuggestions",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation for the effect on web search in the Start menu. DisableSearchBoxSuggestions is described in the ADMX (group policy 'Turn off display of recent search entries in the File Explorer search box', User Configuration). The value BingSearchEnabled, which used to be set as well, is not documented and was removed (see REJECTED-TWEAKS.md). According to the Policy CSP, the documented policy ConnectedSearchUseWeb only works in Enterprise and Education. Therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PRIV-008.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-008.plain.title",
+  "plainDescKey": "tweak.PRIV-008.plain.desc"
+}

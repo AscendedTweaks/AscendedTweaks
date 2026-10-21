@@ -1,0 +1,73 @@
+{
+  "id": "PRIV-022",
+  "category": "Privacy.Telemetry",
+  "nameKey": "tweak.PRIV-022.name",
+  "descriptionKey": "tweak.PRIV-022.desc",
+  "sideEffectsKey": "tweak.PRIV-022.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKLM",
+        "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat",
+        "name": "AITEnable",
+        "value": 0
+      },
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKLM",
+        "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat",
+        "name": "DisableInventory",
+        "value": 1
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat",
+      "name": "AITEnable",
+      "kind": "DWord",
+      "value": 0
+    },
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat",
+      "name": "DisableInventory",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: ADMX_AppCompat Policy CSP, 'Turn off Application Telemetry' (AITEnable, enabled = 0) and 'Turn off Inventory Collector' (DisableInventory = 1) under Software\\Policies\\Microsoft\\Windows\\AppCompat.",
+    "The policy is described in the Policy CSP for Pro, Enterprise and Education; Windows Home reads the same registry value, but Microsoft makes no promise for Home."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-022.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-022.plain.title",
+  "plainDescKey": "tweak.PRIV-022.plain.desc"
+}

@@ -1,0 +1,53 @@
+{
+  "id": "BROW-001",
+  "category": "Performance.Startup",
+  "nameKey": "tweak.BROW-001.name",
+  "descriptionKey": "tweak.BROW-001.desc",
+  "sideEffectsKey": "tweak.BROW-001.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Edge",
+    "name": "StartupBoostEnabled",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Edge",
+      "name": "StartupBoostEnabled",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: Microsoft Edge policy StartupBoostEnabled (\"Enable startup boost\"), Windows since Edge 88, REG_DWORD under SOFTWARE\\Policies\\Microsoft\\Edge; when disabled, Edge no longer preloads in the background at sign-in.",
+    "There is no documented per-user setting outside of policies (the Edge setting lives in the browser's profile data); therefore a policy, with the required note \"Managed by your organization\"."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.BROW-001.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.BROW-001.plain.title",
+  "plainDescKey": "tweak.BROW-001.plain.desc"
+}

@@ -1,0 +1,60 @@
+{
+  "id": "PERF-003",
+  "category": "Performance.Visual",
+  "nameKey": "tweak.PERF-003.name",
+  "descriptionKey": "tweak.PERF-003.desc",
+  "sideEffectsKey": "tweak.PERF-003.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects",
+    "name": "VisualFXSetting",
+    "value": 2
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects",
+      "name": "VisualFXSetting",
+      "kind": "DWord",
+      "value": 2
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation for the registry value. VisualFXSetting stores the choice in the 'Performance Options' dialog (2 = 'Adjust for best performance'). Whether Windows applies the individual effects without the dialog is not documented. The host test only checks the registry behavior.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-003.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-003.plain.title",
+  "plainDescKey": "tweak.PERF-003.plain.desc"
+}

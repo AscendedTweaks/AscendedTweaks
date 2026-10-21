@@ -1,0 +1,50 @@
+{
+  "id": "PERF-013",
+  "category": "Performance.Services",
+  "nameKey": "tweak.PERF-013.name",
+  "descriptionKey": "tweak.PERF-013.desc",
+  "sideEffectsKey": "tweak.PERF-013.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ServiceStartTypeEquals",
+    "service": "WSearch",
+    "value": "Manual"
+  },
+  "apply": [
+    {
+      "type": "ServiceSetStartType",
+      "service": "WSearch",
+      "startType": "Manual",
+      "stopNow": true,
+      "windowsDefault": "AutomaticDelayed"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Windows Search Service' and 'Guidance on disabling system services on Windows' (WSearch). Startup type Manual stops the running indexing.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-013.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-013.plain.title",
+  "plainDescKey": "tweak.PERF-013.plain.desc"
+}

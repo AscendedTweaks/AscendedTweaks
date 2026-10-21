@@ -1,0 +1,53 @@
+{
+  "id": "PERF-020",
+  "category": "Performance.Scheduler",
+  "nameKey": "tweak.PERF-020.name",
+  "descriptionKey": "tweak.PERF-020.desc",
+  "sideEffectsKey": "tweak.PERF-020.side",
+  "risk": "Expert",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\PriorityControl",
+    "name": "Win32PrioritySeparation",
+    "value": 38
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SYSTEM\\CurrentControlSet\\Control\\PriorityControl",
+      "name": "Win32PrioritySeparation",
+      "kind": "DWord",
+      "value": 38
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: Win32PrioritySeparation controls the length and boosting of time slices (default 2 = 'Programs' in Performance Options). The value 38 (0x26: short, variable time slices, triple foreground boost) is recommended in forums for games; a benefit is not measured.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-020.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-020.plain.title",
+  "plainDescKey": "tweak.PERF-020.plain.desc"
+}

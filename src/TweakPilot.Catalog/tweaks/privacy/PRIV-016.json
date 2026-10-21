@@ -1,0 +1,59 @@
+{
+  "id": "PRIV-016",
+  "category": "Privacy.Advertising",
+  "nameKey": "tweak.PRIV-016.name",
+  "descriptionKey": "tweak.PRIV-016.desc",
+  "sideEffectsKey": "tweak.PRIV-016.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+    "name": "Start_TrackProgs",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+      "name": "Start_TrackProgs",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 18.1 General: Start_TrackProgs = 0 under HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced ('Let Windows track app launches to improve Start and search results')."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-016.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-016.plain.title",
+  "plainDescKey": "tweak.PRIV-016.plain.desc"
+}

@@ -1,0 +1,52 @@
+{
+  "id": "POWR-001",
+  "category": "Performance.Power",
+  "nameKey": "tweak.POWR-001.name",
+  "descriptionKey": "tweak.POWR-001.desc",
+  "sideEffectsKey": "tweak.POWR-001.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "PowerSettingEquals",
+    "subgroup": "2a737441-1930-4402-8d77-b2bebba308a3",
+    "setting": "48e6b7a6-50f5-4782-a5d4-53bb8f07e226",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "PowerSettingSet",
+      "subgroup": "2a737441-1930-4402-8d77-b2bebba308a3",
+      "setting": "48e6b7a6-50f5-4782-a5d4-53bb8f07e226",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Power setting \"USB selective suspend\" (USB settings subgroup, no alias in powercfg); 0 = disabled. A benefit for input devices is not proven, therefore \"Disputed\" and expert mode only.",
+    "Microsoft Learn: PowerWriteACValueIndex (powersetting.h) with the subgroup table; changes to the active plan only take effect after PowerSetActiveScheme. The value is set only for plugged in and only in the plan that is active when applying; the original value is backed up.",
+    "Confirmed read-only on the development PC (build 26200) with \"powercfg /aliases\" and \"powercfg /query\" (alias and value range)."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.POWR-001.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.POWR-001.plain.title",
+  "plainDescKey": "tweak.POWR-001.plain.desc",
+  "desktopOnly": true
+}

@@ -1,0 +1,48 @@
+{
+  "id": "PERF-002",
+  "category": "Performance.Power",
+  "nameKey": "tweak.PERF-002.name",
+  "descriptionKey": "tweak.PERF-002.desc",
+  "sideEffectsKey": "tweak.PERF-002.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "PowerPlanActive",
+    "guid": "5b2d7a3e-9c41-4f8e-8a6d-2f1c0b7e9d14",
+    "missingIs": "NotApplied"
+  },
+  "apply": [
+    {
+      "type": "PowerPlanSet",
+      "guid": "5b2d7a3e-9c41-4f8e-8a6d-2f1c0b7e9d14",
+      "duplicateFrom": "e9a42b02-d5df-448d-aa00-03f14749eb61"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Powercfg command-line options' (/duplicatescheme, /setactive). The 'Ultimate Performance' plan (template e9a42b02-d5df-448d-aa00-03f14749eb61) is part of Windows but hidden; the app creates a copy with a fixed GUID and removes it again when resetting.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-002.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-002.plain.title",
+  "plainDescKey": "tweak.PERF-002.plain.desc"
+}

@@ -1,0 +1,53 @@
+{
+  "id": "PERF-008",
+  "category": "Performance.Background",
+  "nameKey": "tweak.PERF-008.name",
+  "descriptionKey": "tweak.PERF-008.desc",
+  "sideEffectsKey": "tweak.PERF-008.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy",
+    "name": "LetAppsRunInBackground",
+    "value": 2
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy",
+      "name": "LetAppsRunInBackground",
+      "kind": "DWord",
+      "value": 2
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: Privacy Policy CSP, LetAppsRunInBackground (2 = Force Deny) under SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy; 'Manage connections from Windows operating system components to Microsoft services', section 18.17 Background apps.",
+    "The description only promises that Store apps do not run in the background; a speed gain is not measured."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PERF-008.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-008.plain.title",
+  "plainDescKey": "tweak.PERF-008.plain.desc"
+}

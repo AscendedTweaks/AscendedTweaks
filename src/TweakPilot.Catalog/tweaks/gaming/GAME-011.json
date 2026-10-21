@@ -1,0 +1,50 @@
+{
+  "id": "GAME-011",
+  "category": "Gaming.Input",
+  "nameKey": "tweak.GAME-011.name",
+  "descriptionKey": "tweak.GAME-011.desc",
+  "sideEffectsKey": "tweak.GAME-011.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "SystemParameterEquals",
+    "parameter": "MouseAcceleration",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "SystemParametersInfo",
+      "parameter": "MouseAcceleration",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'SystemParametersInfoW function', SPI_SETMOUSE (two thresholds and acceleration). Values 0, 0, 0 match 'Enhance pointer precision' off. The app sets the values through this function (takes effect immediately) and restores all three original values when resetting.",
+    "The description only promises even pointer movement, not an FPS effect."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Noticeable",
+  "impactNote": "tweak.GAME-011.impact",
+  "measuredOn": [
+    "Microsoft Learn: SystemParametersInfo SPI_SETMOUSE (acceleration thresholds and factor 0 = pointer follows the mouse without acceleration); host test 26200: values checked before and after"
+  ],
+  "plainTitleKey": "tweak.GAME-011.plain.title",
+  "plainDescKey": "tweak.GAME-011.plain.desc"
+}

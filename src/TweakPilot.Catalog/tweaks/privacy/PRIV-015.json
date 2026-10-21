@@ -1,0 +1,59 @@
+{
+  "id": "PRIV-015",
+  "category": "Privacy.Advertising",
+  "nameKey": "tweak.PRIV-015.name",
+  "descriptionKey": "tweak.PRIV-015.desc",
+  "sideEffectsKey": "tweak.PRIV-015.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Control Panel\\International\\User Profile",
+    "name": "HttpAcceptLanguageOptOut",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Control Panel\\International\\User Profile",
+      "name": "HttpAcceptLanguageOptOut",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 18.1 General: HttpAcceptLanguageOptOut = 1 under HKCU\\Control Panel\\International\\User Profile ('Let websites provide locally relevant content by accessing my language list')."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-015.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-015.plain.title",
+  "plainDescKey": "tweak.PRIV-015.plain.desc"
+}

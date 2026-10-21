@@ -1,0 +1,72 @@
+{
+  "id": "PERF-005",
+  "category": "Performance.Visual",
+  "nameKey": "tweak.PERF-005.name",
+  "descriptionKey": "tweak.PERF-005.desc",
+  "sideEffectsKey": "tweak.PERF-005.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "SystemParameterEquals",
+        "parameter": "ClientAreaAnimation",
+        "value": 0
+      },
+      {
+        "type": "SystemParameterEquals",
+        "parameter": "MinimizeMaximizeAnimation",
+        "value": 0
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "SystemParametersInfo",
+      "parameter": "ClientAreaAnimation",
+      "value": 0
+    },
+    {
+      "type": "SystemParametersInfo",
+      "parameter": "MinimizeMaximizeAnimation",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'SystemParametersInfoW function' (SPI_SETCLIENTAREAANIMATION: animations in controls and window contents; SPI_SETANIMATION with ANIMATIONINFO.iMinAnimate: animation when minimizing and restoring). The app sets both values through this function, permanently for the user.",
+    "The description only promises that animations are turned off, not a speed gain."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": false,
+  "impact": "Noticeable",
+  "impactNote": "tweak.PERF-005.impact",
+  "measuredOn": [
+    "Microsoft Learn: SystemParametersInfo SPI_SETCLIENTAREAANIMATION and SPI_SETANIMATION (window animations off); host test 26200"
+  ],
+  "plainTitleKey": "tweak.PERF-005.plain.title",
+  "plainDescKey": "tweak.PERF-005.plain.desc"
+}

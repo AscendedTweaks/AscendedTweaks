@@ -1,0 +1,88 @@
+{
+  "id": "PRIV-005",
+  "category": "Privacy.Activity",
+  "nameKey": "tweak.PRIV-005.name",
+  "descriptionKey": "tweak.PRIV-005.desc",
+  "sideEffectsKey": "tweak.PRIV-005.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKLM",
+        "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+        "name": "EnableActivityFeed",
+        "value": 0
+      },
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKLM",
+        "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+        "name": "PublishUserActivities",
+        "value": 0
+      },
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKLM",
+        "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+        "name": "UploadUserActivities",
+        "value": 0
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+      "name": "EnableActivityFeed",
+      "kind": "DWord",
+      "value": 0
+    },
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+      "name": "PublishUserActivities",
+      "kind": "DWord",
+      "value": 0
+    },
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+      "name": "UploadUserActivities",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 18.22 Activity History: EnableActivityFeed, PublishUserActivities and UploadUserActivities each 0 under HKLM\\Software\\Policies\\Microsoft\\Windows\\System.",
+    "The policy is described in the Policy CSP for Pro, Enterprise and Education; Windows Home reads the same registry value, but Microsoft makes no promise for Home."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-005.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-005.plain.title",
+  "plainDescKey": "tweak.PRIV-005.plain.desc"
+}

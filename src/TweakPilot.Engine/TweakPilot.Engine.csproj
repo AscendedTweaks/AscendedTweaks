@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>TweakPilot.Engine</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TweakPilot.Core\TweakPilot.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ServiceProcess.ServiceController" />
+    <PackageReference Include="System.Management" />
+    <PackageReference Include="BouncyCastle.Cryptography" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TweakPilot.Engine.Tests" />
+    <InternalsVisibleTo Include="TweakPilot.Ipc.Tests" />
+    <InternalsVisibleTo Include="TweakPilot.App.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,50 @@
+{
+  "id": "PERF-018",
+  "category": "Performance.Services",
+  "nameKey": "tweak.PERF-018.name",
+  "descriptionKey": "tweak.PERF-018.desc",
+  "sideEffectsKey": "tweak.PERF-018.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ServiceStartTypeEquals",
+    "service": "MapsBroker",
+    "value": "Disabled"
+  },
+  "apply": [
+    {
+      "type": "ServiceSetStartType",
+      "service": "MapsBroker",
+      "startType": "Disabled",
+      "stopNow": true,
+      "windowsDefault": "AutomaticDelayed"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Guidance on disabling system services on Windows' (MapsBroker, Downloaded Maps Manager).",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-018.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-018.plain.title",
+  "plainDescKey": "tweak.PERF-018.plain.desc"
+}

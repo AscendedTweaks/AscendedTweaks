@@ -1,0 +1,53 @@
+{
+  "id": "PRIV-024",
+  "category": "Privacy.Delivery",
+  "nameKey": "tweak.PRIV-024.name",
+  "descriptionKey": "tweak.PRIV-024.desc",
+  "sideEffectsKey": "tweak.PRIV-024.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization",
+    "name": "DODownloadMode",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization",
+      "name": "DODownloadMode",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Delivery Optimization reference', Download Mode: HTTP Only (0) turns off peer-to-peer and keeps downloading over HTTP. Registry policy DODownloadMode under HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization (Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 28.3). The documented policy is used instead of the settings value under DeliveryOptimization\\Config.",
+    "The policy is described in the Policy CSP for Pro, Enterprise and Education; Windows Home reads the same registry value, but Microsoft makes no promise for Home."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-024.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-024.plain.title",
+  "plainDescKey": "tweak.PRIV-024.plain.desc"
+}

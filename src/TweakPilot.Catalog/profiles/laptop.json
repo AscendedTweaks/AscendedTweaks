@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "key": "laptop",
+  "symbol": "Battery524",
+  "tweaks": [
+    {
+      "id": "PERF-001",
+      "target": "NotApplied"
+    },
+    {
+      "id": "PERF-002",
+      "target": "NotApplied"
+    },
+    {
+      "id": "PERF-003"
+    },
+    {
+      "id": "PERF-004"
+    },
+    {
+      "id": "PERF-005"
+    },
+    {
+      "id": "PERF-008"
+    },
+    {
+      "id": "NET-011",
+      "target": "NotApplied"
+    }
+  ],
+  "cleanup": []
+}

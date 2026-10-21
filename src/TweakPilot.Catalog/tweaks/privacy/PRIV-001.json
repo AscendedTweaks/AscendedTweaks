@@ -1,0 +1,61 @@
+{
+  "id": "PRIV-001",
+  "category": "Privacy.Advertising",
+  "nameKey": "tweak.PRIV-001.name",
+  "descriptionKey": "tweak.PRIV-001.desc",
+  "sideEffectsKey": "tweak.PRIV-001.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo",
+    "name": "Enabled",
+    "value": 0,
+    "defaultWhenMissing": "NotApplied"
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo",
+      "name": "Enabled",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 18.1 General (advertising ID). The page names the switch in the Settings app and the machine-wide value under HKLM; the app sets the per-user value that the switch under Settings > Privacy & security > General writes.",
+    "Own check: host integration test Windows 11 25H2 build 26200 Home (not a VM), see docs/SOURCES.md"
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-001.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-001.plain.title",
+  "plainDescKey": "tweak.PRIV-001.plain.desc"
+}

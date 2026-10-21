@@ -1,0 +1,53 @@
+{
+  "id": "BROW-003",
+  "category": "Performance.Background",
+  "nameKey": "tweak.BROW-003.name",
+  "descriptionKey": "tweak.BROW-003.desc",
+  "sideEffectsKey": "tweak.BROW-003.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Google\\Chrome",
+    "name": "BackgroundModeEnabled",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Google\\Chrome",
+      "name": "BackgroundModeEnabled",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Chromium policy definition BackgroundModeEnabled (\"Continue running background apps when Google Chrome is closed\"), Windows since Chrome 19, not per profile, dynamic refresh.",
+    "Google Chrome Enterprise Help \"Manage Chrome policies with Windows registry\": policies under HKLM\\SOFTWARE\\Policies\\Google\\Chrome. Only has an effect if Chrome is installed."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.BROW-003.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.BROW-003.plain.title",
+  "plainDescKey": "tweak.BROW-003.plain.desc"
+}

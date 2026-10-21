@@ -1,0 +1,53 @@
+{
+  "id": "NET-009",
+  "category": "Network.Security",
+  "nameKey": "tweak.NET-009.name",
+  "descriptionKey": "tweak.NET-009.desc",
+  "sideEffectsKey": "tweak.NET-009.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient",
+    "name": "EnableMulticast",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient",
+      "name": "EnableMulticast",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: ADMX_DnsClient Policy CSP, 'Turn off multicast name resolution' (EnableMulticast = 0 under Software\\Policies\\Microsoft\\Windows NT\\DNSClient).",
+    "The description promises a smaller attack surface (LLMNR spoofing), not a speed gain."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.NET-009.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.NET-009.plain.title",
+  "plainDescKey": "tweak.NET-009.plain.desc"
+}

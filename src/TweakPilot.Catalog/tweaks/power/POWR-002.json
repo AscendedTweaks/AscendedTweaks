@@ -1,0 +1,52 @@
+{
+  "id": "POWR-002",
+  "category": "Performance.Power",
+  "nameKey": "tweak.POWR-002.name",
+  "descriptionKey": "tweak.POWR-002.desc",
+  "sideEffectsKey": "tweak.POWR-002.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "PowerSettingEquals",
+    "subgroup": "501a4d13-42af-4429-9fd1-a8218c268e20",
+    "setting": "ee12f906-d277-404b-b6da-e5fa1a576df5",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "PowerSettingSet",
+      "subgroup": "501a4d13-42af-4429-9fd1-a8218c268e20",
+      "setting": "ee12f906-d277-404b-b6da-e5fa1a576df5",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: \"Link state power management\" (powercfg ASPM, GUID ee12f906-d277-404b-b6da-e5fa1a576df5), subgroup GUID_PCIEXPRESS_SETTINGS_SUBGROUP; index 0 = Off. A noticeable benefit is not proven, therefore \"Disputed\" and expert mode only.",
+    "Microsoft Learn: PowerWriteACValueIndex (powersetting.h) with the subgroup table; changes to the active plan only take effect after PowerSetActiveScheme. The value is set only for plugged in and only in the plan that is active when applying; the original value is backed up.",
+    "Confirmed read-only on the development PC (build 26200) with \"powercfg /aliases\" and \"powercfg /query\" (alias and value range)."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.POWR-002.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.POWR-002.plain.title",
+  "plainDescKey": "tweak.POWR-002.plain.desc",
+  "desktopOnly": true
+}

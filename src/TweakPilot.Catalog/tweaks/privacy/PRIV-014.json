@@ -1,0 +1,79 @@
+{
+  "id": "PRIV-014",
+  "category": "Privacy.Input",
+  "nameKey": "tweak.PRIV-014.name",
+  "descriptionKey": "tweak.PRIV-014.desc",
+  "sideEffectsKey": "tweak.PRIV-014.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKCU",
+        "path": "Software\\Microsoft\\InputPersonalization",
+        "name": "RestrictImplicitTextCollection",
+        "value": 1
+      },
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKCU",
+        "path": "Software\\Microsoft\\InputPersonalization",
+        "name": "RestrictImplicitInkCollection",
+        "value": 1
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\InputPersonalization",
+      "name": "RestrictImplicitTextCollection",
+      "kind": "DWord",
+      "value": 1
+    },
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\InputPersonalization",
+      "name": "RestrictImplicitInkCollection",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 18.21 Inking & Typing: RestrictImplicitTextCollection = 1 and RestrictImplicitInkCollection = 1 under HKCU\\Software\\Microsoft\\InputPersonalization."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-014.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-014.plain.title",
+  "plainDescKey": "tweak.PRIV-014.plain.desc"
+}

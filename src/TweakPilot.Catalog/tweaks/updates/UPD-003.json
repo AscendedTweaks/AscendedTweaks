@@ -1,0 +1,71 @@
+{
+  "id": "UPD-003",
+  "category": "Updates.Deferral",
+  "nameKey": "tweak.UPD-003.name",
+  "descriptionKey": "tweak.UPD-003.desc",
+  "sideEffectsKey": "tweak.UPD-003.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKLM",
+        "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate",
+        "name": "DeferQualityUpdates",
+        "value": 1
+      },
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKLM",
+        "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate",
+        "name": "DeferQualityUpdatesPeriodInDays",
+        "value": 7
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate",
+      "name": "DeferQualityUpdates",
+      "kind": "DWord",
+      "value": 1
+    },
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate",
+      "name": "DeferQualityUpdatesPeriodInDays",
+      "kind": "DWord",
+      "value": 7
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Configure Windows Update client policies' (table 'GPO: HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate'). According to the Update Policy CSP for Pro, Enterprise and Education. DeferQualityUpdatesPeriodInDays: 0 to 30 days according to the CSP."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.UPD-003.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.UPD-003.plain.title",
+  "plainDescKey": "tweak.UPD-003.plain.desc"
+}

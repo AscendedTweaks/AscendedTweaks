@@ -1,0 +1,48 @@
+{
+  "id": "NET-010",
+  "category": "Network.Tcp",
+  "nameKey": "tweak.NET-010.name",
+  "descriptionKey": "tweak.NET-010.desc",
+  "sideEffectsKey": "tweak.NET-010.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "tcp.autotuning",
+    "value": "normal"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "tcp.autotuning",
+      "value": "normal"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'netsh interface tcp' (set global autotuninglevel) and MSFT_NetTCPSetting (AutoTuningLevelLocal, 3 = Normal). Normal is the Windows default.",
+    "Only restores the default if another program changed it; not a speed booster."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.NET-010.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.NET-010.plain.title",
+  "plainDescKey": "tweak.NET-010.plain.desc"
+}

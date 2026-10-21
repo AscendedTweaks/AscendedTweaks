@@ -1,0 +1,53 @@
+{
+  "id": "PRIV-021",
+  "category": "Privacy.Telemetry",
+  "nameKey": "tweak.PRIV-021.name",
+  "descriptionKey": "tweak.PRIV-021.desc",
+  "sideEffectsKey": "tweak.PRIV-021.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\SQMClient\\Windows",
+    "name": "CEIPEnable",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\SQMClient\\Windows",
+      "name": "CEIPEnable",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: ADMX_ICM Policy CSP, CEIPEnable ('Turn off Windows Customer Experience Improvement Program'), registry key Software\\Policies\\Microsoft\\SQMClient\\Windows, value CEIPEnable (the enabled policy writes 0 according to ICM.admx).",
+    "The policy is described in the Policy CSP for Pro, Enterprise and Education; Windows Home reads the same registry value, but Microsoft makes no promise for Home."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-021.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-021.plain.title",
+  "plainDescKey": "tweak.PRIV-021.plain.desc"
+}

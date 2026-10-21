@@ -1,0 +1,52 @@
+{
+  "id": "PRIV-012",
+  "category": "Privacy.Advertising",
+  "nameKey": "tweak.PRIV-012.name",
+  "descriptionKey": "tweak.PRIV-012.desc",
+  "sideEffectsKey": "tweak.PRIV-012.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "UserPolicy",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Policies\\Microsoft\\Windows\\CloudContent",
+    "name": "DisableTailoredExperiencesWithDiagnosticData",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Policies\\Microsoft\\Windows\\CloudContent",
+      "name": "DisableTailoredExperiencesWithDiagnosticData",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 18.16 Feedback & diagnostics: DisableTailoredExperiencesWithDiagnosticData = 1 under HKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent. The documented policy is used instead of the settings value under Privacy."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-012.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-012.plain.title",
+  "plainDescKey": "tweak.PRIV-012.plain.desc"
+}

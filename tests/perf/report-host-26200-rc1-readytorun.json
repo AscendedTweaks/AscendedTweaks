@@ -1,0 +1,52 @@
+﻿{
+    "Machine":  "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD, 12 logische Prozessoren",
+    "Windows":  "Microsoft Windows 11 Home",
+    "Limits":  "Start \u003c 2000 ms, Arbeitsspeicher \u003c 150 MB, CPU im Leerlauf 0 %, keine Verbindungen, keine Prozesse nach dem Schliessen",
+    "Runs":  [
+                 {
+                     "Run":  1,
+                     "StartToWindowMs":  1268,
+                     "WorkingSetMb":  206.2,
+                     "PrivateMb":  116,
+                     "IdleCpuMsIn30s":  312,
+                     "IdleCpuPercent":  0.087,
+                     "Connections":  [
+
+                                     ],
+                     "ClosedByWindow":  true,
+                     "ProcessesAfterClose":  [
+
+                                             ]
+                 },
+                 {
+                     "Run":  2,
+                     "StartToWindowMs":  854,
+                     "WorkingSetMb":  203.2,
+                     "PrivateMb":  113.3,
+                     "IdleCpuMsIn30s":  0,
+                     "IdleCpuPercent":  0,
+                     "Connections":  [
+
+                                     ],
+                     "ClosedByWindow":  true,
+                     "ProcessesAfterClose":  [
+
+                                             ]
+                 },
+                 {
+                     "Run":  3,
+                     "StartToWindowMs":  1116,
+                     "WorkingSetMb":  203.8,
+                     "PrivateMb":  114.7,
+                     "IdleCpuMsIn30s":  0,
+                     "IdleCpuPercent":  0,
+                     "Connections":  [
+
+                                     ],
+                     "ClosedByWindow":  true,
+                     "ProcessesAfterClose":  [
+
+                                             ]
+                 }
+             ]
+}

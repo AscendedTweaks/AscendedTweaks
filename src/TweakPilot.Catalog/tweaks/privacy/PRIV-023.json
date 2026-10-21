@@ -1,0 +1,53 @@
+{
+  "id": "PRIV-023",
+  "category": "Privacy.Clipboard",
+  "nameKey": "tweak.PRIV-023.name",
+  "descriptionKey": "tweak.PRIV-023.desc",
+  "sideEffectsKey": "tweak.PRIV-023.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+    "name": "AllowCrossDeviceClipboard",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+      "name": "AllowCrossDeviceClipboard",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: Privacy Policy CSP, AllowCrossDeviceClipboard = 0 under Software\\Policies\\Microsoft\\Windows\\System; Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 30 Cloud Clipboard.",
+    "The policy is described in the Policy CSP for Pro, Enterprise and Education; Windows Home reads the same registry value, but Microsoft makes no promise for Home."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-023.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-023.plain.title",
+  "plainDescKey": "tweak.PRIV-023.plain.desc"
+}

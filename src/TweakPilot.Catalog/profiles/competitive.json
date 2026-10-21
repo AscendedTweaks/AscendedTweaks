@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "key": "competitive",
+  "symbol": "Trophy24",
+  "tweaks": [
+    {
+      "id": "GAME-001"
+    },
+    {
+      "id": "GAME-003"
+    },
+    {
+      "id": "GAME-004"
+    },
+    {
+      "id": "GAME-005"
+    },
+    {
+      "id": "GAME-009"
+    },
+    {
+      "id": "GAME-010"
+    },
+    {
+      "id": "GAME-011"
+    },
+    {
+      "id": "GAME-012"
+    },
+    {
+      "id": "GAME-013"
+    },
+    {
+      "id": "PERF-001",
+      "condition": "DesktopOnly"
+    },
+    {
+      "id": "PERF-003"
+    },
+    {
+      "id": "PERF-004"
+    },
+    {
+      "id": "PERF-005"
+    },
+    {
+      "id": "PERF-008"
+    },
+    {
+      "id": "NET-011"
+    },
+    {
+      "id": "PERF-006"
+    },
+    {
+      "id": "POWR-001",
+      "condition": "DesktopOnly"
+    },
+    {
+      "id": "POWR-002",
+      "condition": "DesktopOnly"
+    },
+    {
+      "id": "POWR-003",
+      "condition": "DesktopOnly"
+    },
+    {
+      "id": "POWR-004",
+      "condition": "DesktopOnly"
+    },
+    {
+      "id": "BROW-001"
+    },
+    {
+      "id": "BROW-002"
+    },
+    {
+      "id": "BROW-003"
+    },
+    {
+      "id": "DEFN-001"
+    },
+    {
+      "id": "NET-012"
+    }
+  ],
+  "cleanup": []
+}

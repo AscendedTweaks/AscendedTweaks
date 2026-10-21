@@ -1,0 +1,53 @@
+{
+  "id": "PRIV-011",
+  "category": "Privacy.Ai",
+  "nameKey": "tweak.PRIV-011.name",
+  "descriptionKey": "tweak.PRIV-011.desc",
+  "sideEffectsKey": "tweak.PRIV-011.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 26100,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI",
+    "name": "DisableAIDataAnalysis",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI",
+      "name": "DisableAIDataAnalysis",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: WindowsAI Policy CSP, DisableAIDataAnalysis = 1 ('Turn off saving snapshots for use with Recall') under SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI, from Windows 11 24H2 with KB5055627 (26100.3915). According to Microsoft, snapshots already saved are deleted. Recall only exists on Copilot+ PCs; on other devices the setting has no visible effect.",
+    "The policy is described in the Policy CSP for Pro, Enterprise and Education; Windows Home reads the same registry value, but Microsoft makes no promise for Home."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-011.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-011.plain.title",
+  "plainDescKey": "tweak.PRIV-011.plain.desc"
+}

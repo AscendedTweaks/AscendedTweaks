@@ -1,0 +1,48 @@
+{
+  "id": "PERF-022",
+  "category": "Performance.Tasks",
+  "nameKey": "tweak.PERF-022.name",
+  "descriptionKey": "tweak.PERF-022.desc",
+  "sideEffectsKey": "tweak.PERF-022.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ScheduledTaskEnabledEquals",
+    "taskPath": "\\Microsoft\\Windows\\Application Experience\\ProgramDataUpdater",
+    "value": false
+  },
+  "apply": [
+    {
+      "type": "ScheduledTaskSetEnabled",
+      "taskPath": "\\Microsoft\\Windows\\Application Experience\\ProgramDataUpdater",
+      "enabled": false
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation on turning it off. The task collects program data for the Customer Experience Improvement Program. Not present on build 26200; there the tweak reports 'not available'.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-022.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-022.plain.title",
+  "plainDescKey": "tweak.PERF-022.plain.desc"
+}

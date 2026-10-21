@@ -1,0 +1,48 @@
+{
+  "id": "DISK-007",
+  "category": "Disk.ReservedStorage",
+  "nameKey": "tweak.DISK-007.name",
+  "descriptionKey": "tweak.DISK-007.desc",
+  "sideEffectsKey": "tweak.DISK-007.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "dism.reservedstorage",
+    "value": "disabled"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "dism.reservedstorage",
+      "value": "disabled"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'DISM Operating System Package Servicing Command-Line Options' (/Get-ReservedStorageState, /Set-ReservedStorageState). Queried with /English for language-independent output; readable only with administrator rights.",
+    "Freed space not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.DISK-007.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.DISK-007.plain.title",
+  "plainDescKey": "tweak.DISK-007.plain.desc"
+}

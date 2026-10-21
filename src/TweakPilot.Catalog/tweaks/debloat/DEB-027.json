@@ -1,0 +1,53 @@
+{
+  "id": "DEB-027",
+  "category": "Debloat.Widgets",
+  "nameKey": "tweak.DEB-027.name",
+  "descriptionKey": "tweak.DEB-027.desc",
+  "sideEffectsKey": "tweak.DEB-027.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 22000,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Dsh",
+    "name": "AllowNewsAndInterests",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Dsh",
+      "name": "AllowNewsAndInterests",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: NewsAndInterests Policy CSP, AllowNewsAndInterests (0 = not allowed), group policy 'Allow widgets' under Software\\Policies\\Microsoft\\Dsh (Windows 11).",
+    "The description only promises that widgets are turned off, not a speed gain."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.DEB-027.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.DEB-027.plain.title",
+  "plainDescKey": "tweak.DEB-027.plain.desc"
+}

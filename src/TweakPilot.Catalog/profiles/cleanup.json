@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "key": "cleanup",
+  "symbol": "Broom24",
+  "tweaks": [],
+  "cleanup": [
+    "CLEAN-001",
+    "CLEAN-002",
+    "CLEAN-003",
+    "CLEAN-004",
+    "CLEAN-005",
+    "CLEAN-006",
+    "CLEAN-007",
+    "CLEAN-008",
+    "CLEAN-009",
+    "CLEAN-010",
+    "CLEAN-011",
+    "CLEAN-012",
+    "CLEAN-013",
+    "CLEAN-014",
+    "CLEAN-015",
+    "CLEAN-016",
+    "CLEAN-017",
+    "CLEAN-018",
+    "CLEAN-019",
+    "CLEAN-020"
+  ]
+}

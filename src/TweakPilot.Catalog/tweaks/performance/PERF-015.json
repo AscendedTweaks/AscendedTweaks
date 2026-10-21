@@ -1,0 +1,50 @@
+{
+  "id": "PERF-015",
+  "category": "Performance.Services",
+  "nameKey": "tweak.PERF-015.name",
+  "descriptionKey": "tweak.PERF-015.desc",
+  "sideEffectsKey": "tweak.PERF-015.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ServiceStartTypeEquals",
+    "service": "Spooler",
+    "value": "Disabled"
+  },
+  "apply": [
+    {
+      "type": "ServiceSetStartType",
+      "service": "Spooler",
+      "startType": "Disabled",
+      "stopNow": true,
+      "windowsDefault": "Automatic"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Security Response Center: CVE-2021-34527 (Windows Print Spooler Remote Code Execution), workaround 'Disable the Print Spooler service'; Microsoft Learn: 'Guidance on disabling system services on Windows' (Spooler).",
+    "The description only promises a smaller attack surface, not a speed gain."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PERF-015.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-015.plain.title",
+  "plainDescKey": "tweak.PERF-015.plain.desc"
+}

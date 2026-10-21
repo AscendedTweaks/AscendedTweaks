@@ -1,0 +1,52 @@
+{
+  "id": "UI-007",
+  "category": "Ui.Explorer",
+  "nameKey": "tweak.UI-007.name",
+  "descriptionKey": "tweak.UI-007.desc",
+  "sideEffectsKey": "tweak.UI-007.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+    "name": "HideFileExt",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+      "name": "HideFileExt",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Not documented on Microsoft Learn; the value matches the 'File name extensions' switch (Explorer > View > Show). The host test checks the registry behavior; whether the display changes as described still needs a visual check, therefore 'Disputed' until then."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.UI-007.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.UI-007.plain.title",
+  "plainDescKey": "tweak.UI-007.plain.desc"
+}

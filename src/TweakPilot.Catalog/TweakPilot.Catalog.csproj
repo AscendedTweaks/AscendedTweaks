@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>TweakPilot.Catalog</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TweakPilot.Core\TweakPilot.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JsonSchema.Net" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="tweak.schema.json" LogicalName="catalog/tweak.schema.json" />
+    <EmbeddedResource Include="tweaks\i18n\*.json" LogicalName="catalog/i18n/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="tweaks\**\*.json" Exclude="tweaks\i18n\*.json" LogicalName="catalog/tweaks/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="profiles\*.json" LogicalName="catalog/profiles/%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

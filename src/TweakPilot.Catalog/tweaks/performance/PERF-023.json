@@ -1,0 +1,48 @@
+{
+  "id": "PERF-023",
+  "category": "Performance.Tasks",
+  "nameKey": "tweak.PERF-023.name",
+  "descriptionKey": "tweak.PERF-023.desc",
+  "sideEffectsKey": "tweak.PERF-023.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ScheduledTaskEnabledEquals",
+    "taskPath": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator",
+    "value": false
+  },
+  "apply": [
+    {
+      "type": "ScheduledTaskSetEnabled",
+      "taskPath": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\Consolidator",
+      "enabled": false
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation on turning it off. The task belongs to the Customer Experience Improvement Program (CEIP), which Microsoft lets you turn off through the CEIPEnable policy in 'Manage connections ...' (see PRIV-021).",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-023.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-023.plain.title",
+  "plainDescKey": "tweak.PERF-023.plain.desc"
+}

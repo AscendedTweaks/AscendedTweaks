@@ -1,0 +1,80 @@
+{
+  "id": "PRIV-013",
+  "category": "Privacy.Feedback",
+  "nameKey": "tweak.PRIV-013.name",
+  "descriptionKey": "tweak.PRIV-013.desc",
+  "sideEffectsKey": "tweak.PRIV-013.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKCU",
+        "path": "Software\\Microsoft\\Siuf\\Rules",
+        "name": "NumberOfSIUFInPeriod",
+        "value": 0
+      },
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKCU",
+        "path": "Software\\Microsoft\\Siuf\\Rules",
+        "name": "PeriodInNanoSeconds",
+        "value": 0
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Siuf\\Rules",
+      "name": "NumberOfSIUFInPeriod",
+      "kind": "DWord",
+      "value": 0
+    },
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Siuf\\Rules",
+      "name": "PeriodInNanoSeconds",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 18.16 Feedback & diagnostics: the setting 'Never' matches PeriodInNanoSeconds = 0 and NumberOfSIUFInPeriod = 0 (REG_DWORD); 'Automatically' matches deleted values.",
+    "Own check: host integration test Windows 11 25H2 build 26200 Home (not a VM), see docs/SOURCES.md"
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-013.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-013.plain.title",
+  "plainDescKey": "tweak.PRIV-013.plain.desc"
+}

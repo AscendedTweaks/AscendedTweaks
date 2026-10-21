@@ -1,0 +1,48 @@
+{
+  "id": "PERF-011",
+  "category": "Performance.Storage",
+  "nameKey": "tweak.PERF-011.name",
+  "descriptionKey": "tweak.PERF-011.desc",
+  "sideEffectsKey": "tweak.PERF-011.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": true,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "fsutil.disablelastaccess",
+    "value": "1"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "fsutil.disablelastaccess",
+      "value": "1"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'fsutil behavior', parameter disablelastaccess (1 = user managed, last access time updates off). Since Windows 10 1803, Windows manages the value itself by default (2).",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-011.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-011.plain.title",
+  "plainDescKey": "tweak.PERF-011.plain.desc"
+}

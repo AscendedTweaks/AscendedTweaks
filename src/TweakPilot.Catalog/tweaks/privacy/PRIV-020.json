@@ -1,0 +1,53 @@
+{
+  "id": "PRIV-020",
+  "category": "Privacy.Reports",
+  "nameKey": "tweak.PRIV-020.name",
+  "descriptionKey": "tweak.PRIV-020.desc",
+  "sideEffectsKey": "tweak.PRIV-020.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Error Reporting",
+    "name": "Disabled",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Error Reporting",
+      "name": "Disabled",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: ErrorReporting Policy CSP, DisableWindowsErrorReporting: registry value Disabled under SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Error Reporting (ADMX ErrorReporting.admx, enabled = 1). Windows then sends no problem reports to Microsoft.",
+    "The policy is described in the Policy CSP for Pro, Enterprise and Education; Windows Home reads the same registry value, but Microsoft makes no promise for Home."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-020.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-020.plain.title",
+  "plainDescKey": "tweak.PRIV-020.plain.desc"
+}

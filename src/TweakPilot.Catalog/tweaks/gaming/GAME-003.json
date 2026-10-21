@@ -1,0 +1,80 @@
+{
+  "id": "GAME-003",
+  "category": "Gaming.GameBar",
+  "nameKey": "tweak.GAME-003.name",
+  "descriptionKey": "tweak.GAME-003.desc",
+  "sideEffectsKey": "tweak.GAME-003.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKCU",
+        "path": "Software\\Microsoft\\GameBar",
+        "name": "UseNexusForGameBarEnabled",
+        "value": 0
+      },
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKCU",
+        "path": "Software\\Microsoft\\GameBar",
+        "name": "ShowStartupPanel",
+        "value": 0
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\GameBar",
+      "name": "UseNexusForGameBarEnabled",
+      "kind": "DWord",
+      "value": 0
+    },
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\GameBar",
+      "name": "ShowStartupPanel",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Not documented on Microsoft Learn. UseNexusForGameBarEnabled matches the switch 'Open Xbox Game Bar using this button on a controller', ShowStartupPanel the start panel when a game starts. Win+G keeps working.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-18",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.GAME-003.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.GAME-003.plain.title",
+  "plainDescKey": "tweak.GAME-003.plain.desc"
+}

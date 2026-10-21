@@ -1,0 +1,49 @@
+{
+  "id": "NET-001",
+  "category": "Network.Dns",
+  "nameKey": "tweak.NET-001.name",
+  "descriptionKey": "tweak.NET-001.desc",
+  "sideEffectsKey": "tweak.NET-001.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "dns.servers",
+    "value": "1.1.1.1,1.0.0.1,2606:4700:4700::1111,2606:4700:4700::1001"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "dns.servers",
+      "value": "1.1.1.1,1.0.0.1,2606:4700:4700::1111,2606:4700:4700::1001"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'netsh interface ip' (set dnsservers, add dnsservers, source=dhcp). Only active physical adapters are changed (no VPN or virtual adapters); the previous state of each adapter (automatic or fixed servers) is backed up and restored exactly when resetting.",
+    "Addresses from the Cloudflare documentation '1.1.1.1 - Set up' (developers.cloudflare.com).",
+    "The description does not promise a speed gain; whether another DNS provider answers faster depends on your location (ping test under Tools)."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.NET-001.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.NET-001.plain.title",
+  "plainDescKey": "tweak.NET-001.plain.desc"
+}

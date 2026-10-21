@@ -1,0 +1,52 @@
+{
+  "id": "POWR-003",
+  "category": "Performance.Power",
+  "nameKey": "tweak.POWR-003.name",
+  "descriptionKey": "tweak.POWR-003.desc",
+  "sideEffectsKey": "tweak.POWR-003.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "PowerSettingEquals",
+    "subgroup": "54533251-82be-4824-96c1-47b60b740d00",
+    "setting": "893dee8e-2bef-41e0-89c6-b55d0929964c",
+    "value": 100
+  },
+  "apply": [
+    {
+      "type": "PowerSettingSet",
+      "subgroup": "54533251-82be-4824-96c1-47b60b740d00",
+      "setting": "893dee8e-2bef-41e0-89c6-b55d0929964c",
+      "value": 100
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Power setting PROCTHROTTLEMIN (\"Minimum processor state\", unit percent, 0 to 100) in GUID_PROCESSOR_SETTINGS_SUBGROUP. 100 keeps the processor in its highest performance state when plugged in; turbo behavior depends on the processor.",
+    "Microsoft Learn: PowerWriteACValueIndex (powersetting.h) with the subgroup table; changes to the active plan only take effect after PowerSetActiveScheme. The value is set only for plugged in and only in the plan that is active when applying; the original value is backed up.",
+    "Confirmed read-only on the development PC (build 26200) with \"powercfg /aliases\" and \"powercfg /query\" (alias and value range)."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.POWR-003.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.POWR-003.plain.title",
+  "plainDescKey": "tweak.POWR-003.plain.desc",
+  "desktopOnly": true
+}

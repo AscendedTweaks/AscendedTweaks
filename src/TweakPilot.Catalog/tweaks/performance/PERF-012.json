@@ -1,0 +1,53 @@
+{
+  "id": "PERF-012",
+  "category": "Performance.Storage",
+  "nameKey": "tweak.PERF-012.name",
+  "descriptionKey": "tweak.PERF-012.desc",
+  "sideEffectsKey": "tweak.PERF-012.side",
+  "risk": "Expert",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": true,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\FileSystem",
+    "name": "NtfsDisable8dot3NameCreation",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SYSTEM\\CurrentControlSet\\Control\\FileSystem",
+      "name": "NtfsDisable8dot3NameCreation",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'fsutil 8dot3name' and 'fsutil behavior' (disable8dot3): the registry value NtfsDisable8dot3NameCreation controls the creation of short 8.3 names; 1 = off on all volumes, 2 = per volume (default).",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-012.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-012.plain.title",
+  "plainDescKey": "tweak.PERF-012.plain.desc"
+}

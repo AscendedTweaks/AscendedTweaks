@@ -1,0 +1,41 @@
+﻿[
+    {
+        "Tweak":  "PRIV-013",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\Siuf",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "UI-001",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PRIV-001",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    }
+]

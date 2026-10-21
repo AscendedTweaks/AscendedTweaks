@@ -1,0 +1,52 @@
+{
+  "id": "POWR-004",
+  "category": "Performance.Power",
+  "nameKey": "tweak.POWR-004.name",
+  "descriptionKey": "tweak.POWR-004.desc",
+  "sideEffectsKey": "tweak.POWR-004.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "PowerSettingEquals",
+    "subgroup": "0012ee47-9041-4b5d-9b77-535fba8b1442",
+    "setting": "6738e2c4-e8a5-4a42-b16a-e040e769756e",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "PowerSettingSet",
+      "subgroup": "0012ee47-9041-4b5d-9b77-535fba8b1442",
+      "setting": "6738e2c4-e8a5-4a42-b16a-e040e769756e",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: subgroup \"Disk settings\" (GUID 0012ee47-9041-4b5d-9b77-535fba8b1442); setting DISKIDLE (\"Turn off hard disk after\", unit seconds), 0 = never. Only affects disks that spin down (mostly HDDs).",
+    "Microsoft Learn: PowerWriteACValueIndex (powersetting.h) with the subgroup table; changes to the active plan only take effect after PowerSetActiveScheme. The value is set only for plugged in and only in the plan that is active when applying; the original value is backed up.",
+    "Confirmed read-only on the development PC (build 26200) with \"powercfg /aliases\" and \"powercfg /query\" (alias and value range)."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.POWR-004.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.POWR-004.plain.title",
+  "plainDescKey": "tweak.POWR-004.plain.desc",
+  "desktopOnly": true
+}

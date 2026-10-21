@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "key": "office",
+  "symbol": "Briefcase24",
+  "tweaks": [
+    {
+      "id": "PRIV-009"
+    },
+    {
+      "id": "PRIV-013"
+    },
+    {
+      "id": "PRIV-016"
+    },
+    {
+      "id": "PRIV-017"
+    },
+    {
+      "id": "PRIV-018"
+    },
+    {
+      "id": "PRIV-019"
+    },
+    {
+      "id": "DEB-027"
+    },
+    {
+      "id": "UI-007"
+    },
+    {
+      "id": "UPD-005"
+    },
+    {
+      "id": "UPD-006"
+    },
+    {
+      "id": "PERF-005"
+    },
+    {
+      "id": "PERF-006"
+    }
+  ],
+  "cleanup": []
+}

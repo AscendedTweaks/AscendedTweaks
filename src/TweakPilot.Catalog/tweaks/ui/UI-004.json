@@ -1,0 +1,53 @@
+{
+  "id": "UI-004",
+  "category": "Ui.Taskbar",
+  "nameKey": "tweak.UI-004.name",
+  "descriptionKey": "tweak.UI-004.desc",
+  "sideEffectsKey": "tweak.UI-004.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 22000,
+      "max": 22631
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "restartExplorer": true,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+    "name": "TaskbarMn",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+      "name": "TaskbarMn",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Not documented on Microsoft Learn; the value matches the 'Chat' switch (only Windows 11 21H2 to 23H2; from 24H2 the icon no longer exists). The host test checks the registry behavior; whether the display changes as described still needs a visual check, therefore 'Disputed' until then."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.UI-004.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.UI-004.plain.title",
+  "plainDescKey": "tweak.UI-004.plain.desc"
+}

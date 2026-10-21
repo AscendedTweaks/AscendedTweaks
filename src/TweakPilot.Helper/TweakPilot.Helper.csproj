@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <RootNamespace>TweakPilot.Helper</RootNamespace>
+    <AssemblyName>TweakPilot.Helper</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TweakPilot.Core\TweakPilot.Core.csproj" />
+    <ProjectReference Include="..\TweakPilot.Catalog\TweakPilot.Catalog.csproj" />
+    <ProjectReference Include="..\TweakPilot.Engine\TweakPilot.Engine.csproj" />
+    <ProjectReference Include="..\TweakPilot.Ipc\TweakPilot.Ipc.csproj" />
+    <ProjectReference Include="..\TweakPilot.Appx\TweakPilot.Appx.csproj" />
+  </ItemGroup>
+
+</Project>

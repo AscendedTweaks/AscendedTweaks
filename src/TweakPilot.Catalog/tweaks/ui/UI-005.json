@@ -1,0 +1,54 @@
+{
+  "id": "UI-005",
+  "category": "Ui.Taskbar",
+  "nameKey": "tweak.UI-005.name",
+  "descriptionKey": "tweak.UI-005.desc",
+  "sideEffectsKey": "tweak.UI-005.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 22000,
+      "max": 22631
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "restartExplorer": true,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+    "name": "TaskbarDa",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+      "name": "TaskbarDa",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Not documented on Microsoft Learn; the value matches the 'Widgets' switch (Settings > Personalization > Taskbar). On newer builds Windows can block other programs from writing this value; the tweak then reports an error and changes nothing. The host test checks the registry behavior; whether the display changes as described still needs a visual check, therefore 'Disputed' until then.",
+    "Host test 2026-10-18 on build 26200: Windows denies write access (protection driver for user settings); the tweak was rolled back cleanly. Therefore only up to build 22631; on newer builds DEB-027 (documented policy) turns off widgets."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.UI-005.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.UI-005.plain.title",
+  "plainDescKey": "tweak.UI-005.plain.desc"
+}

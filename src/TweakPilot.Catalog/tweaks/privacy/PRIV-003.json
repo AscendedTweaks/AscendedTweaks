@@ -1,0 +1,49 @@
+{
+  "id": "PRIV-003",
+  "category": "Privacy.Telemetry",
+  "nameKey": "tweak.PRIV-003.name",
+  "descriptionKey": "tweak.PRIV-003.desc",
+  "sideEffectsKey": "tweak.PRIV-003.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ServiceStartTypeEquals",
+    "service": "DiagTrack",
+    "value": "Disabled"
+  },
+  "apply": [
+    {
+      "type": "ServiceSetStartType",
+      "service": "DiagTrack",
+      "startType": "Disabled",
+      "stopNow": true,
+      "windowsDefault": "Automatic"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Service 'Connected User Experiences and Telemetry' (DiagTrack). Microsoft does not describe turning off the service as a supported configuration; the effect on data sent is not measured, therefore 'Disputed'. Own check 2026-10-17 (read-only): on build 26200 Home the startup type is Automatic and it is running. Feature updates can turn the service on again (drift detection)."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PRIV-003.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-003.plain.title",
+  "plainDescKey": "tweak.PRIV-003.plain.desc"
+}

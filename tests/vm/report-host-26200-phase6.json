@@ -1,0 +1,67 @@
+﻿[
+    {
+        "Tweak":  "PERF-003",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PERF-004",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PERF-005",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Control Panel\\Desktop, HKCU\\Control Panel\\Desktop\\WindowMetrics",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PERF-006",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Control Panel\\Desktop",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PERF-007",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    }
+]

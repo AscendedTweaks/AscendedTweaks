@@ -1,0 +1,52 @@
+{
+  "id": "GAME-004",
+  "category": "Gaming.Capture",
+  "nameKey": "tweak.GAME-004.name",
+  "descriptionKey": "tweak.GAME-004.desc",
+  "sideEffectsKey": "tweak.GAME-004.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR",
+    "name": "AllowGameDVR",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR",
+      "name": "AllowGameDVR",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: ApplicationManagement Policy CSP, AllowGameDVR (0 = not allowed), group policy 'Enables or disables Windows Game Recording and Broadcasting' under Software\\Policies\\Microsoft\\Windows\\GameDVR. Documented for Pro, Enterprise and Education; Home is therefore excluded. Used instead of undocumented HKCU values.",
+    "The description only promises that recording is turned off, not a speed gain."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.GAME-004.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.GAME-004.plain.title",
+  "plainDescKey": "tweak.GAME-004.plain.desc"
+}

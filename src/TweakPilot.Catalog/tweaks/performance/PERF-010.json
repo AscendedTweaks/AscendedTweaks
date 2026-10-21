@@ -1,0 +1,53 @@
+{
+  "id": "PERF-010",
+  "category": "Performance.Startup",
+  "nameKey": "tweak.PERF-010.name",
+  "descriptionKey": "tweak.PERF-010.desc",
+  "sideEffectsKey": "tweak.PERF-010.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power",
+    "name": "HiberbootEnabled",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power",
+      "name": "HiberbootEnabled",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation for the registry value; it matches the option 'Turn on fast startup' under Control Panel > Power Options > Choose what the power buttons do.",
+    "Effect on startup problems not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-010.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-010.plain.title",
+  "plainDescKey": "tweak.PERF-010.plain.desc"
+}

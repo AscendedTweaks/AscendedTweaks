@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "key": "privacy",
+  "symbol": "ShieldLock24",
+  "tweaks": [
+    {
+      "id": "PRIV-001"
+    },
+    {
+      "id": "PRIV-002"
+    },
+    {
+      "id": "PRIV-003"
+    },
+    {
+      "id": "PRIV-005"
+    },
+    {
+      "id": "PRIV-006"
+    },
+    {
+      "id": "PRIV-008"
+    },
+    {
+      "id": "PRIV-009"
+    },
+    {
+      "id": "PRIV-010"
+    },
+    {
+      "id": "PRIV-011"
+    },
+    {
+      "id": "PRIV-012"
+    },
+    {
+      "id": "PRIV-013"
+    },
+    {
+      "id": "PRIV-014"
+    },
+    {
+      "id": "PRIV-015"
+    },
+    {
+      "id": "PRIV-016"
+    },
+    {
+      "id": "PRIV-017"
+    },
+    {
+      "id": "PRIV-018"
+    },
+    {
+      "id": "PRIV-019"
+    },
+    {
+      "id": "PRIV-020"
+    },
+    {
+      "id": "PRIV-021"
+    },
+    {
+      "id": "PRIV-022"
+    },
+    {
+      "id": "PRIV-023"
+    },
+    {
+      "id": "PRIV-024"
+    },
+    {
+      "id": "PERF-021"
+    },
+    {
+      "id": "PERF-022"
+    },
+    {
+      "id": "PERF-023"
+    },
+    {
+      "id": "PERF-024"
+    },
+    {
+      "id": "PERF-025"
+    }
+  ],
+  "cleanup": []
+}

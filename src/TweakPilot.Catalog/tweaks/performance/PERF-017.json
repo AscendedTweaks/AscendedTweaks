@@ -1,0 +1,50 @@
+{
+  "id": "PERF-017",
+  "category": "Performance.Services",
+  "nameKey": "tweak.PERF-017.name",
+  "descriptionKey": "tweak.PERF-017.desc",
+  "sideEffectsKey": "tweak.PERF-017.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ServiceStartTypeEquals",
+    "service": "RetailDemo",
+    "value": "Disabled"
+  },
+  "apply": [
+    {
+      "type": "ServiceSetStartType",
+      "service": "RetailDemo",
+      "startType": "Disabled",
+      "stopNow": true,
+      "windowsDefault": "Manual"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Guidance on disabling system services on Windows' (RetailDemo: only for the retail demo mode in stores). The default is Manual; the service practically never runs in daily use.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-017.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-017.plain.title",
+  "plainDescKey": "tweak.PERF-017.plain.desc"
+}

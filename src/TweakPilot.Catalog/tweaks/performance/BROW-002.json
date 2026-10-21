@@ -1,0 +1,53 @@
+{
+  "id": "BROW-002",
+  "category": "Performance.Background",
+  "nameKey": "tweak.BROW-002.name",
+  "descriptionKey": "tweak.BROW-002.desc",
+  "sideEffectsKey": "tweak.BROW-002.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Edge",
+    "name": "BackgroundModeEnabled",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Edge",
+      "name": "BackgroundModeEnabled",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: Microsoft Edge policy BackgroundModeEnabled (\"Continue running background apps after Microsoft Edge closes\"), Windows since Edge 77, REG_DWORD; when disabled, Edge stops running after its last window is closed.",
+    "Without the policy, background mode starts out off; the tweak only has an effect if it was turned on, and prevents it from being turned on again."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.BROW-002.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.BROW-002.plain.title",
+  "plainDescKey": "tweak.BROW-002.plain.desc"
+}

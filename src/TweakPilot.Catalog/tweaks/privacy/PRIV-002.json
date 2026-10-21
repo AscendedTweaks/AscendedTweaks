@@ -1,0 +1,53 @@
+{
+  "id": "PRIV-002",
+  "category": "Privacy.Telemetry",
+  "nameKey": "tweak.PRIV-002.name",
+  "descriptionKey": "tweak.PRIV-002.desc",
+  "sideEffectsKey": "tweak.PRIV-002.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection",
+    "name": "AllowTelemetry",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection",
+      "name": "AllowTelemetry",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage connections from Windows operating system components to Microsoft services', section 18.16 Feedback & diagnostics: AllowTelemetry = 0 under HKLM\\Software\\Policies\\Microsoft\\Windows\\DataCollection. The 'Security' level only exists in Enterprise and Education; Home and Pro treat 0 like 1 ('Required').",
+    "The policy is described in the Policy CSP for Pro, Enterprise and Education; Windows Home reads the same registry value, but Microsoft makes no promise for Home."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-002.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-002.plain.title",
+  "plainDescKey": "tweak.PRIV-002.plain.desc"
+}

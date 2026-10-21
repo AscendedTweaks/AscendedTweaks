@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>TweakPilot.Ipc</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TweakPilot.Core\TweakPilot.Core.csproj" />
+    <ProjectReference Include="..\TweakPilot.Engine\TweakPilot.Engine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TweakPilot.Ipc.Tests" />
+  </ItemGroup>
+
+</Project>

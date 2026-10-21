@@ -1,0 +1,50 @@
+{
+  "id": "PERF-014",
+  "category": "Performance.Services",
+  "nameKey": "tweak.PERF-014.name",
+  "descriptionKey": "tweak.PERF-014.desc",
+  "sideEffectsKey": "tweak.PERF-014.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ServiceStartTypeEquals",
+    "service": "SysMain",
+    "value": "Manual"
+  },
+  "apply": [
+    {
+      "type": "ServiceSetStartType",
+      "service": "SysMain",
+      "startType": "Manual",
+      "stopNow": true,
+      "windowsDefault": "Automatic"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Guidance on disabling system services on Windows' (SysMain, formerly Superfetch). Little effect expected on SSDs.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-014.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-014.plain.title",
+  "plainDescKey": "tweak.PERF-014.plain.desc"
+}

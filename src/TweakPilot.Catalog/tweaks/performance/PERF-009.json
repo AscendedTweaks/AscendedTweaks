@@ -1,0 +1,50 @@
+{
+  "id": "PERF-009",
+  "category": "Performance.Storage",
+  "nameKey": "tweak.PERF-009.name",
+  "descriptionKey": "tweak.PERF-009.desc",
+  "sideEffectsKey": "tweak.PERF-009.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "powercfg.hibernate",
+    "value": "off"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "powercfg.hibernate",
+      "value": "off"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Powercfg command-line options', /hibernate off: turns off hibernation and removes the hibernation file hiberfil.sys. State detection through GetPwrCapabilities (SystemS4, HiberFilePresent), documented under 'SYSTEM_POWER_CAPABILITIES structure'.",
+    "The description only promises free disk space, not a speed gain."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Noticeable",
+  "impactNote": "tweak.PERF-009.impact",
+  "measuredOn": [
+    "Microsoft Learn: \"Hibernation\" (the hibernation file is about 40 percent of RAM by default; powercfg /hibernate off removes it)"
+  ],
+  "plainTitleKey": "tweak.PERF-009.plain.title",
+  "plainDescKey": "tweak.PERF-009.plain.desc"
+}

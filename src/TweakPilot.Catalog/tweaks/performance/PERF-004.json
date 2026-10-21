@@ -1,0 +1,60 @@
+{
+  "id": "PERF-004",
+  "category": "Performance.Visual",
+  "nameKey": "tweak.PERF-004.name",
+  "descriptionKey": "tweak.PERF-004.desc",
+  "sideEffectsKey": "tweak.PERF-004.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+    "name": "EnableTransparency",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+      "name": "EnableTransparency",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation for the registry value; it matches the 'Transparency effects' switch under Settings > Personalization > Colors.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-004.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-004.plain.title",
+  "plainDescKey": "tweak.PERF-004.plain.desc"
+}

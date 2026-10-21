@@ -1,0 +1,48 @@
+{
+  "id": "NET-011",
+  "category": "Network.Adapter",
+  "nameKey": "tweak.NET-011.name",
+  "descriptionKey": "tweak.NET-011.desc",
+  "sideEffectsKey": "tweak.NET-011.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "nic.powersaving",
+    "value": "off"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "nic.powersaving",
+      "value": "off"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: WMI class MSPower_DeviceEnable (root\\wmi), matches 'Allow the computer to turn off this device to save power' in the device properties. Applies to active physical adapters; the previous state of each adapter is backed up.",
+    "Effect on connection drops not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.NET-011.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.NET-011.plain.title",
+  "plainDescKey": "tweak.NET-011.plain.desc"
+}

@@ -1,0 +1,72 @@
+{
+  "id": "UPD-005",
+  "category": "Updates.Restart",
+  "nameKey": "tweak.UPD-005.name",
+  "descriptionKey": "tweak.UPD-005.desc",
+  "sideEffectsKey": "tweak.UPD-005.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKLM",
+        "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+        "name": "AUOptions",
+        "value": 4
+      },
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKLM",
+        "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+        "name": "NoAutoRebootWithLoggedOnUsers",
+        "value": 1
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+      "name": "AUOptions",
+      "kind": "DWord",
+      "value": 4
+    },
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+      "name": "NoAutoRebootWithLoggedOnUsers",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Manage device restarts after updates', section 'Delay automatic restart' and table 'Registry keys used to manage restart' (AUOptions = 4 and NoAutoRebootWithLoggedOnUsers = 1).",
+    "Microsoft notes there that the policy does not work exactly as described and that restarts after quality updates can stop entirely if nobody signs out."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.UPD-005.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.UPD-005.plain.title",
+  "plainDescKey": "tweak.UPD-005.plain.desc"
+}

@@ -1,0 +1,59 @@
+{
+  "id": "UI-008",
+  "category": "Ui.Explorer",
+  "nameKey": "tweak.UI-008.name",
+  "descriptionKey": "tweak.UI-008.desc",
+  "sideEffectsKey": "tweak.UI-008.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+    "name": "Hidden",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+      "name": "Hidden",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Not documented on Microsoft Learn; the value matches the 'Hidden items' switch (Explorer > View > Show). The host test checks the registry behavior; whether the display changes as described still needs a visual check, therefore 'Disputed' until then."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-18",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.UI-008.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.UI-008.plain.title",
+  "plainDescKey": "tweak.UI-008.plain.desc"
+}

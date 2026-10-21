@@ -1,0 +1,56 @@
+{
+  "id": "UI-001",
+  "category": "Ui.Windows11",
+  "nameKey": "tweak.UI-001.name",
+  "descriptionKey": "tweak.UI-001.desc",
+  "sideEffectsKey": "tweak.UI-001.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 22631,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "restartExplorer": true,
+  "detect": {
+    "type": "RegistryKeyExists",
+    "hive": "HKCU",
+    "path": "Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32"
+  },
+  "apply": [
+    {
+      "type": "RegistryCreateKey",
+      "hive": "HKCU",
+      "path": "Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32",
+      "defaultValue": ""
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation. Known Windows 11 behavior: an empty InprocServer32 key under this CLSID in the user hive hides the new context menu. Registry behavior (create, detect, remove completely) checked in the host integration test on build 26200 Home; the visible effect after restarting Explorer is not checked yet, therefore 'Disputed' for now."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.UI-001.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.UI-001.plain.title",
+  "plainDescKey": "tweak.UI-001.plain.desc"
+}

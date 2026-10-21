@@ -1,0 +1,47 @@
+{
+  "id": "DISK-001",
+  "category": "Disk.Trim",
+  "nameKey": "tweak.DISK-001.name",
+  "descriptionKey": "tweak.DISK-001.desc",
+  "sideEffectsKey": "tweak.DISK-001.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "fsutil.disabledeletenotify",
+    "value": "0"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "fsutil.disabledeletenotify",
+      "value": "0"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'fsutil behavior' (DisableDeleteNotify, 0 = TRIM on). This is the Windows default; the tweak only helps if TRIM was turned off."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.DISK-001.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.DISK-001.plain.title",
+  "plainDescKey": "tweak.DISK-001.plain.desc"
+}

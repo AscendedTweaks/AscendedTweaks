@@ -1,0 +1,48 @@
+{
+  "id": "NET-012",
+  "category": "Network.Adapter",
+  "nameKey": "tweak.NET-012.name",
+  "descriptionKey": "tweak.NET-012.desc",
+  "sideEffectsKey": "tweak.NET-012.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "nic.eee",
+    "value": "off"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "nic.eee",
+      "value": "off"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: Standardized INF keywords for power management, *EEE (\"Energy-efficient ethernet\", IEEE 802.3az): 0 = Disabled, 1 = Enabled (default).",
+    "Set like Set-NetAdapterAdvancedProperty through MSFT_NetAdapterAdvancedPropertySettingData (root\\StandardCimv2). Only adapters whose driver offers the property; without such an adapter the tweak is not available. Checked read-only on the development PC (Realtek 2.5GbE, value 0)."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.NET-012.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.NET-012.plain.title",
+  "plainDescKey": "tweak.NET-012.plain.desc"
+}

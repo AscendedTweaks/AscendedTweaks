@@ -1,0 +1,56 @@
+{
+  "id": "PRIV-010",
+  "category": "Privacy.Ai",
+  "nameKey": "tweak.PRIV-010.name",
+  "descriptionKey": "tweak.PRIV-010.desc",
+  "sideEffectsKey": "tweak.PRIV-010.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": 19045
+    },
+    {
+      "min": 22631,
+      "max": 22631
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "UserPolicy",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Policies\\Microsoft\\Windows\\WindowsCopilot",
+    "name": "TurnOffWindowsCopilot",
+    "value": 1
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Policies\\Microsoft\\Windows\\WindowsCopilot",
+      "name": "TurnOffWindowsCopilot",
+      "kind": "DWord",
+      "value": 1
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: WindowsAI Policy CSP, TurnOffWindowsCopilot (user) = 1 under SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsCopilot. The policy is marked as deprecated and does not apply to the new Copilot app; therefore only for Windows 10 22H2 and Windows 11 23H2. From 24H2 on, DEB-021 removes the Copilot app."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.PRIV-010.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-010.plain.title",
+  "plainDescKey": "tweak.PRIV-010.plain.desc"
+}

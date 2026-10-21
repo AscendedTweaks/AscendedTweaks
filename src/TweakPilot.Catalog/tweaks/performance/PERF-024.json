@@ -1,0 +1,48 @@
+{
+  "id": "PERF-024",
+  "category": "Performance.Tasks",
+  "nameKey": "tweak.PERF-024.name",
+  "descriptionKey": "tweak.PERF-024.desc",
+  "sideEffectsKey": "tweak.PERF-024.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ScheduledTaskEnabledEquals",
+    "taskPath": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\UsbCeip",
+    "value": false
+  },
+  "apply": [
+    {
+      "type": "ScheduledTaskSetEnabled",
+      "taskPath": "\\Microsoft\\Windows\\Customer Experience Improvement Program\\UsbCeip",
+      "enabled": false
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation on turning it off. The task collects USB usage data for the Customer Experience Improvement Program.",
+    "Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-024.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-024.plain.title",
+  "plainDescKey": "tweak.PERF-024.plain.desc"
+}

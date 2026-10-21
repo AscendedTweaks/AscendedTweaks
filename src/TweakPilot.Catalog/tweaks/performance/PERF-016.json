@@ -1,0 +1,49 @@
+{
+  "id": "PERF-016",
+  "category": "Performance.Services",
+  "nameKey": "tweak.PERF-016.name",
+  "descriptionKey": "tweak.PERF-016.desc",
+  "sideEffectsKey": "tweak.PERF-016.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "ServiceStartTypeEquals",
+    "service": "Fax",
+    "value": "Disabled"
+  },
+  "apply": [
+    {
+      "type": "ServiceSetStartType",
+      "service": "Fax",
+      "startType": "Disabled",
+      "stopNow": true,
+      "windowsDefault": "Manual"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "The 'Fax' service belongs to the optional Windows feature Fax and Scan. Own check 2026-10-17: not installed on Windows 11 25H2 build 26200 Home, where the tweak counts as not available. Performance effect not measured, therefore 'Disputed'."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PERF-016.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PERF-016.plain.title",
+  "plainDescKey": "tweak.PERF-016.plain.desc"
+}

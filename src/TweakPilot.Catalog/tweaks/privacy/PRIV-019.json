@@ -1,0 +1,59 @@
+{
+  "id": "PRIV-019",
+  "category": "Privacy.Suggestions",
+  "nameKey": "tweak.PRIV-019.name",
+  "descriptionKey": "tweak.PRIV-019.desc",
+  "sideEffectsKey": "tweak.PRIV-019.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 22631,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+    "name": "Start_AccountNotifications",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+      "name": "Start_AccountNotifications",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "No Microsoft documentation: Start_AccountNotifications matches the switch 'Show account-related notifications' under Settings > Personalization > Start (Windows 11). Registry behavior checked in the host test, the effect was not, therefore 'Disputed'."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-17",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.PRIV-019.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.PRIV-019.plain.title",
+  "plainDescKey": "tweak.PRIV-019.plain.desc"
+}

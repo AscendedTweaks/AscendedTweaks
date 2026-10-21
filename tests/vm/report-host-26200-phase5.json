@@ -1,0 +1,80 @@
+﻿[
+    {
+        "Tweak":  "PRIV-014",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\InputPersonalization",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PRIV-015",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Control Panel\\International\\User Profile",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PRIV-016",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PRIV-017",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PRIV-018",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    },
+    {
+        "Tweak":  "PRIV-019",
+        "Build":  26200,
+        "Edition":  "Core",
+        "Roots":  "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "DryRunUnchanged":  true,
+        "ApplyOnlyDeclared":  true,
+        "DetectApplied":  true,
+        "RevertEqualsBaseline":  true,
+        "DetectNotApplied":  true,
+        "Passed":  true,
+        "Date":  "2026-10-17"
+    }
+]

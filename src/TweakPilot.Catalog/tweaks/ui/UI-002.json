@@ -1,0 +1,60 @@
+{
+  "id": "UI-002",
+  "category": "Ui.Taskbar",
+  "nameKey": "tweak.UI-002.name",
+  "descriptionKey": "tweak.UI-002.desc",
+  "sideEffectsKey": "tweak.UI-002.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 22000,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "restartExplorer": true,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+    "name": "TaskbarAl",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+      "name": "TaskbarAl",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Not documented on Microsoft Learn; the value matches the 'Taskbar alignment' switch (Settings > Personalization > Taskbar > Taskbar behaviors). The host test checks the registry behavior; whether the display changes as described still needs a visual check, therefore 'Disputed' until then."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-18",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.UI-002.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.UI-002.plain.title",
+  "plainDescKey": "tweak.UI-002.plain.desc"
+}

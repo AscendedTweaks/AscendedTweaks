@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build and test
+        run: |
+          dotnet build -c Release --nologo
+          dotnet test -c Release --no-build --nologo
+      - name: Package
+        shell: pwsh
+        run: ./package.ps1 -Destination "$env:RUNNER_TEMP\TweakPilot" -ZipDirectory "$env:GITHUB_WORKSPACE\artifacts"
+      - name: Checksums
+        shell: pwsh
+        run: |
+          Set-Location artifacts
+          Get-ChildItem -Filter *.zip | ForEach-Object { '{0}  {1}' -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $_.Name } |
+            Set-Content SHA256SUMS.txt -Encoding ascii
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: artifacts/*.zip
+      - name: Draft release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $files = @(Get-ChildItem artifacts -Filter *.zip | ForEach-Object FullName) + 'artifacts/SHA256SUMS.txt'
+          $flags = @('--draft', '--title', $tag, '--generate-notes')
+          if ($tag -match '-') { $flags += '--prerelease' }
+          gh release create $tag @files @flags

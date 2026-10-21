@@ -23,18 +23,18 @@ public sealed class Phase2Tests : IDisposable
     [Fact]
     public void Log_replaces_user_name_and_profile_and_rotates()
     {
-        var log = new JsonLinesLog(_dir, "test", new FakeTime(), maxBytes: 400, maxFiles: 3, userName: "tobia", userProfile: @"C:\Users\tobia");
+        var log = new JsonLinesLog(_dir, "test", new FakeTime(), maxBytes: 400, maxFiles: 3, userName: "alex", userProfile: @"C:\Users\alex");
 
         for (var i = 0; i < 20; i++)
         {
-            log.Write(new LogRecord { Event = "E", Target = @"C:\Users\tobia\AppData\x", Error = "Benutzer tobia" });
+            log.Write(new LogRecord { Event = "E", Target = @"C:\Users\alex\AppData\x", Error = "Benutzer alex" });
         }
 
         log.Write(new LogRecord { Event = "Debug", Level = LogLevel.Debug });
         var files = Directory.GetFiles(_dir);
         files.Should().HaveCount(3);
         var text = string.Concat(files.Select(File.ReadAllText));
-        text.Should().NotContain("tobia").And.Contain("%USERPROFILE%").And.Contain("%USERNAME%");
+        text.Should().NotContain("alex").And.Contain("%USERPROFILE%").And.Contain("%USERNAME%");
         text.Should().NotContain("Debug");
 
         log.Clear();

@@ -13,7 +13,7 @@ Jede Annahme ist mit "ANNAHME:" markiert. Offene Punkte, die nicht von der Entwi
 
 ## Phase 1
 
-- ANNAHME: Der Projektordner ist `TweakPilot\` innerhalb von `C:\Users\tobia\Desktop\Fortnite-Optimizer`. Die vorhandenen Dateien (`FortniteOptimizer.ps1`, zwei `.bat`-Dateien, `Backup\backup.json`) bleiben unverändert. Das alte Skript hat noch eine aktive Sicherung (siehe Abschnitt "Altbestand").
+- ANNAHME: Der Projektordner ist `TweakPilot\` innerhalb des Arbeitsordners. Die vorhandenen Dateien (`FortniteOptimizer.ps1`, zwei `.bat`-Dateien, `Backup\backup.json`) bleiben unverändert. Das alte Skript hat noch eine aktive Sicherung (siehe Abschnitt "Altbestand").
 - ANNAHME: .NET 8 SDK 8.0.426 (per winget installiert), festgelegt in `global.json` mit `rollForward: latestFeature`.
 - ANNAHME: Kein Moq. Die Executors werden gegen eigene Fake-Implementierungen getestet (`tests/TweakPilot.Engine.Tests/Fakes.cs`); eine ungenutzte Abhängigkeit wäre ein Verstoß gegen das Qualitätstor.
 - ANNAHME: FluentAssertions bleibt auf Version 6.12.x (Apache-2.0). Ab Version 8 gilt eine kommerzielle Lizenz.
@@ -301,7 +301,7 @@ Jede Annahme ist mit "ANNAHME:" markiert. Offene Punkte, die nicht von der Entwi
 - ANNAHME: Im Paket heißen die Dokumente deutsch (`Datenschutz.md`, `Lizenzen.md`, `Aenderungen.md`, `Quellen.md`); die App öffnet sie dort und fällt sonst auf `docs` zurück (Entwicklungs-Build). Befund aus dem echten Paket: Ohne diese Zuordnung wären die Knöpfe "Quellen", "Lizenzen" und "Datenschutz" im Paket wirkungslos gewesen.
 - ANNAHME: Der Quellordner bleibt Quellcode; `bin`, `obj`, `artifacts` und `TestResults` sind Bauausgaben (Liste in `docs/BUILD.md`, `.gitignore`). `bin` und `obj` bleiben am .NET-Standardort.
 - ANNAHME: `installer\TweakPilot.iss` übernimmt den Paketordner als optionalen zweiten Weg (mit Administratorrechten); auf dem Entwicklungsrechner nicht gebaut, weil Inno Setup fehlt.
-- Echt erzeugt: `C:\Users\tobia\Desktop\TweakPilot` (vorher nicht vorhanden) und `artifacts\TweakPilot-1.0.0-rc.1-win-x64.zip`. Aus dem Paket nur `app\tweakpilot-cli.exe --version` und `--list` gestartet. Die echte Installation nach `%LOCALAPPDATA%` ist nicht ausgeführt (nur auf ausdrückliche Anweisung).
+- Echt erzeugt: `%USERPROFILE%\Desktop\TweakPilot` (vorher nicht vorhanden) und `artifacts\TweakPilot-1.0.0-rc.1-win-x64.zip`. Aus dem Paket nur `app\tweakpilot-cli.exe --version` und `--list` gestartet. Die echte Installation nach `%LOCALAPPDATA%` ist nicht ausgeführt (nur auf ausdrückliche Anweisung).
 
 ## Offene Punkte
 

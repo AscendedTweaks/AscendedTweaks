@@ -4,3 +4,13 @@ TestResults/
 *.user
 .vs/
 artifacts/
+TestResults/
+*.binlog
+*.pfx
+*.snk
+*.key
+*.pem
+graphify-out/
+Backup/
+*.ps1.bak
+.claude/settings.local.json

@@ -163,7 +163,7 @@ public sealed class PipeTests
 
         var act = () => client.Ping();
 
-        act.Should().Throw<TweakPilotException>().WithMessage("*nicht der gestartete Helfer*");
+        act.Should().Throw<TweakPilotException>().WithMessage("*not the started helper*");
     }
 
     [Fact]
@@ -173,10 +173,10 @@ public sealed class PipeTests
         var handler = new EchoHandler();
         var server = Task.Run(() => new HelperServer(Options(Environment.ProcessId, MyDirectory)(name, Me), handler, NullLogSink.Instance).RunAsync(CancellationToken.None));
 
-        (await Send(name, Raw(1, 1, IpcCommands.Ping), Raw(1, 1, IpcCommands.Ping))).Should().Equal("ok", "error:Wiederholung", "closed");
-        (await Send(name, Raw(2, 1, IpcCommands.Ping))).Should().Equal("error:Protokollversion", "closed");
+        (await Send(name, Raw(1, 1, IpcCommands.Ping), Raw(1, 1, IpcCommands.Ping))).Should().Equal("ok", "error:replay", "closed");
+        (await Send(name, Raw(2, 1, IpcCommands.Ping))).Should().Equal("error:Protocol version", "closed");
         (await Send(name, Encoding.UTF8.GetBytes("{ kaputt"))).Should().Equal("error:", "closed");
-        (await Send(name, Raw(1, 1, "RunScript"))).Should().Equal("error:nicht erlaubt", "closed");
+        (await Send(name, Raw(1, 1, "RunScript"))).Should().Equal("error:is not allowed", "closed");
         (await Send(name, Raw(1, 1, IpcCommands.Shutdown))).Should().Equal("ok", "closed");
 
         await server.WaitAsync(TimeSpan.FromSeconds(10));
@@ -304,7 +304,7 @@ public sealed class PipeTests
 
     private static string Keyword(string? error)
     {
-        foreach (var keyword in new[] { "Wiederholung", "Protokollversion", "nicht erlaubt" })
+        foreach (var keyword in new[] { "replay", "Protocol version", "is not allowed" })
         {
             if (error?.Contains(keyword, StringComparison.Ordinal) == true)
             {

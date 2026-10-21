@@ -166,11 +166,11 @@ public sealed class Phase11PageTests : IDisposable
 
         await page.ExportScriptsCommand.ExecuteAsync(null);
 
-        _files.Files.Keys.Select(Path.GetFileName).Should().BeEquivalentTo(["[preset.test.name].ps1", "[preset.test.name]-ruecksetzen.ps1", "[preset.test.name].reg", "[preset.test.name]-ruecksetzen.reg"]);
+        _files.Files.Keys.Select(Path.GetFileName).Should().BeEquivalentTo(["[preset.test.name].ps1", "[preset.test.name]-revert.ps1", "[preset.test.name].reg", "[preset.test.name]-revert.reg"]);
         var apply = Encoding.UTF8.GetString(_files.Files.Single(f => f.Key.EndsWith("name].ps1", StringComparison.Ordinal)).Value);
-        apply.Should().Contain("# ---- PRIV-901").And.Contain("-Name 'A' -PropertyType DWord -Value 0").And.Contain("# Originalwert: HKEY_CURRENT_USER\\" + P + "\\A = 1 (DWord)");
-        apply.Should().NotContain("Administratorrechte", "nur Benutzer-Tweaks");
-        var reset = Encoding.Unicode.GetString(_files.Files.Single(f => f.Key.EndsWith("ruecksetzen.reg", StringComparison.Ordinal)).Value);
+        apply.Should().Contain("# ---- PRIV-901").And.Contain("-Name 'A' -PropertyType DWord -Value 0").And.Contain("# Original value: HKEY_CURRENT_USER\\" + P + "\\A = 1 (DWord)");
+        apply.Should().NotContain("IsInRole(", "nur Benutzer-Tweaks");
+        var reset = Encoding.Unicode.GetString(_files.Files.Single(f => f.Key.EndsWith("revert.reg", StringComparison.Ordinal)).Value);
         reset.Should().Contain("\"A\"=dword:00000001").And.Contain("\"C\"=dword:00000000");
         page.Message.Should().Contain("2 Tweaks");
         _h.Registry.GetValue(RegHive.HKCU, P, "A")!.Number.Should().Be(1, "Export aendert nichts");

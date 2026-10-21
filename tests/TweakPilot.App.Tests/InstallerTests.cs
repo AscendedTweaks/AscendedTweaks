@@ -101,7 +101,7 @@ public sealed class InstallerTests : IDisposable
         ElevatedHelperLauncher.VerifyHash(helper, hash);
         ElevatedHelperLauncher.VerifyHash(helper, null);
         File.AppendAllText(helper, "veraendert");
-        ((Action)(() => ElevatedHelperLauncher.VerifyHash(helper, hash))).Should().Throw<TweakPilotException>().WithMessage("*verändert*");
+        ((Action)(() => ElevatedHelperLauncher.VerifyHash(helper, hash))).Should().Throw<TweakPilotException>().WithMessage("*was modified*");
     }
 
     private AppInstaller Installer() => new(

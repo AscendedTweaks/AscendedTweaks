@@ -245,7 +245,7 @@ public sealed class HelperClient : IHelperChannel
         }
 
         var response = JsonSerializer.Deserialize<IpcResponse>(answer, CoreJson.Options)
-            ?? throw new IpcProtocolException("Leere Antwort.");
+            ?? throw new IpcProtocolException("Empty response.");
         if (response.Sequence != request.Sequence)
         {
             throw new IpcProtocolException("Response does not match the request.");

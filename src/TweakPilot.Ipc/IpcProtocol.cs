@@ -58,10 +58,10 @@ public static partial class IpcProtocol
     {
         if (element is not { } e)
         {
-            throw new IpcProtocolException("Nutzdaten fehlen.");
+            throw new IpcProtocolException("Payload missing.");
         }
 
-        return e.Deserialize<T>(CoreJson.Options) ?? throw new IpcProtocolException("Nutzdaten leer.");
+        return e.Deserialize<T>(CoreJson.Options) ?? throw new IpcProtocolException("Payload empty.");
     }
 
     public static JsonElement ToElement<T>(T value) => JsonSerializer.SerializeToElement(value, CoreJson.Options);

@@ -144,7 +144,7 @@ public sealed class HelperServer
             try
             {
                 request = JsonSerializer.Deserialize<IpcRequest>(frame, CoreJson.Options)
-                    ?? throw new IpcProtocolException("Leere Anfrage.");
+                    ?? throw new IpcProtocolException("Empty request.");
                 if (request.Version != IpcProtocol.Version)
                 {
                     throw new IpcProtocolException($"Protocol version {request.Version} is not supported.");

@@ -4,6 +4,21 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 
 ## [Unreleased]
 
+## [1.1.0] - noch nicht veröffentlicht
+
+Erste öffentliche Version (V3), nicht signiert. Lizenz MIT.
+
+### Hinzugefügt
+- V3-2: Eigenes Symbol (`assets/icon`, `tools/make-icon.ps1`) für EXE-Dateien, Fenster, Titelleiste und Installer.
+- V3-3: Englische `README.md`, `LICENSE` (MIT), GitHub-Workflows für Build und Tests, Release mit Prüfsummen und Build-Attestierung sowie GitHub Pages.
+- V3-4: Website in `site/` (statisch, ohne Cookies und ohne Anfragen an fremde Server).
+
+### Geändert
+- V3-1: Die App startet immer auf Englisch; die Sprache wird in "First steps", im Installationsdialog oder in den Einstellungen gewählt. Fehlermeldungen von Engine und Helfer sind englisch.
+
+### Behoben
+- Die App beendete sich, wenn der Helfer beim Anwenden einen Fehler meldete oder die Administratorabfrage abgelehnt wurde (zum Beispiel beim Ändern des DNS-Servers); der Fehler steht jetzt im Ergebnisfenster.
+
 ## [1.1.0-rc.1] - 2026-10-20
 
 Release-Kandidat V2, nicht signiert. Weiterhin offen: Name, Lizenz, Zertifikat, Update-Adresse, Rechtstexte, VM-Testmatrix (siehe `docs/DECISIONS.md`).

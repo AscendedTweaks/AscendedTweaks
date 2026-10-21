@@ -3,7 +3,7 @@ const CONFIG = {
   owner: 'TweakPilot',
   repo: 'TweakPilot',
   version: '1.1',
-  copyright: 'COPYRIGHT_HOLDER',
+  copyright: 'TweakPilot',
   // Set to true once img/app.webp, img/before.webp and img/after.webp exist (real screenshots, English UI).
   screenshots: false,
 };

@@ -57,6 +57,6 @@ tweakpilot-cli --revert PRIV-001 | --revert-all
 
 ## License
 
-The license has not been chosen yet. Until a `LICENSE` file exists, all rights are reserved.
+MIT, see [LICENSE](LICENSE).
 
 Not affiliated with Microsoft or any game publisher.

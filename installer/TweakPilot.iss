@@ -4,7 +4,7 @@
 ; Inno Setup ist dort nicht installiert. Aufruf: ISCC.exe /DAppVersion=... /DSourceDir=<Paketordner> installer\TweakPilot.iss
 
 #ifndef AppVersion
-  #define AppVersion "1.1.0-rc.1"
+  #define AppVersion "1.1.0"
 #endif
 #ifndef SourceDir
   #define SourceDir "..\..\TweakPilot"

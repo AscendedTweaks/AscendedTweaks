@@ -31,6 +31,7 @@ OutputBaseFilename=TweakPilot-{#AppVersion}-Setup
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=..\assets\icon\tweakpilot.ico
 UninstallDisplayIcon={app}\TweakPilot.exe
 UninstallDisplayName=TweakPilot
 

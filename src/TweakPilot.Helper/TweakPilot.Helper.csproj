@@ -7,6 +7,7 @@
     <RootNamespace>TweakPilot.Helper</RootNamespace>
     <AssemblyName>TweakPilot.Helper</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\assets\icon\tweakpilot.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

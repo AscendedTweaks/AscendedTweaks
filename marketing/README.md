@@ -4,6 +4,7 @@
 - `cinematic/`: TikTok video with voice, glowing horizon, light orb and serif type.
 - `TweakPilot-TikTok-Profile.png`: TikTok profile picture, 1080 x 1080.
 - `motion/`: 15 s, 60 fps, no voice, liquid light, typing search, morphing cards.
+- `fortnite/`: 15 s, 60 fps, gaming focus: search "fortnite", per-game tweak, Competitive Gaming preset.
 - `voice/`: ElevenLabs voice (`original.mp3`), word alignment (`align.py`, PocketSphinx) and the reordered voice with longer pauses (`reorder.py`).
 
 Each folder renders with `build.py` (writes `scene.html`), `render.js` (Playwright frames to `video-only.mp4`) and `mix.py` (voice plus Kenney CC0 sounds).

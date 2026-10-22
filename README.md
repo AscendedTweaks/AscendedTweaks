@@ -2,30 +2,31 @@
 
 Open-source Windows tuning that previews every change and can undo everything.
 
-- **Undo everything.** Every change is backed up first and can be reset with one click.
-- **No telemetry.** The app sends nothing. It only goes online when you click "Check for updates".
-- **Open source.** Every tweak names its source, so you can check what it does.
-
-![Ascended Tweaks dashboard](docs/screenshots/phase12/Dark-100-dashboard.png)
-
 ## Download
 
-Get the latest ZIP from [GitHub Releases](https://github.com/AscendedTweaks/AscendedTweaks/releases/latest).
+**[Download the latest version](https://github.com/TweakPilot/AscendedTweaks/releases/latest)** for Windows 10 22H2 (build 19045) or Windows 11, 64-bit.
 
 1. Download `AscendedTweaks-<version>-win-x64.zip` and `SHA256SUMS.txt`.
-2. Check the file (PowerShell): `Get-FileHash .\AscendedTweaks-<version>-win-x64.zip -Algorithm SHA256`.
-   The hash must match the line in `SHA256SUMS.txt`.
-3. Unzip it and start `AscendedTweaks.exe`. `START HERE.txt` explains install, reset and removal.
+2. Unzip it and start `AscendedTweaks.exe`. No administrator rights are needed to start.
+3. Choose "Install (recommended)" or "Just try it (portable)". `START HERE.txt` explains install, undo and removal.
 
-Requirements: Windows 10 22H2 (build 19045) or Windows 11, 64-bit.
+Optional check before starting (PowerShell): `Get-FileHash .\AscendedTweaks-<version>-win-x64.zip -Algorithm SHA256`.
+The hash must match the line in `SHA256SUMS.txt`.
+
+## What you get
+
+- **Undo everything.** Every change is backed up first and can be reset with one click.
+- **Preview first.** You see every value before and after, nothing changes without your confirmation.
+- **No telemetry.** The app sends nothing. It only goes online when you start a check yourself.
+- **Open source.** Every tweak names its source, so you can check what it does.
 
 ## Why does Windows warn me?
 
-The files are not code-signed yet, so SmartScreen may show "Windows protected your PC". Check the hash as shown above.
-You can also verify that the ZIP was built from this repository:
+The files are not code-signed yet, so SmartScreen may show "Windows protected your PC". Check the hash as shown above,
+then click "More info" > "Run anyway". You can also verify that the ZIP was built from this repository:
 
 ```
-gh attestation verify AscendedTweaks-<version>-win-x64.zip --repo AscendedTweaks/AscendedTweaks
+gh attestation verify AscendedTweaks-<version>-win-x64.zip --repo TweakPilot/AscendedTweaks
 ```
 
 Do not turn off Microsoft Defender or SmartScreen for this or any other app.
@@ -35,7 +36,15 @@ Do not turn off Microsoft Defender or SmartScreen for this or any other app.
 Ascended Tweaks never turns off Defender, the firewall, UAC, SmartScreen or Windows Update. Deleted files and removed apps
 cannot always be restored; the app says so before you confirm.
 
-## Build
+## Command line
+
+```
+ascendedtweaks-cli --list [--module PRIV] [--json]
+ascendedtweaks-cli --apply PRIV-001,PRIV-013 [--dry-run]
+ascendedtweaks-cli --revert PRIV-001 | --revert-all
+```
+
+## Build from source
 
 Requires the .NET 8 SDK (see `global.json`).
 
@@ -47,16 +56,14 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File build.ps1
 `build.ps1` is the quality gate (build without warnings, tests, catalog lint, contrast and format checks, package test).
 `build.ps1 -Package` builds the finished folder and the ZIP. Details: `docs/BUILD.md`.
 
-## Command line
-
-```
-ascendedtweaks-cli --list [--module PRIV] [--json]
-ascendedtweaks-cli --apply PRIV-001,PRIV-013 [--dry-run]
-ascendedtweaks-cli --revert PRIV-001 | --revert-all
-```
+| Folder | Content |
+| --- | --- |
+| `src/` | The app, the helper for administrator changes, the command line and the tweak catalog |
+| `tests/` | Automated tests |
+| `tools/` | Build, release and catalog tools |
+| `site/` | The project website |
+| `docs/` | Design notes, sources and privacy |
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
-
-Not affiliated with Microsoft or any game publisher.
+MIT, see [LICENSE](LICENSE). Not affiliated with Microsoft or any game publisher.

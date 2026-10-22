@@ -3,12 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>TweakPilot.Tools.PerfMeasure</RootNamespace>
+    <RootNamespace>AscendedTweaks.Tools.PerfMeasure</RootNamespace>
     <AssemblyName>perf-measure</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="TweakPilot.Engine.Tests" />
+    <InternalsVisibleTo Include="AscendedTweaks.Engine.Tests" />
   </ItemGroup>
 
 </Project>

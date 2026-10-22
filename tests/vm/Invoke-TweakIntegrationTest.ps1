@@ -31,14 +31,14 @@ $ErrorActionPreference = 'Stop'
 # Bei Aufruf ueber -File kommt eine kommagetrennte Liste als ein einziger String an.
 $TweakIds = @($TweakIds | ForEach-Object { $_.Split(',') } | Where-Object { $_ })
 $repo =(Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
-$cli = Join-Path $repo "src\TweakPilot.Cli\bin\$Configuration\net8.0-windows10.0.19041.0\tweakpilot-cli.exe"
+$cli = Join-Path $repo "src\AscendedTweaks.Cli\bin\$Configuration\net8.0-windows10.0.19041.0\ascendedtweaks-cli.exe"
 $snap = Join-Path $repo "tools\registry-snapshot\bin\$Configuration\net8.0-windows\registry-snapshot.exe"
-$catalog = Join-Path $repo 'src\TweakPilot.Catalog\tweaks'
+$catalog = Join-Path $repo 'src\AscendedTweaks.Catalog\tweaks'
 foreach ($exe in $cli, $snap) {
     if (-not (Test-Path -LiteralPath $exe)) { throw "Nicht gebaut: $exe (zuerst 'dotnet build')." }
 }
 
-$work = Join-Path ([IO.Path]::GetTempPath()) ("TweakPilot.IntegrationTest." + [guid]::NewGuid().ToString('N'))
+$work = Join-Path ([IO.Path]::GetTempPath()) ("AscendedTweaks.IntegrationTest." + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $work | Out-Null
 $state = Join-Path $work 'state'
 $build = [Environment]::OSVersion.Version.Build
@@ -64,7 +64,7 @@ function Compare-Snapshot([string]$A, [string]$B) {
     return [pscustomobject]@{ Equal = ($LASTEXITCODE -eq 0); Lines = @($out -split "`r?`n" | Where-Object { $_ -match '^[+-] ' }) }
 }
 
-# Registry-Abdruck von SystemParametersInfo (gleiche Tabelle wie SystemParameterWhitelist in TweakPilot.Core).
+# Registry-Abdruck von SystemParametersInfo (gleiche Tabelle wie SystemParameterWhitelist in AscendedTweaks.Core).
 $spiFootprint = @{
     'ClientAreaAnimation'       = @{ hive = 'HKCU'; path = 'Control Panel\Desktop'; name = 'UserPreferencesMask' }
     'MinimizeMaximizeAnimation' = @{ hive = 'HKCU'; path = 'Control Panel\Desktop\WindowMetrics'; name = 'MinAnimate' }

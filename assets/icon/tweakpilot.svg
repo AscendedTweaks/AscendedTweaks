@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
-  <!-- TweakPilot icon, detailed variant for 64, 128 and 256 px. -->
-  <rect x="4" y="4" width="248" height="248" rx="55" fill="#0A0A0C"/>
-  <rect x="5" y="5" width="246" height="246" rx="54" fill="none" stroke="#FFFFFF" stroke-opacity=".16" stroke-width="2"/>
-  <!-- Pilot arrow pointing up-right. -->
-  <path d="M202 54 L70 110 L128 128 L146 186 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round"/>
-  <!-- Check mark in the accent color. -->
-  <path d="M56 172 L80 196 L118 158" fill="none" stroke="#2997FF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>

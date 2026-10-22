@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ascendedtweaks.invalid/schema/tweak.schema.json",
+  "title": "Ascended Tweaks Tweak",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "category", "nameKey", "descriptionKey", "sideEffectsKey", "risk", "evidence",
+    "builds", "editions", "scope", "requiresAdmin", "requiresReboot", "detect", "apply",
+    "revert", "sources", "verifiedOn", "hiddenByDefault",
+    "impact", "impactNote", "measuredOn", "plainTitleKey", "plainDescKey"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^(PRIV|PERF|GAME|CLEAN|DEB|UI|NET|DISK|UPD|BROW|POWR|DEFN)-[0-9]{3}$" },
+    "category": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*\\.[A-Z][A-Za-z0-9]*$" },
+    "nameKey": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.name$" },
+    "descriptionKey": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.desc$" },
+    "sideEffectsKey": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.side$" },
+    "risk": { "enum": ["Safe", "Caution", "Expert"] },
+    "evidence": { "enum": ["Proven", "Minor", "Disputed", "Placebo"] },
+    "builds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["min", "max"],
+        "properties": {
+          "min": { "type": "integer", "minimum": 10240 },
+          "max": { "type": ["integer", "null"], "minimum": 10240 }
+        }
+      }
+    },
+    "editions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["Home", "Pro", "Enterprise", "Education"] }
+    },
+    "scope": { "enum": ["User", "Machine", "UserPolicy"] },
+    "requiresAdmin": { "type": "boolean" },
+    "requiresReboot": { "type": "boolean" },
+    "restartExplorer": { "type": "boolean" },
+    "detect": { "$ref": "#/$defs/condition" },
+    "apply": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/action" } },
+    "revert": {
+      "oneOf": [
+        { "const": "restoreFromBackup" },
+        { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/action" } }
+      ]
+    },
+    "sources": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 10 } },
+    "verifiedOn": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["build", "edition", "date", "method"],
+        "properties": {
+          "build": { "type": "integer", "minimum": 10240 },
+          "edition": { "enum": ["Home", "Pro", "Enterprise", "Education"] },
+          "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+          "method": { "type": "string", "minLength": 5 }
+        }
+      }
+    },
+    "hiddenByDefault": { "type": "boolean" },
+    "desktopOnly": { "type": "boolean" },
+    "impact": { "enum": ["Noticeable", "Small", "Unclear"] },
+    "impactNote": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.impact$" },
+    "measuredOn": { "type": "array", "items": { "type": "string", "minLength": 10 } },
+    "plainTitleKey": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.plain\\.title$" },
+    "plainDescKey": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.plain\\.desc$" }
+  },
+  "$defs": {
+    "hive": { "enum": ["HKCU", "HKLM"] },
+    "regPath": { "type": "string", "minLength": 3, "maxLength": 1024, "pattern": "^[^\\\\/].*[^\\\\]$" },
+    "regName": { "type": "string", "maxLength": 255 },
+    "literal": {
+      "oneOf": [
+        { "type": "integer", "minimum": 0 },
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "guid": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" },
+    "startType": { "enum": ["Automatic", "AutomaticDelayed", "Manual", "Disabled"] },
+    "serviceName": { "type": "string", "pattern": "^[A-Za-z0-9_.-]{1,80}$" },
+    "commandId": { "type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9]+)+$" },
+    "taskPath": { "type": "string", "minLength": 20, "maxLength": 260, "pattern": "^\\\\Microsoft\\\\Windows\\\\" },
+    "listFormat": { "enum": ["KeyValueSemicolon", "CompatLayers"] },
+    "listKey": { "type": "string", "pattern": "^[A-Za-z0-9_]{1,64}$" },
+    "spiParameter": { "enum": ["ClientAreaAnimation", "MinimizeMaximizeAnimation", "MenuShowDelay", "MouseAcceleration", "StickyKeysHotkey", "FilterKeysHotkey", "ToggleKeysHotkey"] },
+    "state": { "enum": ["Applied", "NotApplied", "Mixed", "Unavailable"] },
+    "condition": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "hive", "path", "name", "value"],
+          "properties": {
+            "type": { "const": "RegistryValueEquals" },
+            "hive": { "$ref": "#/$defs/hive" }, "path": { "$ref": "#/$defs/regPath" },
+            "name": { "$ref": "#/$defs/regName" }, "value": { "$ref": "#/$defs/literal" },
+            "defaultWhenMissing": { "$ref": "#/$defs/state" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "hive", "path", "name"],
+          "properties": {
+            "type": { "const": "RegistryValueAbsent" },
+            "hive": { "$ref": "#/$defs/hive" }, "path": { "$ref": "#/$defs/regPath" },
+            "name": { "$ref": "#/$defs/regName" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "hive", "path"],
+          "properties": {
+            "type": { "enum": ["RegistryKeyExists", "RegistryKeyAbsent"] },
+            "hive": { "$ref": "#/$defs/hive" }, "path": { "$ref": "#/$defs/regPath" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "service", "value"],
+          "properties": {
+            "type": { "const": "ServiceStartTypeEquals" },
+            "service": { "$ref": "#/$defs/serviceName" }, "value": { "$ref": "#/$defs/startType" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "guid"],
+          "properties": {
+            "type": { "const": "PowerPlanActive" },
+            "guid": { "$ref": "#/$defs/guid" }, "missingIs": { "$ref": "#/$defs/state" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "subgroup", "setting", "value"],
+          "properties": {
+            "type": { "const": "PowerSettingEquals" },
+            "subgroup": { "$ref": "#/$defs/guid" }, "setting": { "$ref": "#/$defs/guid" }, "value": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "command", "value"],
+          "properties": {
+            "type": { "const": "CommandQueryEquals" },
+            "command": { "$ref": "#/$defs/commandId" }, "value": { "type": "string", "maxLength": 64 }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "taskPath", "value"],
+          "properties": {
+            "type": { "const": "ScheduledTaskEnabledEquals" },
+            "taskPath": { "$ref": "#/$defs/taskPath" }, "value": { "type": "boolean" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "parameter", "value"],
+          "properties": {
+            "type": { "const": "SystemParameterEquals" },
+            "parameter": { "$ref": "#/$defs/spiParameter" }, "value": { "type": "integer", "minimum": 0 }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "hive", "path", "name", "format", "key"],
+          "properties": {
+            "type": { "const": "RegistryListEntryEquals" },
+            "hive": { "$ref": "#/$defs/hive" }, "path": { "$ref": "#/$defs/regPath" }, "name": { "$ref": "#/$defs/regName" },
+            "format": { "$ref": "#/$defs/listFormat" }, "key": { "$ref": "#/$defs/listKey" }, "value": { "type": "string", "maxLength": 64 }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "conditions"],
+          "properties": {
+            "type": { "const": "AllOf" },
+            "conditions": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/condition" } }
+          }
+        }
+      ]
+    },
+    "action": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "hive", "path", "name", "kind", "value"],
+          "properties": {
+            "type": { "const": "RegistrySetValue" },
+            "hive": { "$ref": "#/$defs/hive" }, "path": { "$ref": "#/$defs/regPath" },
+            "name": { "$ref": "#/$defs/regName" },
+            "kind": { "enum": ["String", "ExpandString", "DWord", "QWord", "MultiString", "Binary"] },
+            "value": { "$ref": "#/$defs/literal" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "hive", "path", "name"],
+          "properties": {
+            "type": { "const": "RegistryDeleteValue" },
+            "hive": { "$ref": "#/$defs/hive" }, "path": { "$ref": "#/$defs/regPath" },
+            "name": { "$ref": "#/$defs/regName" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "hive", "path"],
+          "properties": {
+            "type": { "const": "RegistryCreateKey" },
+            "hive": { "$ref": "#/$defs/hive" }, "path": { "$ref": "#/$defs/regPath" },
+            "defaultValue": { "type": "string" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "hive", "path"],
+          "properties": {
+            "type": { "const": "RegistryDeleteKey" },
+            "hive": { "$ref": "#/$defs/hive" }, "path": { "$ref": "#/$defs/regPath" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "service", "startType"],
+          "properties": {
+            "type": { "const": "ServiceSetStartType" },
+            "service": { "$ref": "#/$defs/serviceName" }, "startType": { "$ref": "#/$defs/startType" },
+            "stopNow": { "type": "boolean" }, "windowsDefault": { "$ref": "#/$defs/startType" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "guid"],
+          "properties": {
+            "type": { "const": "PowerPlanSet" },
+            "guid": { "$ref": "#/$defs/guid" }, "duplicateFrom": { "$ref": "#/$defs/guid" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "subgroup", "setting", "value"],
+          "properties": {
+            "type": { "const": "PowerSettingSet" },
+            "subgroup": { "$ref": "#/$defs/guid" }, "setting": { "$ref": "#/$defs/guid" }, "value": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "command", "value"],
+          "properties": {
+            "type": { "const": "Command" },
+            "command": { "$ref": "#/$defs/commandId" }, "value": { "type": "string", "maxLength": 64 }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "taskPath", "enabled"],
+          "properties": {
+            "type": { "const": "ScheduledTaskSetEnabled" },
+            "taskPath": { "$ref": "#/$defs/taskPath" }, "enabled": { "type": "boolean" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "parameter", "value"],
+          "properties": {
+            "type": { "const": "SystemParametersInfo" },
+            "parameter": { "$ref": "#/$defs/spiParameter" }, "value": { "type": "integer", "minimum": 0 }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "hive", "path", "name", "format", "key"],
+          "properties": {
+            "type": { "const": "RegistryListEntry" },
+            "hive": { "$ref": "#/$defs/hive" }, "path": { "$ref": "#/$defs/regPath" }, "name": { "$ref": "#/$defs/regName" },
+            "format": { "$ref": "#/$defs/listFormat" }, "key": { "$ref": "#/$defs/listKey" }, "value": { "type": "string", "maxLength": 64 }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -3,12 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <RootNamespace>TweakPilot.Tools.RegistrySnapshot</RootNamespace>
+    <RootNamespace>AscendedTweaks.Tools.RegistrySnapshot</RootNamespace>
     <AssemblyName>registry-snapshot</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TweakPilot.Engine\TweakPilot.Engine.csproj" />
+    <ProjectReference Include="..\..\src\AscendedTweaks.Engine\AscendedTweaks.Engine.csproj" />
   </ItemGroup>
 
 </Project>

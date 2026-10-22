@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tweakpilot.github.io/TweakPilot/sitemap.xml
+Sitemap: https://ascendedtweaks.github.io/AscendedTweaks/sitemap.xml

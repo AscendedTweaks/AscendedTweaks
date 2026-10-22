@@ -1,0 +1,121 @@
+<UserControl x:Class="AscendedTweaks.App.Views.DesignCatalogPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:c="clr-namespace:AscendedTweaks.App.Controls"
+             xmlns:s="clr-namespace:AscendedTweaks.App.Services">
+    <!-- Gestaltungskatalog (docs/DESIGN.md, Abschnitt 4): jede Komponente in jedem Zustand. -->
+    <StackPanel>
+        <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc catalog.intro}" Margin="0,0,0,16" />
+
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc catalog.typography}" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Title}" Text="{s:Loc catalog.typography.title}" />
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc catalog.typography.subtitle}" />
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc catalog.typography.bodystrong}" />
+                <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc catalog.typography.body}" />
+                <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc catalog.typography.caption}" />
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc catalog.buttons}" Margin="0,0,0,8" />
+                <WrapPanel>
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc catalog.button.primary}" Margin="0,0,8,8" />
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc catalog.button.secondary}" Margin="0,0,8,8" />
+                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc catalog.button.text}" Margin="0,0,8,8" />
+                    <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc catalog.button.danger}" Margin="0,0,8,8" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc catalog.button.disabled}" IsEnabled="False" Margin="0,0,8,8" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc catalog.button.running}" IsRunning="{Binding IsRunning}"
+                                    Command="{Binding ToggleRunningCommand}" Margin="0,0,8,8" />
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc catalog.button.running}" IsRunning="{Binding IsRunning}" Margin="0,0,8,8" />
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc catalog.toggles}" Margin="0,0,0,8" />
+                <WrapPanel>
+                    <ToggleButton Style="{StaticResource Toggle.Switch}" IsChecked="{Binding ToggleOff}" Content="{s:Loc catalog.toggle.off}" Margin="0,0,24,8" />
+                    <ToggleButton Style="{StaticResource Toggle.Switch}" IsChecked="{Binding ToggleOn}" Content="{s:Loc catalog.toggle.on}" Margin="0,0,24,8" />
+                    <ToggleButton Style="{StaticResource Toggle.Switch}" IsChecked="True" IsEnabled="False" Content="{s:Loc catalog.toggle.disabled}" Margin="0,0,24,8" />
+                    <ToggleButton Style="{StaticResource Toggle.Switch}" IsThreeState="True" IsChecked="{Binding ToggleMixed}" Content="{s:Loc catalog.toggle.mixed}" Margin="0,0,24,8" />
+                    <ToggleButton Style="{StaticResource Toggle.Switch}" IsChecked="False" IsEnabled="False" Content="{s:Loc catalog.toggle.unavailable}"
+                                  ToolTip="{Binding UnavailableTooltip}" Margin="0,0,24,8" />
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc catalog.badges}" Margin="0,0,0,8" />
+                <WrapPanel>
+                    <c:Badge Tone="Success" Filled="True" Symbol="CheckmarkCircle16" Text="{s:Loc risk.safe}" Margin="0,0,8,8" />
+                    <c:Badge Tone="Warning" Filled="True" Symbol="Warning16" Text="{s:Loc risk.caution}" Margin="0,0,8,8" />
+                    <c:Badge Tone="Danger" Filled="True" Symbol="ErrorCircle16" Text="{s:Loc risk.expert}" Margin="0,0,24,8" />
+                    <c:Badge Tone="Accent" Symbol="Checkmark16" Text="{s:Loc evidence.proven}" Margin="0,0,8,8" />
+                    <c:Badge Tone="Neutral" Symbol="Subtract16" Text="{s:Loc evidence.minor}" Margin="0,0,8,8" />
+                    <c:Badge Tone="Warning" Symbol="QuestionCircle16" Text="{s:Loc evidence.disputed}" Margin="0,0,24,8" />
+                    <c:Badge Tone="Neutral" Symbol="ArrowClockwise16" Text="{s:Loc badge.reboot}" Margin="0,0,8,8" />
+                    <c:Badge Tone="Neutral" Symbol="Shield16" Text="{s:Loc badge.admin}" Margin="0,0,8,8" />
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc catalog.inputs}" Margin="0,0,0,8" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <ui:TextBox PlaceholderText="{s:Loc catalog.input.placeholder}" Margin="0,0,0,8" AutomationProperties.Name="{s:Loc catalog.input.placeholder}" />
+                        <ui:TextBox Text="300.1.1.1" BorderBrush="{DynamicResource Brush.Danger}" AutomationProperties.Name="{s:Loc catalog.input.placeholder}"
+                                    AutomationProperties.HelpText="{s:Loc catalog.input.error}" />
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,8">
+                            <ui:SymbolIcon Symbol="ErrorCircle16" FontSize="14" Foreground="{DynamicResource Brush.Danger}" Margin="0,0,4,0" />
+                            <TextBlock Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Danger}" Text="{s:Loc catalog.input.error}" />
+                        </StackPanel>
+                        <ComboBox SelectedIndex="0" AutomationProperties.Name="{s:Loc catalog.inputs}">
+                            <ComboBoxItem Content="{s:Loc settings.theme.dark}" />
+                            <ComboBoxItem Content="{s:Loc settings.theme.light}" />
+                        </ComboBox>
+                    </StackPanel>
+                    <ListBox Grid.Column="2" ItemsSource="{Binding ListItems}" SelectedIndex="1" MaxHeight="180"
+                             AutomationProperties.Name="{s:Loc catalog.inputs}" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Aenderungsleiste und Dialog als statische Muster; die echten Komponenten folgen in Phase 4. -->
+        <Border Background="{DynamicResource Brush.Elevated}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1"
+                CornerRadius="{StaticResource Radius.Large}" Height="56" Padding="16,0" Margin="0,0,0,16">
+            <DockPanel VerticalAlignment="Center">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc changebar.discard}" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc changebar.preview}" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc changebar.apply}" />
+                </StackPanel>
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding PendingText}" VerticalAlignment="Center" />
+            </DockPanel>
+        </Border>
+
+        <Border Background="{DynamicResource Brush.Elevated}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1"
+                CornerRadius="{StaticResource Radius.Large}" Padding="24" MaxWidth="520" HorizontalAlignment="Left">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc dryrun.title}" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc restore.limits}" Margin="0,0,0,16" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc changebar.discard}" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc changebar.apply}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

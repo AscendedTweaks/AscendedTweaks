@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>AscendedTweaks.Ipc.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="coverlet.collector" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AscendedTweaks.Ipc\AscendedTweaks.Ipc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Gemeinsame Fakes der Engine-Tests. -->
+    <Compile Include="..\AscendedTweaks.Engine.Tests\Fakes.cs" Link="Shared\Fakes.cs" />
+    <Compile Include="..\AscendedTweaks.Engine.Tests\TestSupport.cs" Link="Shared\TestSupport.cs" />
+  </ItemGroup>
+
+</Project>

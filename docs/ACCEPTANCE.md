@@ -203,7 +203,7 @@ Wichtiger Befund aus dem Host-Test: `HKCU\Software\Policies` ist auch in der eig
 | 3 | Beschreibungen stimmen | Ja | Datenschutztext entspricht dem Verhalten: keine Verbindungen beim Start und im Leerlauf (Messung). |
 | 4 | UI nach Design-System | Ja | Bereich "Über" in den Einstellungen; Screenshots `docs/screenshots/phase15`. |
 | 5 | Durchgefallene Tweaks | Keine | |
-| 6 | Qualitätstor grün | Ja | `build.ps1`: 0 Warnungen, 477/477 Tests (App 86, Catalog 53, Ipc 31, Engine 307), Linter (85 Tweaks), Kontrast, Format. Release-Build: `artifacts\TweakPilot-1.0.0-rc.1-portable-win-x64.zip` (93,8 MB, SHA-256 in `artifacts\SHA256SUMS.txt`). |
+| 6 | Qualitätstor grün | Ja | `build.ps1`: 0 Warnungen, 477/477 Tests (App 86, Catalog 53, Ipc 31, Engine 307), Linter (85 Tweaks), Kontrast, Format. Release-Build: `artifacts\AscendedTweaks-1.0.0-rc.1-portable-win-x64.zip` (93,8 MB, SHA-256 in `artifacts\SHA256SUMS.txt`). |
 | 7 | Größte Schwäche | Offen benannt | Der Release-Kandidat ist weder signiert noch als Installer gebaut noch auf Viren geprüft, und die VM-Testmatrix fehlt. Das braucht Entscheidungen und Handgriffe des Auftraggebers (offene Punkte 1, 2 bis 7, 9, 18). |
 | 8 | Annahmen | DECISIONS.md, Abschnitt "Phase 15" | Ein Ordner für alle Programme, Speicherorte der portablen Version, Inno Setup mit Rückfrage zu Sicherungen, Signierwege, automatische Drittlizenzen. |
 | 9 | Nächste Phase | Keine | Alle 15 Phasen sind umgesetzt; offen sind die Schritte, die der Auftraggeber erledigen oder entscheiden muss. |
@@ -267,7 +267,7 @@ Stufen auf dem echten Katalog (alle Ziele noch offen, ohne Akku): Sicher & Schne
 | 4 | Beschreibungen stimmen | Ja | Jede Behauptung mit Quelle (Microsoft Learn: Edge-Richtlinien, MSFT_MpPreference, Set-MpPreference, INF-Schlüsselwörter *EEE, PowerWriteACValueIndex, Disk settings, ASPM; Chromium-Richtliniendefinition; Google-Hilfe 9131254). Pflichthinweise "Wird von deiner Organisation verwaltet", "Schutz bleibt an", "Nur auf PCs ohne Akku". Nicht belegte Aussagen gestrichen (Spotify-Downloads). |
 | 5 | UI nach 2.3 und DESIGN.md | Ja | Neue Karten nutzen die vorhandenen Vorlagen; Autostart zeigt Klartext und "Braucht gerade ... MB", Prozesse Klartext und Sprung. Screenshots in `artifacts/screens-v24` (170 Bilder), Barrierefreiheits-Prüfung 0 Befunde bei 5381 Elementen. |
 | 6 | Durchgefallene Tweaks | Siehe `REJECTED-TWEAKS.md` | Neues Teams, Spotify `Data`, ganze Launcher-Ordner, Browser ohne Richtlinie; POWR-001/002 nur "Umstritten". |
-| 7 | Änderungen am echten Rechner | Keine | Nur lesend: `powercfg /aliases` und `/query`, CIM-Abfrage `*EEE`, Run-Schlüssel, Ordnerlisten der Caches, `tweakpilot-cli --status` und `--clean-scan`. |
+| 7 | Änderungen am echten Rechner | Keine | Nur lesend: `powercfg /aliases` und `/query`, CIM-Abfrage `*EEE`, Run-Schlüssel, Ordnerlisten der Caches, `ascendedtweaks-cli --status` und `--clean-scan`. |
 | 8 | Größte Schwäche | Als offener Punkt 19 | Keiner der neun neuen Tweaks ist echt angewendet worden (alle brauchen Administratorrechte, UAC-Tests sind auf dem Host verboten). Die Herausgeber-Erkennung ist für fünf der zehn Programme auf dem Host nicht beobachtbar. |
 | 9 | Annahmen | DECISIONS.md, Abschnitt "V2-4" | Autostart als Erkennungstabelle, RAM nur bei laufendem Programm, PowerSettingSet und desktopOnly, WMI statt PowerShell, *EEE nur wo vorhanden, Cache-Unterordner und Muster-Segment, keine Entwickler-Caches, Preset-Zuordnung. |
 | 10 | Nächste Phase | V2-5 | Die zehn Gaming-Checks mit Fake-Daten und die Karte "Messung" mit Vorher/Nachher. |
@@ -294,13 +294,13 @@ Stufen auf dem echten Katalog (alle Ziele noch offen, ohne Akku): Sicher & Schne
 | 1 | Qualitätstor grün | Ja | `build.ps1`: 0 Warnungen, 561/561 Tests (App 104, Catalog 66, Ipc 31, Engine 360), Linter, Kontrast, Format. |
 | 2 | Revert für Neues getestet | Ja | Löschen nur in den Papierkorb (rückgängig über den Explorer); `Recycler_rechecks_everything_and_never_receives_a_class_d_path` (Klasse D auch bei gefälschter Klasse nie im Papierkorb, geänderte, fehlende und geöffnete Dateien übersprungen). |
 | 3 | Dry-Run unverändert | Ja | Die Suche liest nur; vor dem Löschen ein Dialog mit Anzahl, Gesamtgröße und den drei größten Dateien. |
-| 4 | Beschreibungen stimmen | Ja | Jede Zeile hat "Warum sehe ich das?" mit Ort und Alter; Spiele "TweakPilot löscht nie"; Cloud "wird weder geladen noch gelöscht". |
+| 4 | Beschreibungen stimmen | Ja | Jede Zeile hat "Warum sehe ich das?" mit Ort und Alter; Spiele "Ascended Tweaks löscht nie"; Cloud "wird weder geladen noch gelöscht". |
 | 5 | UI nach 2.3 und DESIGN.md | Ja | Gruppen A und B sichtbar, C und D nur auf Klick und nur "Im Explorer zeigen", nichts vorausgewählt, eine Hauptaktion. Einfach-Seite "Aufräumen" vereinfacht. Screenshots in `artifacts/screens-v26` (174 Bilder, mit `disk-large-scanned`), Barrierefreiheit 0 Befunde bei 5724 Elementen. |
 | 6 | Durchgefallene Tweaks | Keine | Keine neuen Tweaks. |
-| 7 | Änderungen am echten Rechner | Keine | Nur lesend: `tweakpilot-cli --large-scan`. Ergebnis: A 4 Dateien (Installer in Downloads), B 0, C 5, D 60; **0 Spieldateien fälschlich in A oder B**. |
+| 7 | Änderungen am echten Rechner | Keine | Nur lesend: `ascendedtweaks-cli --large-scan`. Ergebnis: A 4 Dateien (Installer in Downloads), B 0, C 5, D 60; **0 Spieldateien fälschlich in A oder B**. |
 | 8 | Größte Schwäche | Annahme | Die Spielerkennung ist eine Heuristik: Ein Spiel ohne Launcher-Marker und ohne typische Archive wäre nur über "älter als 30 Tage und unbekannt = C" geschützt, nicht als D. Der echte Lauf hat zwei Fehler gezeigt, die die Fake-Tests nicht fanden (C:\Users als "Spiel", Electron-Apps als Spiele); beide sind behoben und als Test festgehalten. |
 | 9 | Annahmen | DECISIONS.md, Abschnitt "V2-6" | Klassenreihenfolge, Windows-Reste bleiben in der Bereinigung, Grenzen der Spielerkennung, schwache Archiv-Endungen, Deinstallieren über Windows-Apps, Duplikat-Original, Prüfungen vor dem Löschen, Downloads über Known Folder, Ergebnisgrenzen, Einfach-Ansicht "Aufräumen". |
-| 10 | Nächste Phase | V2-7 | Verpackung und Installation: `package.ps1`, Ordner `Desktop\TweakPilot`, Installieren/Portabel/Deinstallieren, `START HIER.txt`, Prüfsummen; Skriptlogik in Temp getestet, App nur mit `--version`/`--list` gestartet. |
+| 10 | Nächste Phase | V2-7 | Verpackung und Installation: `package.ps1`, Ordner `Desktop\AscendedTweaks`, Installieren/Portabel/Deinstallieren, `START HIER.txt`, Prüfsummen; Skriptlogik in Temp getestet, App nur mit `--version`/`--list` gestartet. |
 
 ## V2-7: Verpackung und Installation
 
@@ -312,10 +312,10 @@ Stufen auf dem echten Katalog (alle Ziele noch offen, ohne Akku): Sicher & Schne
 | 4 | Beschreibungen stimmen | Ja | `START HIER.txt` (DE und EN): Start, Installieren/portabel, Zurück, Entfernen, SmartScreen mit Prüfsummen-Anleitung, "nie Defender abschalten". |
 | 5 | UI nach 2.3 und DESIGN.md | Ja | Ein kleines Fenster mit zwei Knöpfen ("Installieren (empfohlen)" als Hauptaktion), Texte DE und EN; nicht im Snapshot, weil es vor dem Hauptfenster steht. |
 | 6 | Durchgefallene Tweaks | Keine | Keine neuen Tweaks. |
-| 7 | Änderungen am echten Rechner | Ja, erlaubt | `%USERPROFILE%\Desktop\TweakPilot` neu angelegt (Ziel der Phase), ZIP in `artifacts`. Aus dem Paket nur `app\tweakpilot-cli.exe --version` und `--list` gestartet. Keine Installation, kein UAC, keine Verknüpfung, kein Registry-Eintrag. |
+| 7 | Änderungen am echten Rechner | Ja, erlaubt | `%USERPROFILE%\Desktop\AscendedTweaks` neu angelegt (Ziel der Phase), ZIP in `artifacts`. Aus dem Paket nur `app\ascendedtweaks-cli.exe --version` und `--list` gestartet. Keine Installation, kein UAC, keine Verknüpfung, kein Registry-Eintrag. |
 | 8 | Größte Schwäche | Als offener Punkt 20 | Der Ablauf Installieren und Deinstallieren ist nur mit dem Test-Hook geprüft, nicht mit echtem Doppelklick, echten Verknüpfungen und "Apps". Die Programme sind groß (212, 103, 113 MB), weil jede Datei ihr eigenes .NET enthält. Ohne Signatur zeigt Windows SmartScreen. |
 | 9 | Annahmen | DECISIONS.md, Abschnitt "V2-7" | Umbenennen statt Assembly-Name, Einzeldateien, Helfer-Pfadcheck mit zwei Ordnern plus Hash, Installationsmarkierung, einmalige Frage, Deinstallation über Temp-Kopie, deutsche Dokumentnamen, Bauausgaben, Inno als zweiter Weg. |
 | 10 | Nächste Phase | V2-8 | Gesamtabnahme: Qualitätstor, README, CHANGELOG, ACCEPTANCE, offene Punkte neu nummeriert (was nur der Nutzer erledigen kann), Version 1.1.0-rc.1. |
 
-Prüfungen am echten Paket: Prüfsummen in `Dokumente\Pruefsummen.txt` stimmen mit den Dateien überein; der SHA-256 des Helfers (`08DFA75B…AB23`) steckt in `TweakPilot.exe` und `app\tweakpilot-cli.exe`.
+Prüfungen am echten Paket: Prüfsummen in `Dokumente\Pruefsummen.txt` stimmen mit den Dateien überein; der SHA-256 des Helfers (`08DFA75B…AB23`) steckt in `AscendedTweaks.exe` und `app\ascendedtweaks-cli.exe`.
 

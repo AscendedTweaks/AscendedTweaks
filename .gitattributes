@@ -1,0 +1,4 @@
+# The repository uses LF everywhere (.editorconfig, dotnet format); Windows checkouts keep LF too.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf

@@ -1,0 +1,57 @@
+<UserControl x:Class="AscendedTweaks.App.Views.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:s="clr-namespace:AscendedTweaks.App.Services"
+             xmlns:loc="clr-namespace:AscendedTweaks.Localization;assembly=AscendedTweaks.Localization"
+             x:Name="Root">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ChoiceTemplate">
+            <TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource LocKey}">
+                        <Binding Path="LabelKey" />
+                        <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </DataTemplate>
+    </UserControl.Resources>
+    <StackPanel>
+        <Border Style="{StaticResource Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="240" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="LanguageLabel" Style="{StaticResource Text.BodyStrong}" Text="{s:Loc settings.language}" VerticalAlignment="Center" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}"
+                          ItemTemplate="{StaticResource ChoiceTemplate}" AutomationProperties.LabeledBy="{Binding ElementName=LanguageLabel}" AutomationProperties.Name="{s:Loc settings.language}" />
+            </Grid>
+        </Border>
+        <Border Style="{StaticResource Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="240" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="ThemeLabel" Style="{StaticResource Text.BodyStrong}" Text="{s:Loc settings.theme}" VerticalAlignment="Center" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}"
+                          ItemTemplate="{StaticResource ChoiceTemplate}" AutomationProperties.LabeledBy="{Binding ElementName=ThemeLabel}" AutomationProperties.Name="{s:Loc settings.theme}" />
+            </Grid>
+        </Border>
+        <Border Style="{StaticResource Card}" Visibility="{Binding ShowExpertMode, ElementName=Root, Converter={StaticResource BoolToVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Name="ExpertLabel" Style="{StaticResource Text.BodyStrong}" Text="{s:Loc settings.expert}" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc settings.expert.help}" Margin="0,4,0,0" />
+                </StackPanel>
+                <ToggleButton Grid.Column="1" Style="{StaticResource Toggle.Switch}" IsChecked="{Binding ExpertMode}" VerticalAlignment="Center"
+                              AutomationProperties.LabeledBy="{Binding ElementName=ExpertLabel}" AutomationProperties.Name="{s:Loc settings.expert}" />
+            </Grid>
+        </Border>
+    </StackPanel>
+</UserControl>

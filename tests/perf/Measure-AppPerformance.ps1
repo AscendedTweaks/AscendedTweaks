@@ -43,7 +43,7 @@ for ($run = 1; $run -le $Runs; $run++) {
     [void]$process.CloseMainWindow()
     if (-not $process.WaitForExit(15000)) { $process.Kill(); $closed = $false } else { $closed = $true }
     Start-Sleep -Seconds 2
-    $left = @(Get-Process -Name 'TweakPilot.App', 'TweakPilot.Helper' -ErrorAction SilentlyContinue | Where-Object { $_.Id -ne $PID } | ForEach-Object { "$($_.Name) ($($_.Id))" })
+    $left = @(Get-Process -Name 'AscendedTweaks.App', 'AscendedTweaks.Helper' -ErrorAction SilentlyContinue | Where-Object { $_.Id -ne $PID } | ForEach-Object { "$($_.Name) ($($_.Id))" })
 
     $results += [pscustomobject]@{
         Run = $run

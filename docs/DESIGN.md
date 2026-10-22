@@ -1,4 +1,4 @@
-# DESIGN.md – TweakPilot
+# DESIGN.md – Ascended Tweaks
 
 Format nach dem Aufbau der DESIGN.md-Dateien aus voltagent/awesome-design-md (neun Abschnitte). Übernommen wurden nur die Gliederung und abstrakte Prinzipien, keine Marken, Farben oder Texte fremder Produkte. Vor jeder UI-Aufgabe wird diese Datei erneut gelesen. Weicht die UI ab, wird die UI korrigiert, nicht dieses Dokument.
 

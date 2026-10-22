@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>AscendedTweaks.Engine.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="coverlet.collector" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AscendedTweaks.Core\AscendedTweaks.Core.csproj" />
+    <ProjectReference Include="..\..\src\AscendedTweaks.Engine\AscendedTweaks.Engine.csproj" />
+    <ProjectReference Include="..\..\tools\perf-measure\perf-measure.csproj" />
+  </ItemGroup>
+
+</Project>

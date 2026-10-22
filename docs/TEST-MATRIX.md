@@ -27,7 +27,7 @@ Hyper-V ist auf dem Entwicklungsrechner (Windows 11 Home) nicht verfügbar (offe
 # Prüfpunkt "sauber" wiederherstellen
 .\tests\vm\Invoke-TestMatrix.ps1 -Phase RebootApply   # Schritt 9, Teil 1; danach von Hand neu starten
 .\tests\vm\Invoke-TestMatrix.ps1 -Phase RebootVerify  # Schritt 9, Teil 2
-.\tests\perf\Measure-AppPerformance.ps1 -AppPath <Release-Build>\TweakPilot.App.exe -Out perf.json
+.\tests\perf\Measure-AppPerformance.ps1 -AppPath <Release-Build>\AscendedTweaks.App.exe -Out perf.json
 ```
 
 Jeder Lauf schreibt `tests/vm/report-<Build>-<Edition>-<Phase>.json`. Bestandene Einträge kommen in das Feld `verifiedOn` des Tweaks; nicht bestandene Tweaks werden korrigiert oder in `docs/REJECTED-TWEAKS.md` dokumentiert.
@@ -36,7 +36,7 @@ Jeder Lauf schreibt `tests/vm/report-<Build>-<Edition>-<Phase>.json`. Bestandene
 
 - Die Snapshots erfassen die Registry. Bei Befehls-Tweaks (netsh, fsutil, powercfg, DISM) und Aufgaben prüfen die Schritte 5 und 7 den Zustand über die Zustandserkennung der App; für einen unabhängigen Vergleich zusätzlich `powercfg /list`, `fsutil behavior query`, `schtasks /query` vor und nach dem Test sichern.
 - Das Skript legt keine geplanten Aufgaben an und startet nicht selbst neu.
-- Der Export (Abschnitt 10.4) wird in der VM zusätzlich so geprüft: `tweakpilot-cli --export ps1 --profile <name> --out x.ps1`, Skript ausführen, Snapshot mit dem Ergebnis der App vergleichen, Rücksetz-Skript ausführen, Snapshot gleich Ausgangszustand.
+- Der Export (Abschnitt 10.4) wird in der VM zusätzlich so geprüft: `ascendedtweaks-cli --export ps1 --profile <name> --out x.ps1`, Skript ausführen, Snapshot mit dem Ergebnis der App vergleichen, Rücksetz-Skript ausführen, Snapshot gleich Ausgangszustand.
 
 ## Manuelle Prüfungen in der VM
 

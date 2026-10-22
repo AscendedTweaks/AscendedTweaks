@@ -5,14 +5,14 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 using Org.BouncyCastle.Security;
 
-namespace TweakPilot.Tools.UpdateSign;
+namespace AscendedTweaks.Tools.UpdateSign;
 
 /// <summary>
 /// Signiert das Update-Manifest (Abschnitt 12.3) mit Ed25519.
 ///   update-sign keygen &lt;privater-schluessel-datei&gt;   erzeugt ein Schluesselpaar und gibt den oeffentlichen Schluessel aus
 ///   update-sign sign &lt;privater-schluessel-datei&gt; &lt;manifest.json&gt;   schreibt manifest.json.sig (Base64)
 ///   update-sign hash &lt;installer.exe&gt;   gibt SHA-256 und Groesse fuer das Manifest aus
-/// Der private Schluessel darf nie im Repository liegen; das Werkzeug lehnt Pfade innerhalb eines Ordners mit .git oder TweakPilot.sln ab.
+/// Der private Schluessel darf nie im Repository liegen; das Werkzeug lehnt Pfade innerhalb eines Ordners mit .git oder AscendedTweaks.sln ab.
 /// </summary>
 internal static class Program
 {
@@ -85,7 +85,7 @@ internal static class Program
         var directory = new DirectoryInfo(Path.GetDirectoryName(Path.GetFullPath(keyFile))!);
         for (var current = directory; current is not null; current = current.Parent)
         {
-            if (Directory.Exists(Path.Combine(current.FullName, ".git")) || File.Exists(Path.Combine(current.FullName, "TweakPilot.sln")))
+            if (Directory.Exists(Path.Combine(current.FullName, ".git")) || File.Exists(Path.Combine(current.FullName, "AscendedTweaks.sln")))
             {
                 throw new InvalidOperationException("Der private Schluessel darf nicht im Repository liegen. Waehle einen Ordner ausserhalb, zum Beispiel auf einem USB-Stick.");
             }

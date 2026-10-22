@@ -4,7 +4,7 @@ Tweaks sind Daten. Ein neuer Tweak braucht keine Code-Änderung, solange er eine
 
 ## Ablauf
 
-1. Datei `src/TweakPilot.Catalog/tweaks/<modul>/<ID>.json` anlegen. Der Dateiname ist die ID.
+1. Datei `src/AscendedTweaks.Catalog/tweaks/<modul>/<ID>.json` anlegen. Der Dateiname ist die ID.
 2. Texte `tweak.<ID>.name`, `.desc`, `.side` in `tweaks/i18n/de-DE.json` und `en-US.json` eintragen. "Was funktioniert danach nicht mehr?" (`.side`) ist nie leer.
 3. `detect` so schreiben, dass jede Aktion in `apply` genau eine passende Bedingung mit demselben Zielwert hat und umgekehrt. Der Linter prüft das.
 4. Quelle eintragen: Microsoft-Learn-Seitentitel plus Abschnitt, oder eigene Messung mit Datum und Build.

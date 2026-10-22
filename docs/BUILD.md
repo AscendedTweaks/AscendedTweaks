@@ -17,17 +17,17 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File build.ps1 -Package
 `package.ps1` veröffentlicht App, Helfer und Kommandozeile als einzelne Dateien ohne installiertes .NET (`win-x64`, self-contained, ohne `.pdb`), bettet den SHA-256 des Helfers in App und Kommandozeile ein und schreibt:
 
 ```
-Desktop\TweakPilot\
+Desktop\AscendedTweaks\
   START HERE.txt
-  TweakPilot.exe
-  app\TweakPilot.Helper.exe
-  app\tweakpilot-cli.exe
+  AscendedTweaks.exe
+  app\AscendedTweaks.Helper.exe
+  app\ascendedtweaks-cli.exe
   Docs\Privacy.md, Licenses.md, Changelog.md, Sources.md, Checksums.txt
-  .tweakpilot-package        (versteckte Markierung)
-artifacts\TweakPilot-<Version>-win-x64.zip   (gleicher Inhalt)
+  .ascendedtweaks-package        (versteckte Markierung)
+artifacts\AscendedTweaks-<Version>-win-x64.zip   (gleicher Inhalt)
 ```
 
-Der Zielordner wird nur geleert, wenn er die Markierung `.tweakpilot-package` trägt. Ein gleichnamiger Ordner ohne Markierung bleibt unberührt; das Paket landet dann in `TweakPilot (2)` (oder der nächsten freien Nummer). `-Destination` wählt einen anderen Zielordner, `-PublishDir` überspringt das Veröffentlichen (Test-Hook).
+Der Zielordner wird nur geleert, wenn er die Markierung `.ascendedtweaks-package` trägt. Ein gleichnamiger Ordner ohne Markierung bleibt unberührt; das Paket landet dann in `Ascended Tweaks (2)` (oder der nächsten freien Nummer). `-Destination` wählt einen anderen Zielordner, `-PublishDir` überspringt das Veröffentlichen (Test-Hook).
 
 ## Was nicht in den Quellordner gehört
 
@@ -41,4 +41,4 @@ Der fertige Ordner liegt außerhalb des Quellordners auf dem Desktop.
 
 ## Installer (optional)
 
-`installer\TweakPilot.iss` (Inno Setup 6) übernimmt den Paketordner als zweiten Weg mit Administratorrechten. Auf dem Entwicklungsrechner ist Inno Setup nicht installiert; der Installer wird dort nicht gebaut. Der empfohlene Weg ist die Installation pro Benutzer aus der App ("Installieren (empfohlen)").
+`installer\AscendedTweaks.iss` (Inno Setup 6) übernimmt den Paketordner als zweiten Weg mit Administratorrechten. Auf dem Entwicklungsrechner ist Inno Setup nicht installiert; der Installer wird dort nicht gebaut. Der empfohlene Weg ist die Installation pro Benutzer aus der App ("Installieren (empfohlen)").

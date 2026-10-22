@@ -23,7 +23,7 @@ jobs:
           dotnet test -c Release --no-build --nologo
       - name: Package
         shell: pwsh
-        run: ./package.ps1 -Destination "$env:RUNNER_TEMP\TweakPilot" -ZipDirectory "$env:GITHUB_WORKSPACE\artifacts"
+        run: ./package.ps1 -Destination "$env:RUNNER_TEMP\AscendedTweaks" -ZipDirectory "$env:GITHUB_WORKSPACE\artifacts"
       - name: Checksums
         shell: pwsh
         run: |

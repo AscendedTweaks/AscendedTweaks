@@ -12,10 +12,10 @@
     <Deterministic>true</Deterministic>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
-    <!-- Produktname: zentrale Stelle fuer Build-Metadaten. Gegenstueck im Code: TweakPilot.Core.ProductInfo. -->
-    <Product>TweakPilot</Product>
-    <Company>TweakPilot</Company>
-    <Copyright>TweakPilot</Copyright>
+    <!-- Produktname: zentrale Stelle fuer Build-Metadaten. Gegenstueck im Code: AscendedTweaks.Core.ProductInfo. -->
+    <Product>Ascended Tweaks</Product>
+    <Company>Ascended Tweaks</Company>
+    <Copyright>Ascended Tweaks</Copyright>
     <Version>1.1.0</Version>
     <NeutralLanguage>de-DE</NeutralLanguage>
   </PropertyGroup>

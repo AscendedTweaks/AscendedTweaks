@@ -57,7 +57,7 @@ Vorher gelesen (nur lesend, Host 26200): `dmwappushservice` und `lfsvc` stehen a
 
 Quellen pro Tweak stehen in `sources` der Tweak-Dateien (Microsoft Learn: Powercfg command-line options, SystemParametersInfoW, Privacy Policy CSP, fsutil behavior, fsutil 8dot3name, Guidance on disabling system services on Windows, SYSTEM_POWER_CAPABILITIES; MSRC CVE-2021-34527 für PERF-015).
 
-Gelesen auf dem Host (Build 26200 Home, nur lesend): WSearch Automatisch (verzögert), SysMain und Spooler Automatisch, RetailDemo Manuell, MapsBroker Automatisch (verzögert), RemoteRegistry Deaktiviert (daraus Ablehnung PERF-019), Fax nicht installiert; Ruhezustand aktiv (hiberfil.sys 13,5 GB), Schnellstart aus; Aufgaben "Microsoft Compatibility Appraiser" und "ProgramDataUpdater" auf diesem Build nicht vorhanden (Tweaks melden "nicht verfügbar"). Die Zustandserkennung aller PERF-Tweaks lieferte auf dem echten System plausible Werte (`tweakpilot-cli --list`).
+Gelesen auf dem Host (Build 26200 Home, nur lesend): WSearch Automatisch (verzögert), SysMain und Spooler Automatisch, RetailDemo Manuell, MapsBroker Automatisch (verzögert), RemoteRegistry Deaktiviert (daraus Ablehnung PERF-019), Fax nicht installiert; Ruhezustand aktiv (hiberfil.sys 13,5 GB), Schnellstart aus; Aufgaben "Microsoft Compatibility Appraiser" und "ProgramDataUpdater" auf diesem Build nicht vorhanden (Tweaks melden "nicht verfügbar"). Die Zustandserkennung aller PERF-Tweaks lieferte auf dem echten System plausible Werte (`ascendedtweaks-cli --list`).
 
 Eigene Prüfung 2026-10-17, Host-Integrationstest Schritte 3 bis 7 (`tests/vm/report-host-26200-phase6.json`):
 
@@ -95,7 +95,7 @@ Nicht auf dem Host geprüft: GAME-001, 005 und 011 (bereits im Zielzustand, nich
 
 Die Bereinigung braucht keine Microsoft-Dokumentation für eine Wirkung: Sie löscht Zwischenspeicher. Belegt wird das Verhalten (was gelöscht wird, was nie). Verwendete dokumentierte Schnittstellen: `IFileOperation` (Papierkorb), `SHQueryRecycleBin`/`SHEmptyRecycleBin`, `CreateFileW` mit `FILE_FLAG_OPEN_REPARSE_POINT`, `SetFileInformationByHandle` (FileDispositionInfo), Datenträgerbereinigung `cleanmgr /sageset|/sagerun`, `DISM /StartComponentCleanup`.
 
-Host-Prüfung 2026-10-18, nur lesend (`tweakpilot-cli --clean-scan`): Alle 14 Kategorien liefern plausible Werte (zum Beispiel Benutzer-Temp 14 MB, Miniaturansichten 166 MB, Shader-Caches 627 MB, Papierkorb 11,7 GB; Systemordner ohne Administratorrechte geschätzt). Beim ersten Lauf meldete der Papierkorb "unbekannt": falsche Struktur-Ausrichtung von `SHQUERYRBINFO` unter 64 Bit, behoben.
+Host-Prüfung 2026-10-18, nur lesend (`ascendedtweaks-cli --clean-scan`): Alle 14 Kategorien liefern plausible Werte (zum Beispiel Benutzer-Temp 14 MB, Miniaturansichten 166 MB, Shader-Caches 627 MB, Papierkorb 11,7 GB; Systemordner ohne Administratorrechte geschätzt). Beim ersten Lauf meldete der Papierkorb "unbekannt": falsche Struktur-Ausrichtung von `SHQUERYRBINFO` unter 64 Bit, behoben.
 
 Löschen auf dem echten Dateisystem nur in einem eigenen Sandbox-Ordner (`CleanupIntegrationTests`): alte Dateien gelöscht, schreibgeschützte entfernt, geöffnete übersprungen, junge Dateien behalten, echte Junction (`mklink /J`) nicht verfolgt, Ziel hinter der Junction unverändert, Handle-basiertes Löschen einer Junction verweigert. Auf den echten Daten des Nutzers wurde nichts gelöscht.
 
@@ -105,7 +105,7 @@ Quellen: Microsoft Learn `PackageManager` (Windows.Management.Deployment: FindPa
 
 Host-Prüfung 2026-10-18:
 
-- Paketliste gelesen (`tweakpilot-cli --apps`): 20 der 26 Katalog-Apps installiert, 9 Apps anderer Hersteller (darunter Treiber- und Sicherheitssoftware, mit Warnhinweis), 19 gesperrte Systemapps.
+- Paketliste gelesen (`ascendedtweaks-cli --apps`): 20 der 26 Katalog-Apps installiert, 9 Apps anderer Hersteller (darunter Treiber- und Sicherheitssoftware, mit Warnhinweis), 19 gesperrte Systemapps.
 - Wiederherstellungsweg (a) mit echter Paketverwaltung: Neuregistrierung per Paketfamilie für eine installierte Katalog-App gelingt (`AppxIntegrationTests`, ändert nichts). Entfernen wurde auf dem Host nicht ausgeführt (UAC und nicht garantiert umkehrbar).
 - OneDrive (`--onedrive-check`): nicht installiert; nur das Installationsprogramm liegt in System32. Die Sperrgründe sind gegen Fakes getestet.
 - UI-Tweaks, Host-Integrationstest (`tests/vm/report-host-26200-phase9.json`): UI-002, 003, 006, 008, 009, 010, 011 bestanden (Registry). UI-005: Schreibzugriff von Windows verweigert, sauber zurückgerollt. UI-004 auf diesem Build nicht verfügbar, UI-007 bereits gesetzt (nicht durch die App).
@@ -116,7 +116,7 @@ Quellen: Microsoft Learn `netsh interface ip` (set dnsservers, add dnsservers), 
 
 Host-Prüfung 2026-10-18, nur lesend:
 
-- Erkennung aller NET- und DISK-Tweaks plausibel (`tweakpilot-cli --status`); NET-011 (Energiesparen der Netzwerkkarte, WMI root\wmi) und DISK-007 (reservierter Speicher) ohne Administratorrechte als "Admin nötig"; NET-010 und DISK-001 stehen bereits auf dem Windows-Standard.
+- Erkennung aller NET- und DISK-Tweaks plausibel (`ascendedtweaks-cli --status`); NET-011 (Energiesparen der Netzwerkkarte, WMI root\wmi) und DISK-007 (reservierter Speicher) ohne Administratorrechte als "Admin nötig"; NET-010 und DISK-001 stehen bereits auf dem Windows-Standard.
 - Ping und Jitter (`--ping 1.1.1.1`): 50 Pakete, plausible Werte.
 - Laufwerke (`--volumes`): Systemlaufwerk als SSD erkannt, Modell gelesen.
 - DoH: Windows kennt DoH-Vorlagen; der aktuelle DNS-Server (von einem VPN-Programm gesetzt) ist keiner davon.
@@ -128,7 +128,7 @@ Quellen: Microsoft Learn "Configure Windows Update client policies" (Tabelle der
 
 Host-Prüfung 2026-10-18, nur lesend:
 
-- `tweakpilot-cli --status`: UPD-002 bis UPD-006 und UPD-007/11/25H2 melden auf Windows 11 Home "Auf dieser Windows-Edition nicht wirksam"; UPD-001 "nicht angewendet" (keine Pause aktiv).
+- `ascendedtweaks-cli --status`: UPD-002 bis UPD-006 und UPD-007/11/25H2 melden auf Windows 11 Home "Auf dieser Windows-Edition nicht wirksam"; UPD-001 "nicht angewendet" (keine Pause aktiv).
 - Installierte Version laut `DisplayVersion`: 25H2; die Seite zeigt sie an.
 - Profil-Vorschau gegen den echten Zustand (Screenshot `phase11/*-profiles-plan.png`): plausibel, zum Beispiel GAME-004 "Auf dieser Windows-Edition nicht wirksam", bereits gesetzte Eingabehilfen-Tastenkürzel "Schon aktiv".
 - Nicht ausgeführt: Anwenden von Update-Tweaks und Profilen auf dem Host (UAC, und Profile ändern viele Einstellungen auf einmal). Der Ablauf ist mit Benutzer-Tweaks gegen Fakes getestet.
@@ -137,7 +137,7 @@ Host-Prüfung 2026-10-18, nur lesend:
 
 Quellen: Microsoft Learn `Win32_Processor`, `Win32_VideoController`, `Win32_PnPSignedDriver`, `Win32_PhysicalMemory` (SMBIOSMemoryType), `Win32_OperatingSystem` (Caption, LastBootUpTime), `MSFT_PhysicalDisk` (MediaType, BusType), `MSFT_Partition`, `GlobalMemoryStatusEx`, `PowerGetActiveScheme` und `PowerReadFriendlyName`, `Tbsi_GetDeviceInfo`, `Win32_DeviceGuard`, `MSFT_MpComputerStatus`, `wevtutil qe`.
 
-Host-Prüfung 2026-10-18, nur lesend (`tweakpilot-cli --sysinfo`): Prozessor mit Kernen und Threads, Grafikkarte mit Hersteller, Treiberversion und -datum sowie Videospeicher über 4 GB (`qwMemorySize`), Arbeitsspeicher mit Typ DDR5, NVMe-Laufwerk mit freiem Platz, Windows 11 Home 25H2 mit Build und UBR, Installationsdatum, letzter Start; Startdauer ohne Administratorrechte nicht lesbar (wie erwartet). Zustandsanzeigen: kein Neustart ausstehend, Energieplan, Spielmodus, Defender-Echtzeitschutz aus mit zwei registrierten Virenschutzprogrammen. Ein Kartenleser mit Größe 0 wurde danach ausgeblendet.
+Host-Prüfung 2026-10-18, nur lesend (`ascendedtweaks-cli --sysinfo`): Prozessor mit Kernen und Threads, Grafikkarte mit Hersteller, Treiberversion und -datum sowie Videospeicher über 4 GB (`qwMemorySize`), Arbeitsspeicher mit Typ DDR5, NVMe-Laufwerk mit freiem Platz, Windows 11 Home 25H2 mit Build und UBR, Installationsdatum, letzter Start; Startdauer ohne Administratorrechte nicht lesbar (wie erwartet). Zustandsanzeigen: kein Neustart ausstehend, Energieplan, Spielmodus, Defender-Echtzeitschutz aus mit zwei registrierten Virenschutzprogrammen. Ein Kartenleser mit Größe 0 wurde danach ausgeblendet.
 
 ## Phase 13: Export und Update
 

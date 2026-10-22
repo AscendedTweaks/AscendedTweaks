@@ -1,0 +1,48 @@
+{
+  "id": "DEFN-001",
+  "category": "Performance.Background",
+  "nameKey": "tweak.DEFN-001.name",
+  "descriptionKey": "tweak.DEFN-001.desc",
+  "sideEffectsKey": "tweak.DEFN-001.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "defender.scanload",
+    "value": "20"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "defender.scanload",
+      "value": "20"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: Set-MpPreference -ScanAvgCPULoadFactor: maximum average CPU load of a scan, 5 to 100 or 0 (no limit), default 50. Not a hard limit; for idle scans the value does not apply as long as DisableCpuThrottleOnIdleScans is on (default).",
+    "Microsoft Learn: WMI class MSFT_MpPreference (root\\Microsoft\\Windows\\Defender) with the Set method. The only Defender setting Ascended Tweaks touches; real-time protection and all protection features stay unchanged. If a policy sets the value (Scan\\AvgCPULoadFactor), the tweak is not available."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.DEFN-001.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.DEFN-001.plain.title",
+  "plainDescKey": "tweak.DEFN-001.plain.desc"
+}

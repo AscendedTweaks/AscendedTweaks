@@ -37,7 +37,7 @@ function Get-Packages([string[]]$Projects) {
     }
 }
 
-$shipped = Get-Packages @('src\TweakPilot.App\TweakPilot.App.csproj', 'src\TweakPilot.Helper\TweakPilot.Helper.csproj', 'src\TweakPilot.Cli\TweakPilot.Cli.csproj')
+$shipped = Get-Packages @('src\AscendedTweaks.App\AscendedTweaks.App.csproj', 'src\AscendedTweaks.Helper\AscendedTweaks.Helper.csproj', 'src\AscendedTweaks.Cli\AscendedTweaks.Cli.csproj')
 $tests = Get-Packages (Get-ChildItem (Join-Path $repo 'tests') -Recurse -Filter '*.csproj' | ForEach-Object { $_.FullName.Substring($repo.Length + 1) }) |
     Where-Object { $shipped -notcontains $_ }
 

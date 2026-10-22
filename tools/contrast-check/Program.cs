@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace TweakPilot.Tools.ContrastCheck;
+namespace AscendedTweaks.Tools.ContrastCheck;
 
 /// <summary>
 /// Prueft alle Text-auf-Flaeche-Paare beider Themes gegen WCAG 2.x (4,5:1 fuer Text, 3:1 fuer Symbole und Bedienelemente).
@@ -118,7 +118,7 @@ internal static partial class Program
     {
         for (var dir = new DirectoryInfo(Environment.CurrentDirectory); dir is not null; dir = dir.Parent)
         {
-            var candidate = Path.Combine(dir.FullName, "src", "TweakPilot.App", "Themes");
+            var candidate = Path.Combine(dir.FullName, "src", "AscendedTweaks.App", "Themes");
             if (Directory.Exists(candidate))
             {
                 return candidate;

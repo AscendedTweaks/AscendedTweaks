@@ -1,0 +1,1744 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                    xmlns:c="clr-namespace:AscendedTweaks.App.Controls"
+                    xmlns:vm="clr-namespace:AscendedTweaks.App.ViewModels"
+                    xmlns:sv="clr-namespace:AscendedTweaks.App.Services"
+                    xmlns:v="clr-namespace:AscendedTweaks.App.Views"
+                    xmlns:s="clr-namespace:AscendedTweaks.App.Services"
+                    xmlns:loc="clr-namespace:AscendedTweaks.Localization;assembly=AscendedTweaks.Localization">
+    <!-- Zuordnung ViewModel zu View ohne Reflection-Scanning (docs/DESIGN.md, Abschnitt 4). -->
+
+    <DataTemplate DataType="{x:Type vm:PlaceholderPageViewModel}">
+        <Border Style="{StaticResource Card}">
+            <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc page.placeholder}" />
+        </Border>
+    </DataTemplate>
+
+    <!-- V2 Einfach-Modus (Abschnitt 2): eine Karte = ein Schalter, Nutzen-Titel, ein Satz, Wirkungswort, ein Risiko-Symbol. -->
+    <DataTemplate x:Key="SimpleCard" DataType="{x:Type sv:TweakCardViewModel}">
+        <Border Style="{StaticResource Card}" Padding="20,16">
+            <DockPanel>
+                <ToggleButton DockPanel.Dock="Left" Style="{StaticResource Toggle.Switch}" IsChecked="{Binding IsOn, Mode=TwoWay}" IsEnabled="{Binding IsToggleEnabled}"
+                              ToolTip="{Binding ToggleToolTip}" ToolTipService.ShowOnDisabled="True" VerticalAlignment="Top" Margin="0,4,16,0"
+                              AutomationProperties.Name="{Binding PlainTitle}" AutomationProperties.HelpText="{Binding PlainDescription}" />
+                <StackPanel>
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,0,0">
+                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ImpactText}" Margin="0,0,12,0" VerticalAlignment="Center" ToolTip="{Binding ImpactNote}" />
+                            <ui:SymbolIcon Symbol="{Binding RiskPlainSymbol}" FontSize="16" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
+                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding RiskPlainText}" Margin="4,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding PlainTitle}" TextWrapping="Wrap" />
+                    </DockPanel>
+                    <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding PlainDescription}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                    <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ToggleToolTip}" TextWrapping="Wrap" Margin="0,4,0,0"
+                               Visibility="{Binding ToggleToolTip, Converter={StaticResource NullToCollapsed}}" />
+                    <Expander Margin="0,8,0,0" AutomationProperties.Name="{s:Loc simple.technical}" sv:A11y.NameParts="True">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.technical}" />
+                        </Expander.Header>
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Name}" TextWrapping="Wrap" />
+                            <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Description}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                            <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding SideEffects}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                            <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding ImpactNote}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                            <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc card.details}" Command="{Binding ShowDetailsCommand}" HorizontalAlignment="Left" Margin="0,4,0,0" MinHeight="40" />
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:HelpViewModel}">
+        <StackPanel>
+            <c:ActionButton Style="{StaticResource Button.Text}" Command="{Binding ToggleCommand}" HorizontalAlignment="Left" MinHeight="40" AutomationProperties.Name="{s:Loc simple.help}">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="QuestionCircle16" FontSize="16" Margin="0,0,6,0" />
+                    <TextBlock Text="{s:Loc simple.help}" VerticalAlignment="Center" />
+                </StackPanel>
+            </c:ActionButton>
+            <Border Style="{StaticResource Banner}" Visibility="{Binding IsOpen, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock Style="{StaticResource Text.Simple.Body}" TextWrapping="Wrap">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource LocKey}">
+                            <Binding Path="TextKey" />
+                            <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SimpleTweakPageViewModel}">
+        <StackPanel Margin="0,0,0,24">
+            <ContentControl Content="{Binding Help}" Focusable="False" Margin="0,0,0,8" />
+            <ui:TextBox Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{s:Loc simple.search}" Icon="{ui:SymbolIcon Search24}"
+                        AutomationProperties.Name="{s:Loc simple.search}" MinHeight="40" FontSize="15" Margin="0,0,0,16" />
+            <ItemsControl ItemsSource="{Binding Cards}" ItemTemplate="{StaticResource SimpleCard}" Focusable="False" />
+            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.empty}" Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}" Margin="0,0,0,16" />
+            <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{Binding MoreText}" Command="{Binding MoreCommand}" HorizontalAlignment="Left" MinHeight="40"
+                            Visibility="{Binding HasMore, Converter={StaticResource BoolToVisibility}}" Margin="0,0,0,16" />
+            <ItemsControl ItemsSource="{Binding Extras}" Focusable="False" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SimpleAutostartCard}">
+        <StackPanel Margin="0,8,0,0">
+            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.autostart.title}" Margin="0,0,0,4" />
+            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.autostart.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+            <ContentControl Content="{Binding Autostart}" Focusable="False" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SimplePingCard}">
+        <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+            <StackPanel DataContext="{Binding Tools}">
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.ping.title}" Margin="0,0,0,4" />
+                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.ping.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox ItemsSource="{Binding Targets}" SelectedItem="{Binding Target}" MinWidth="140" MinHeight="40" AutomationProperties.Name="{s:Loc simple.ping.title}" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc net.ping.run}" Command="{Binding PingCommand}" IsRunning="{Binding IsPinging}" MinHeight="40" />
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding Results}" Focusable="False" Margin="0,8,0,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource Text.Simple.Body}" TextWrapping="Wrap"><Run Text="{Binding Target, Mode=OneWay}" FontWeight="SemiBold" /><Run Text=": " /><Run Text="{Binding Summary, Mode=OneWay}" /></TextBlock>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SimpleUpdatesCard}">
+        <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+            <DockPanel DataContext="{Binding Updates}">
+                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc updates.open}" Command="{Binding OpenWindowsUpdateCommand}" VerticalAlignment="Top" MinHeight="40" />
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.updates.title}" Margin="0,0,0,4" />
+                    <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding PauseText}" TextWrapping="Wrap" />
+                    <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.updates.intro}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SimpleStartViewModel}">
+        <StackPanel Margin="0,0,0,24">
+            <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{s:Loc simple.start.hello}" Margin="0,0,0,4" />
+            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Status}" TextWrapping="Wrap" Margin="0,0,0,8" />
+            <ContentControl Content="{Binding Help}" Focusable="False" Margin="0,0,0,16" />
+            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.start.presets}" Margin="0,0,0,8" />
+            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Message}" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="{Binding Message, Converter={StaticResource NullToCollapsed}}" />
+            <ItemsControl ItemsSource="{Binding Presets}" Focusable="False">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}" Margin="0,0,12,12" MinHeight="160">
+                            <DockPanel>
+                                <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+                                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.undo}" Command="{Binding UndoCommand}" MinHeight="40"
+                                                    Visibility="{Binding IsOwned, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Name}" />
+                                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc simple.preset.apply}" Command="{Binding ApplyCommand}"
+                                                    HorizontalAlignment="Left" MinHeight="40" AutomationProperties.HelpText="{Binding Name}" />
+                                </DockPanel>
+                                <ListBox DockPanel.Dock="Bottom" Style="{StaticResource Segment.List}" ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel, Mode=TwoWay}"
+                                         AutomationProperties.Name="{s:Loc level.title}" Margin="0,10,0,0" Visibility="{Binding HasLevels, Converter={StaticResource BoolToVisibility}}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Label}" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="22" Foreground="{DynamicResource Brush.TextSecondary}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Description}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                                    <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Summary}" Margin="0,8,0,0" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <c:ActionButton Style="{StaticResource Button.Text}" Command="{Binding CreateOwnCommand}" HorizontalAlignment="Left" MinHeight="40" AutomationProperties.Name="{s:Loc simple.preset.own}"
+                            Visibility="{Binding CanCreateOwn, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="Add16" FontSize="16" Margin="0,0,6,0" />
+                    <TextBlock Text="{s:Loc simple.preset.own}" VerticalAlignment="Center" />
+                </StackPanel>
+            </c:ActionButton>
+            <ContentControl Content="{Binding Measurement}" Focusable="False" Visibility="{Binding Measurement, Converter={StaticResource NullToCollapsed}}" />
+            <Border Style="{StaticResource Banner}" Margin="0,8,0,0">
+                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc banner.honesty}" TextWrapping="Wrap" />
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:CustomPresetDialogViewModel}">
+        <Border Style="{StaticResource Dialog}" AutomationProperties.Name="{s:Loc simple.preset.own}">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.preset.own}" Margin="0,0,0,8" />
+                <TextBox DockPanel.Dock="Top" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{s:Loc profiles.name}" MinHeight="40" Margin="0,0,0,12" />
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc dialog.cancel}" Command="{Binding DeclineCommand}" IsCancel="True" Margin="0,0,8,0" MinHeight="40" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc dialog.save}" Command="{Binding SaveCommand}" MinHeight="40" />
+                </StackPanel>
+                <ScrollViewer MaxHeight="380" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsChecked}" Margin="0,0,0,8" AutomationProperties.Name="{Binding Title}" AutomationProperties.HelpText="{Binding Description}">
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource Text.Simple.Title}" FontSize="15" Text="{Binding Title}" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Description}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SimpleBackViewModel}">
+        <StackPanel Margin="0,0,0,24">
+            <ContentControl Content="{Binding Help}" Focusable="False" Margin="0,0,0,8" />
+            <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc restore.undoall}" Command="{Binding UndoAllCommand}" HorizontalAlignment="Left"
+                            MinHeight="44" Padding="20,8" Margin="0,0,0,16" IsEnabled="{Binding HasItems}" />
+            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.back.list}" Margin="0,0,0,8" />
+            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.back.empty}" Visibility="{Binding HasItems, Converter={StaticResource InverseBoolToVisibility}}" />
+            <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}" Padding="20,12">
+                            <DockPanel>
+                                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc simple.back.undo}" MinHeight="40" VerticalAlignment="Center"
+                                                Command="{Binding DataContext.UndoCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                AutomationProperties.HelpText="{Binding Title}" />
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding Title}" TextWrapping="Wrap" />
+                                    <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding When}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Dashboard (Abschnitt 6.1): nur Anzeige und eine Aktion, kein Gesamtwert. -->
+    <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc dashboard.indicators}" Margin="0,0,0,4" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc dashboard.indicators.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <ItemsControl ItemsSource="{Binding Indicators}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Label}" TextWrapping="Wrap" />
+                                    <TextBlock Grid.Column="1" Style="{StaticResource Text.BodyStrong}" Text="{Binding Value}" TextWrapping="Wrap" Margin="8,0" />
+                                    <TextBlock Grid.Column="2" Style="{StaticResource Text.Caption}" Text="{Binding Explanation}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc dashboard.system}" Margin="0,0,0,8" />
+                    <ItemsControl ItemsSource="{Binding System}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="140" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Label}" />
+                                    <TextBlock Grid.Column="1" Style="{StaticResource Text.Body}" Text="{Binding Value}" TextWrapping="Wrap" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+        <StackPanel>
+            <v:SettingsPage />
+            <ContentControl Content="{Binding Maintenance}" Focusable="False" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Wartung in den Einstellungen (Abschnitt 6.11). -->
+    <DataTemplate DataType="{x:Type vm:SettingsMaintenanceViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                        <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc settings.update.install}" Command="{Binding InstallUpdateCommand}" Margin="0,0,8,0"
+                                        Visibility="{Binding HasUpdate, Converter={StaticResource BoolToVisibility}}" />
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc settings.update.check}" Command="{Binding CheckUpdateCommand}" IsRunning="{Binding IsChecking}" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc settings.update}" />
+                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc settings.update.help}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                        <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding UpdateText}" TextWrapping="Wrap" Margin="0,4,0,0" Visibility="{Binding UpdateText, Converter={StaticResource NullToCollapsed}}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc settings.logs.open}" Command="{Binding OpenLogsCommand}" Margin="0,0,8,0" />
+                        <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc settings.logs.delete}" Command="{Binding DeleteLogsCommand}" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc settings.logs}" />
+                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc settings.logs.help}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                        <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding LogText}" Margin="0,4,0,0" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc settings.cli}" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding CliText}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc settings.reset}" Command="{Binding ResetSettingsCommand}" VerticalAlignment="Top" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc settings.reset}" />
+                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc settings.reset.help}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" Visibility="{Binding KeepList, Converter={StaticResource NullToCollapsed}}">
+                <StackPanel DataContext="{Binding KeepList}">
+                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc keep.title}" Margin="0,0,0,4" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc keep.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc keep.empty}" Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}" />
+                    <ItemsControl ItemsSource="{Binding Entries}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,2">
+                                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc keep.remove}" MinHeight="40"
+                                                    Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" AutomationProperties.HelpText="{Binding}" />
+                                    <TextBlock Style="{StaticResource Text.Body}" Text="{Binding}" TextTrimming="CharacterEllipsis" ToolTip="{Binding}" VerticalAlignment="Center" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc glossary.title}" Margin="0,0,0,8" />
+                    <ItemsControl ItemsSource="{Binding GlossaryKeys}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Expander Margin="0,0,0,4" sv:A11y.NameParts="True">
+                                    <Expander.Header>
+                                        <TextBlock Style="{StaticResource Text.Body}">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource GlossaryKey}" ConverterParameter="term">
+                                                    <Binding />
+                                                    <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </Expander.Header>
+                                    <TextBlock Style="{StaticResource Text.Secondary}" TextWrapping="Wrap" Margin="0,4,0,8">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource GlossaryKey}" ConverterParameter="text">
+                                                <Binding />
+                                                <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </Expander>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc about.title}" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding VersionText}" Margin="0,4,0,8" />
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc about.disclaimer}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc about.privacy}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc about.trademark}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <WrapPanel>
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc about.sources}" Command="{Binding OpenSourcesCommand}" Margin="0,0,8,8" />
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc about.privacy.open}" Command="{Binding OpenPrivacyCommand}" Margin="0,0,8,8" />
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc about.notices}" Command="{Binding OpenNoticesCommand}" Margin="0,0,8,8" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:DesignCatalogViewModel}">
+        <v:DesignCatalogPage />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:RestorePageViewModel}">
+        <v:RestorePage />
+    </DataTemplate>
+
+    <!-- Tweak-Karte: Schalter, Name, Kurzbeschreibung (2 Zeilen), Risiko- und Wirkungs-Badge, Chips, "Mehr Details". -->
+    <DataTemplate DataType="{x:Type sv:TweakCardViewModel}">
+        <Border Style="{StaticResource Card}" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ToggleButton Grid.Column="0" Style="{StaticResource Toggle.Switch}" VerticalAlignment="Top" Margin="0,2,16,0"
+                              IsChecked="{Binding IsOn, Mode=TwoWay}" IsEnabled="{Binding IsToggleEnabled}" ToolTip="{Binding ToggleToolTip}"
+                              AutomationProperties.Name="{Binding Name}" AutomationProperties.HelpText="{Binding Description}" />
+                <StackPanel Grid.Column="1">
+                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Name}" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Description}" Margin="0,4,0,8"
+                               LineHeight="20" LineStackingStrategy="BlockLineHeight" MaxHeight="40" TextTrimming="WordEllipsis" />
+                    <!-- Grund fuer einen gesperrten Schalter auch als Text, weil Tooltips deaktivierter Elemente per Tastatur nicht erreichbar sind. -->
+                    <DockPanel Margin="0,0,0,8" Visibility="{Binding ToggleToolTip, Converter={StaticResource EmptyToCollapsed}}">
+                        <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Info16" FontSize="14" Foreground="{DynamicResource Brush.TextSecondary}" Margin="0,0,6,0" VerticalAlignment="Top" />
+                        <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding ToggleToolTip}" />
+                    </DockPanel>
+                    <WrapPanel>
+                        <c:Badge Tone="{Binding RiskTone}" Symbol="{Binding RiskSymbol}" Text="{Binding RiskText}" Filled="True" Margin="0,0,8,4" />
+                        <c:Badge Tone="{Binding EvidenceTone}" Symbol="{Binding EvidenceSymbol}" Text="{Binding EvidenceText}" Margin="0,0,8,4" />
+                        <c:Badge Tone="Neutral" Symbol="ArrowClockwise16" Text="{Binding RebootText}" Margin="0,0,8,4"
+                                 Visibility="{Binding Tweak.RequiresReboot, Converter={StaticResource BoolToVisibility}}" />
+                        <c:Badge Tone="Neutral" Symbol="Shield16" Text="{Binding AdminText}" Margin="0,0,8,4"
+                                 Visibility="{Binding Tweak.RequiresAdmin, Converter={StaticResource BoolToVisibility}}" />
+                        <c:Badge Tone="Accent" Symbol="History16" Text="{s:Loc card.pending}" Filled="True" Margin="0,0,8,4"
+                                 Visibility="{Binding IsPending, Converter={StaticResource BoolToVisibility}}" />
+                    </WrapPanel>
+                </StackPanel>
+                <c:ActionButton Grid.Column="2" Style="{StaticResource Button.Text}" VerticalAlignment="Top" Content="{s:Loc card.details}"
+                                Command="{Binding ShowDetailsCommand}" AutomationProperties.HelpText="{Binding Name}" />
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <!-- Updates (Abschnitt 6.9): Grundsatz, Pause, Zielversion. -->
+    <DataTemplate DataType="{x:Type vm:UpdatesOverviewViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}">
+                <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc updates.info}" TextWrapping="Wrap" />
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc updates.open}" Command="{Binding OpenWindowsUpdateCommand}" VerticalAlignment="Top" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc updates.status.title}" Margin="0,0,0,4" />
+                        <TextBlock Style="{StaticResource Text.Body}" Text="{Binding PauseText}" TextWrapping="Wrap" />
+                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding VersionText}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{Binding PauseTitle}" Margin="0,0,0,4" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc updates.pause.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc updates.expertonly}" TextWrapping="Wrap"
+                               Visibility="{Binding ExpertMode, Converter={StaticResource InverseBoolToVisibility}}" />
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding ExpertMode, Converter={StaticResource BoolToVisibility}}">
+                        <ComboBox ItemsSource="{Binding DayOptions}" SelectedItem="{Binding SelectedDays}" MinWidth="90" AutomationProperties.Name="{s:Loc updates.pause.days}" />
+                        <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc updates.pause.days}" VerticalAlignment="Center" Margin="8,0,16,0" />
+                        <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc updates.pause.run}" Command="{Binding PauseCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" Visibility="{Binding ExpertMode, Converter={StaticResource BoolToVisibility}}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc updates.hold.run}" Command="{Binding HoldVersionCommand}" IsEnabled="{Binding CanTarget}" VerticalAlignment="Top" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{Binding HoldTitle}" Margin="0,0,0,4" />
+                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding HoldSideEffects}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Profile (Abschnitt 6.10). -->
+    <DataTemplate DataType="{x:Type vm:ProfilesPageViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,0,0" IsEnabled="{Binding CanChange}">
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc profiles.import}" Command="{Binding ImportCommand}" Margin="0,0,8,0" />
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc profiles.save}" Command="{Binding SaveCurrentCommand}" />
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc profiles.intro}" TextWrapping="Wrap" />
+                </DockPanel>
+            </Border>
+            <ListBox Style="{StaticResource Segment.List}" ItemsSource="{Binding Profiles}" SelectedItem="{Binding Selected, Mode=TwoWay}"
+                     AutomationProperties.Name="{s:Loc nav.profiles}" Margin="0,0,0,8">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Message}" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="{Binding Message, Converter={StaticResource NullToCollapsed}}" />
+            <Border Style="{StaticResource Card}" DataContext="{Binding}">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                            <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc profiles.rename}" Command="{Binding RenameCommand}" Margin="0,0,4,0"
+                                            Visibility="{Binding Selected.IsOwn, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}" />
+                            <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc profiles.delete}" Command="{Binding DeleteCommand}" Margin="0,0,4,0"
+                                            Visibility="{Binding Selected.IsOwn, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}" />
+                            <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc profiles.export}" Command="{Binding ExportCommand}" Margin="0,0,4,0" />
+                            <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc profiles.script}" Command="{Binding ExportScriptsCommand}" Margin="0,0,8,0" />
+                            <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc profiles.apply}" Command="{Binding ApplyCommand}" IsEnabled="{Binding CanApply}" IsRunning="{Binding IsBusy}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{Binding Selected.Name}" TextWrapping="Wrap" />
+                            <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Selected.Description}" TextWrapping="Wrap"
+                                       Visibility="{Binding Selected.Description, Converter={StaticResource NullToCollapsed}}" />
+                            <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding PlanSummary}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </DockPanel>
+                    <ItemsControl ItemsSource="{Binding Plan}" Focusable="False" Margin="0,8,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Name}" TextWrapping="Wrap" />
+                                        <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding SideEffects}" TextWrapping="Wrap" Visibility="{Binding SideEffects, Converter={StaticResource NullToCollapsed}}" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Style="{StaticResource Text.Secondary}" Text="{Binding Text}" TextWrapping="Wrap" Margin="12,0,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" Visibility="{Binding HasComparison, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc profiles.compare.title}" Margin="0,0,0,8" />
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc profiles.compare.tweak}" />
+                        <TextBlock Grid.Column="1" Style="{StaticResource Text.Caption}" Text="{s:Loc profiles.compare.before}" />
+                        <TextBlock Grid.Column="2" Style="{StaticResource Text.Caption}" Text="{s:Loc profiles.compare.after}" />
+                        <TextBlock Grid.Column="3" Style="{StaticResource Text.Caption}" Text="{s:Loc profiles.compare.reboot}" />
+                    </Grid>
+                    <ItemsControl ItemsSource="{Binding Comparison}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Tweak}" TextWrapping="Wrap" />
+                                    <TextBlock Grid.Column="1" Style="{StaticResource Text.Body}" Text="{Binding Before}" />
+                                    <TextBlock Grid.Column="2" Style="{StaticResource Text.Body}" Text="{Binding After}" />
+                                    <TextBlock Grid.Column="3" Style="{StaticResource Text.Body}" Text="{Binding Reboot}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc profiles.metric.title}" Margin="0,12,0,4" />
+                    <ItemsControl ItemsSource="{Binding Metrics}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Label}" TextWrapping="Wrap" />
+                                    <TextBlock Grid.Column="1" Style="{StaticResource Text.Body}" Text="{Binding Before}" />
+                                    <TextBlock Grid.Column="2" Style="{StaticResource Text.Body}" Text="{Binding After}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc profiles.metric.note}" TextWrapping="Wrap" Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Netzwerk und Datentraeger (Abschnitt 6.7, 6.8): Bereichsseite. -->
+    <DataTemplate DataType="{x:Type vm:SectionPageViewModel}">
+        <StackPanel>
+            <ListBox Style="{StaticResource Segment.List}" ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection, Mode=TwoWay}"
+                     AutomationProperties.Name="{s:Loc perf.sections}" Margin="0,0,0,8">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource Text.Body}">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource LocKey}">
+                                    <Binding Path="TitleKey" />
+                                    <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ContentControl Content="{Binding CurrentSection}" Focusable="False" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:CustomDnsViewModel}">
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc dns.custom.title}" Margin="0,0,0,4" />
+                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc dns.custom.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Primary}" Content="{s:Loc dns.custom.apply}" Command="{Binding ApplyCommand}" Margin="8,0,0,0" />
+                    <TextBox Text="{Binding Input, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{s:Loc dns.custom.title}" VerticalContentAlignment="Center" MinHeight="32" />
+                </DockPanel>
+                <TextBlock Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Danger}" Text="{Binding Error}" TextWrapping="Wrap" Margin="0,4,0,0"
+                           Visibility="{Binding Error, Converter={StaticResource NullToCollapsed}}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:NetworkToolsViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc net.ping.title}" Margin="0,0,0,4" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc net.ping.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <DockPanel>
+                        <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Primary}" Content="{s:Loc net.ping.run}" Command="{Binding PingCommand}" IsRunning="{Binding IsPinging}" Margin="8,0,0,0" />
+                        <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.Caption}" Text="{Binding PingProgress, StringFormat={}{0}/50}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                        <ComboBox ItemsSource="{Binding Targets}" SelectedItem="{Binding Target}" AutomationProperties.Name="{s:Loc net.ping.title}" />
+                    </DockPanel>
+                    <ItemsControl ItemsSource="{Binding Results}" Focusable="False" Margin="0,8,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{StaticResource Text.Body}" TextWrapping="Wrap" Margin="0,2"><Run Text="{Binding Target, Mode=OneWay}" FontWeight="SemiBold" /><Run Text=": " /><Run Text="{Binding Summary, Mode=OneWay}" /></TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc net.flush.run}" Command="{Binding FlushDnsCommand}" VerticalAlignment="Top" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc net.flush.title}" Margin="0,0,0,4" />
+                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc net.flush.intro}" TextWrapping="Wrap" />
+                        <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding DnsText}" Margin="0,4,0,0" Visibility="{Binding DnsText, Converter={StaticResource NullToCollapsed}}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc net.doh.open}" Command="{Binding OpenDnsSettingsCommand}" VerticalAlignment="Top" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc net.doh.title}" Margin="0,0,0,4" />
+                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding DohText}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Danger}" Content="{s:Loc net.reset.run}" Command="{Binding NetworkResetCommand}" VerticalAlignment="Top" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc net.reset.title}" Margin="0,0,0,4" />
+                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc net.reset.body}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:DrivesViewModel}">
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding Volumes}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <DockPanel>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc disk.retrim}" Margin="0,0,8,0"
+                                                    Command="{Binding DataContext.ReTrimCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                    Visibility="{Binding CanReTrim, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Title}" />
+                                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc disk.defrag}"
+                                                    Command="{Binding DataContext.DefragCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                    IsEnabled="{Binding CanDefrag}" AutomationProperties.HelpText="{Binding Title}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Title}" />
+                                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Detail}" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding DefragNote}" TextWrapping="Wrap" Margin="0,4,0,0" Visibility="{Binding DefragNote, Converter={StaticResource NullToCollapsed}}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc disk.health.read}" Command="{Binding ReadHealthCommand}" IsRunning="{Binding IsBusy}" VerticalAlignment="Top" />
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc disk.health.title}" VerticalAlignment="Center" />
+                    </DockPanel>
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc disk.health.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <ItemsControl ItemsSource="{Binding Health}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,4">
+                                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Title}" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Detail}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="LargeFileRowTemplate">
+        <Border Style="{StaticResource Card}">
+            <DockPanel>
+                <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, Mode=TwoWay}" VerticalAlignment="Top" Margin="0,2,12,0"
+                          Visibility="{Binding CanSelect, Converter={StaticResource BoolToVisibility}}" AutomationProperties.Name="{Binding Name}" />
+                <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.BodyStrong}" Text="{Binding Size}" Margin="12,0,0,0" VerticalAlignment="Top" />
+                <StackPanel>
+                    <WrapPanel>
+                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Name}" Margin="0,0,12,2" TextTrimming="CharacterEllipsis" />
+                        <c:Badge Tone="Neutral" Symbol="Copy16" Text="{Binding Duplicate}" Margin="0,0,8,2" Visibility="{Binding Duplicate, Converter={StaticResource NullToCollapsed}}" />
+                    </WrapPanel>
+                    <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Why}" TextWrapping="Wrap" />
+                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Folder}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Folder}" />
+                    <WrapPanel Margin="0,2,0,0">
+                        <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc disk.large.show}" MinHeight="40" Margin="0,0,8,0"
+                                        Command="{Binding DataContext.ShowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" AutomationProperties.HelpText="{Binding Name}" />
+                        <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc large.keep.file}" MinHeight="40" Margin="0,0,8,0"
+                                        Command="{Binding DataContext.KeepFileCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" AutomationProperties.HelpText="{Binding Name}" />
+                        <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc large.keep.folder}" MinHeight="40"
+                                        Command="{Binding DataContext.KeepFolderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" AutomationProperties.HelpText="{Binding Folder}" />
+                    </WrapPanel>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:LargeFilesViewModel}">
+        <UserControl>
+            <StackPanel>
+                <Border Style="{StaticResource Banner}">
+                    <DockPanel>
+                        <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc disk.large.scan}" Command="{Binding ScanCommand}" IsRunning="{Binding IsScanning}" VerticalAlignment="Top" Margin="12,0,0,0" MinHeight="40" />
+                        <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc large.intro}" TextWrapping="Wrap" />
+                    </DockPanel>
+                </Border>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8" Visibility="{Binding IsExpert, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc large.threshold}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <ComboBox ItemsSource="{Binding Thresholds}" SelectedItem="{Binding Threshold}" DisplayMemberPath="Label" MinWidth="120" MinHeight="40" AutomationProperties.Name="{s:Loc large.threshold}" />
+                </StackPanel>
+                <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Status}" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="{Binding Status, Converter={StaticResource NullToCollapsed}}" />
+                <DockPanel Margin="0,8,0,4" Visibility="{Binding HasResults, Converter={StaticResource BoolToVisibility}}">
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc large.selectall}" Command="{Binding SelectAllACommand}" MinHeight="40" />
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc large.group.a}" VerticalAlignment="Center" />
+                </DockPanel>
+                <ItemsControl ItemsSource="{Binding GroupA}" ItemTemplate="{StaticResource LargeFileRowTemplate}" Focusable="False" />
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc large.group.b}" Margin="0,8,0,4" Visibility="{Binding HasResults, Converter={StaticResource BoolToVisibility}}" />
+                <ItemsControl ItemsSource="{Binding GroupB}" ItemTemplate="{StaticResource LargeFileRowTemplate}" Focusable="False" />
+                <c:ActionButton Style="{StaticResource Button.Primary}" Content="{Binding RecycleText}" Command="{Binding RecycleCommand}" HorizontalAlignment="Left" MinHeight="40" Margin="0,8,0,8"
+                                Visibility="{Binding HasResults, Converter={StaticResource BoolToVisibility}}" />
+                <CheckBox Content="{s:Loc large.showprotected}" IsChecked="{Binding ShowProtected, Mode=TwoWay}" Margin="0,8,0,8" MinHeight="40" Visibility="{Binding HasResults, Converter={StaticResource BoolToVisibility}}" />
+                <StackPanel Visibility="{Binding ShowProtected, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc large.protected.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <ItemsControl ItemsSource="{Binding Protected}" ItemTemplate="{StaticResource LargeFileRowTemplate}" Focusable="False" />
+                </StackPanel>
+                <Border Style="{StaticResource Card}" Margin="0,8,0,0" Visibility="{Binding HasResults, Converter={StaticResource BoolToVisibility}}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc large.games.title}" Margin="0,0,0,4" />
+                        <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc large.games.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                        <ItemsControl ItemsSource="{Binding Games}" Focusable="False">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel Margin="0,2">
+                                        <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc large.games.uninstall}" MinHeight="40"
+                                                        Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" AutomationProperties.HelpText="{Binding Game.Name}" />
+                                        <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc disk.large.show}" MinHeight="40" Margin="0,0,8,0"
+                                                        Command="{Binding DataContext.ShowGameCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" AutomationProperties.HelpText="{Binding Game.Name}" />
+                                        <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.BodyStrong}" Text="{Binding Size}" Margin="12,0" VerticalAlignment="Center" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Game.Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </UserControl>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SimpleCleanupView}">
+        <StackPanel DataContext="{Binding Cleanup}">
+            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.clean.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding SelectedText}" Margin="0,0,0,8" Visibility="{Binding HasScanned, Converter={StaticResource BoolToVisibility}}" />
+            <ItemsControl ItemsSource="{Binding Rows}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel Margin="0,4">
+                            <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding CanSelect}" VerticalAlignment="Center" Margin="0,0,12,0"
+                                      MinHeight="40" AutomationProperties.Name="{Binding Title}" />
+                            <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.Simple.Body}" Text="{Binding SizeText}" Margin="12,0,0,0" VerticalAlignment="Center" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Title}" />
+                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Note}" TextWrapping="Wrap" Visibility="{Binding Note, Converter={StaticResource NullToCollapsed}}" />
+                            </StackPanel>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <WrapPanel Margin="0,12,0,0">
+                <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc simple.clean.run}" Command="{Binding CleanCommand}" IsEnabled="{Binding CanClean}" MinHeight="40" Margin="0,0,8,8" />
+                <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc clean.scan}" Command="{Binding ScanCommand}" IsRunning="{Binding IsBusy}" MinHeight="40" Margin="0,0,8,8" />
+            </WrapPanel>
+            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.clean.note}" TextWrapping="Wrap" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Debloat (Abschnitt 6.6): Apps, Oberflaeche, OneDrive. -->
+    <DataTemplate DataType="{x:Type vm:DebloatPageViewModel}">
+        <StackPanel>
+            <ListBox Style="{StaticResource Segment.List}" ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection, Mode=TwoWay}"
+                     AutomationProperties.Name="{s:Loc perf.sections}" Margin="0,0,0,8">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource Text.Body}">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource LocKey}">
+                                    <Binding Path="TitleKey" />
+                                    <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ContentControl Content="{Binding CurrentSection}" Focusable="False" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:AppsViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}" BorderBrush="{DynamicResource Brush.Warning}">
+                <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc debloat.intro}" TextWrapping="Wrap" />
+            </Border>
+            <WrapPanel Margin="0,0,0,8">
+                <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc debloat.remove}" Command="{Binding RemoveCommand}" IsEnabled="{Binding CanRemove}" IsRunning="{Binding IsBusy}" Margin="0,0,16,8" />
+                <CheckBox IsChecked="{Binding Deprovision, Mode=TwoWay}" Content="{s:Loc debloat.deprovision}" VerticalAlignment="Center" Margin="0,0,16,8" />
+                <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding SelectedText}" VerticalAlignment="Center" Margin="0,0,0,8" />
+            </WrapPanel>
+            <TextBlock Style="{StaticResource Text.Body}" Foreground="{DynamicResource Brush.Danger}" Text="{Binding Error}" TextWrapping="Wrap"
+                       Visibility="{Binding Error, Converter={StaticResource NullToCollapsed}}" />
+            <ItemsControl ItemsSource="{Binding Groups}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{Binding Title}" Margin="0,0,0,8" />
+                            <ItemsControl ItemsSource="{Binding Apps}" Focusable="False">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource Card}">
+                                            <DockPanel>
+                                                <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding CanSelect}" VerticalAlignment="Top" Margin="0,2,12,0"
+                                                          AutomationProperties.Name="{Binding Name}" />
+                                                <StackPanel>
+                                                    <WrapPanel>
+                                                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Name}" Margin="0,0,12,4" VerticalAlignment="Center" />
+                                                        <c:Badge Tone="{Binding RiskTone}" Symbol="{Binding RiskSymbol}" Text="{Binding RiskText}" Filled="True" Margin="0,0,8,4" />
+                                                        <c:Badge Tone="Neutral" Symbol="LockClosed16" Text="{s:Loc debloat.badge.locked}" Margin="0,0,8,4" Visibility="{Binding LockReason, Converter={StaticResource NullToCollapsed}}" />
+                                                        <c:Badge Tone="Neutral" Symbol="Info16" Text="{s:Loc debloat.badge.notinstalled}" Margin="0,0,8,4" Visibility="{Binding IsInstalled, Converter={StaticResource InverseBoolToVisibility}}" />
+                                                    </WrapPanel>
+                                                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Description}" TextWrapping="Wrap" />
+                                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding LockReason}" TextWrapping="Wrap" Margin="0,4,0,0" Visibility="{Binding LockReason, Converter={StaticResource NullToCollapsed}}" />
+                                                    <TextBlock Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Warning}" Text="{Binding Warning}" TextWrapping="Wrap" Margin="0,4,0,0" Visibility="{Binding Warning, Converter={StaticResource NullToCollapsed}}" />
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:OneDriveViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}" BorderBrush="{DynamicResource Brush.Warning}">
+                <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc onedrive.intro}" TextWrapping="Wrap" />
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,8">
+                        <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Danger}" Content="{s:Loc onedrive.uninstall}" Command="{Binding UninstallCommand}" IsEnabled="{Binding CanUninstall}" IsRunning="{Binding IsBusy}" VerticalAlignment="Top" />
+                        <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc perm.reload}" Command="{Binding LoadCommand}" VerticalAlignment="Top" Margin="0,0,8,0" />
+                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding StatusText}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                    </DockPanel>
+                    <ItemsControl ItemsSource="{Binding Reasons}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,4,0,0">
+                                    <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Warning16" FontSize="14" Foreground="{DynamicResource Brush.Warning}" Margin="0,0,8,0" VerticalAlignment="Top" />
+                                    <TextBlock Style="{StaticResource Text.Body}" Text="{Binding}" TextWrapping="Wrap" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Bereinigung (Abschnitt 6.5): Scan, Auswahl, Modus, dann Loeschen mit deutlicher Rueckfrage. -->
+    <DataTemplate DataType="{x:Type vm:CleanupPageViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}" BorderBrush="{DynamicResource Brush.Warning}">
+                <DockPanel>
+                    <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Warning24" FontSize="20" Foreground="{DynamicResource Brush.Warning}" Margin="0,0,12,0" VerticalAlignment="Top" />
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc clean.intro}" TextWrapping="Wrap" />
+                </DockPanel>
+            </Border>
+            <WrapPanel Margin="0,0,0,8">
+                <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc clean.scan}" Command="{Binding ScanCommand}" IsRunning="{Binding IsBusy}" Margin="0,0,8,8" />
+                <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc clean.run}" Command="{Binding CleanCommand}" IsEnabled="{Binding CanClean}" Margin="0,0,16,8" />
+                <RadioButton GroupName="CleanMode" IsChecked="{Binding UseRecycleBin, Mode=TwoWay}" Content="{s:Loc clean.mode.recycle}" Margin="0,0,16,8" VerticalAlignment="Center" />
+                <RadioButton GroupName="CleanMode" IsChecked="{Binding UseRecycleBin, Mode=TwoWay, Converter={StaticResource InverseBool}}" Content="{s:Loc clean.mode.delete}" Margin="0,0,16,8" VerticalAlignment="Center" />
+            </WrapPanel>
+            <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding SelectedText}" Margin="0,0,0,8" Visibility="{Binding HasScanned, Converter={StaticResource BoolToVisibility}}" />
+            <ItemsControl ItemsSource="{Binding Rows}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <DockPanel>
+                                <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding CanSelect}" VerticalAlignment="Top" Margin="0,2,12,0"
+                                          AutomationProperties.Name="{Binding Title}" />
+                                <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.BodyStrong}" Text="{Binding SizeText}" Margin="12,0,0,0" VerticalAlignment="Top" />
+                                <StackPanel>
+                                    <WrapPanel>
+                                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Title}" Margin="0,0,12,4" VerticalAlignment="Center" />
+                                        <c:Badge Tone="{Binding RiskTone}" Symbol="{Binding RiskSymbol}" Text="{Binding RiskText}" Filled="True" Margin="0,0,8,4" />
+                                        <c:Badge Tone="Neutral" Symbol="Delete16" Text="{Binding ModeText}" Margin="0,0,8,4" />
+                                        <c:Badge Tone="Neutral" Symbol="Shield16" Text="{s:Loc badge.admin}" Margin="0,0,8,4" Visibility="{Binding NeedsAdmin, Converter={StaticResource BoolToVisibility}}" />
+                                    </WrapPanel>
+                                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Description}" TextWrapping="Wrap" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding SideEffects}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Warning}" Text="{Binding Note}" TextWrapping="Wrap" Margin="0,4,0,0"
+                                               Visibility="{Binding Note, Converter={StaticResource NullToCollapsed}}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Gaming (Abschnitt 6.3): Pflicht-Hinweisbox zu Anti-Cheat immer oben, darunter die Bereiche. -->
+    <DataTemplate DataType="{x:Type vm:GamingPageViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}" BorderBrush="{DynamicResource Brush.Warning}">
+                <DockPanel>
+                    <ui:SymbolIcon DockPanel.Dock="Left" Symbol="ShieldError24" FontSize="20" Foreground="{DynamicResource Brush.Warning}" Margin="0,0,12,0" VerticalAlignment="Top" />
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc gaming.anticheat.notice}" TextWrapping="Wrap" />
+                </DockPanel>
+            </Border>
+            <ListBox Style="{StaticResource Segment.List}" ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection, Mode=TwoWay}"
+                     AutomationProperties.Name="{s:Loc perf.sections}" Margin="0,0,0,8">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource Text.Body}">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource LocKey}">
+                                    <Binding Path="TitleKey" />
+                                    <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ContentControl Content="{Binding CurrentSection}" Focusable="False" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:AntiCheatViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc perm.reload}" Command="{Binding LoadCommand}" IsRunning="{Binding IsLoading}" VerticalAlignment="Top" />
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc anticheat.intro}" TextWrapping="Wrap" />
+                </DockPanel>
+            </Border>
+            <ItemsControl ItemsSource="{Binding Rows}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <WrapPanel>
+                                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Title}" Margin="0,0,12,4" VerticalAlignment="Center" />
+                                    <c:Badge Tone="{Binding Tone}" Symbol="Info16" Text="{Binding StateText}" Margin="0,0,8,4" />
+                                </WrapPanel>
+                                <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Explanation}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:GamingChecksViewModel}">
+        <StackPanel Margin="0,8,0,0">
+            <DockPanel Margin="0,0,0,4">
+                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc check.reload}" Command="{Binding LoadCommand}" IsRunning="{Binding IsLoading}" VerticalAlignment="Top" MinHeight="40" />
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc check.title}" VerticalAlignment="Center" />
+            </DockPanel>
+            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc check.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+            <ItemsControl ItemsSource="{Binding Rows}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <WrapPanel>
+                                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Title}" Margin="0,0,12,4" VerticalAlignment="Center" />
+                                    <c:Badge Tone="{Binding Tone}" Symbol="Info16" Text="{Binding StateText}" Margin="0,0,8,4" />
+                                </WrapPanel>
+                                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Text}" TextWrapping="Wrap" />
+                                <TextBlock Style="{StaticResource Text.Caption}" TextWrapping="Wrap" Margin="0,4,0,0" Visibility="{Binding HowTo, Converter={StaticResource NullToCollapsed}}"><Run Text="{s:Loc check.howto}" FontWeight="SemiBold" /><Run Text=" " /><Run Text="{Binding HowTo, Mode=OneWay}" /></TextBlock>
+                                <WrapPanel Margin="0,4,0,0">
+                                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{Binding LinkText}" MinHeight="40" Margin="0,0,8,0"
+                                                    Command="{Binding DataContext.OpenLinkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                    AutomationProperties.HelpText="{Binding Title}" Visibility="{Binding Link, Converter={StaticResource NullToCollapsed}}" />
+                                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc check.jump}" MinHeight="40"
+                                                    Command="{Binding DataContext.JumpCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                    AutomationProperties.HelpText="{Binding Title}" Visibility="{Binding CanJump, Converter={StaticResource BoolToVisibility}}" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:MeasurementViewModel}">
+        <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc measure.title}" Margin="0,0,0,4" />
+                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Status}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                <ItemsControl ItemsSource="{Binding Rows}" Focusable="False" Margin="0,0,0,8">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel Margin="0,2">
+                                <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.BodyStrong}" Text="{Binding Value}" Margin="12,0,0,0" />
+                                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Label}" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <WrapPanel>
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc measure.now}" Command="{Binding MeasureNowCommand}" IsRunning="{Binding IsMeasuring}" MinHeight="40" Margin="0,0,8,8" />
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc measure.after}" Command="{Binding MeasureAfterCommand}" MinHeight="40" Margin="0,0,8,8"
+                                    Visibility="{Binding CanMeasureAfter, Converter={StaticResource BoolToVisibility}}" />
+                </WrapPanel>
+                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc measure.note}" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:GameProfileViewModel}">
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,8">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                        <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc gaming.profile.apply}" Command="{Binding ApplyCommand}" Margin="0,0,8,0"
+                                        AutomationProperties.HelpText="{Binding Name}" />
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc gaming.profile.start}" Command="{Binding StartCommand}" IsRunning="{Binding IsStarting}" Margin="0,0,8,0"
+                                        AutomationProperties.HelpText="{Binding Name}" />
+                        <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc gaming.profile.remove}" Command="{Binding RemoveCommand}"
+                                        AutomationProperties.HelpText="{Binding Name}" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Name}" />
+                        <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Detail}" />
+                    </StackPanel>
+                </DockPanel>
+                <CheckBox IsChecked="{Binding GpuHighPerformance, Mode=TwoWay}" Margin="0,4" Content="{s:Loc gaming.profile.gpu}" />
+                <CheckBox IsChecked="{Binding DisableFullscreenOptimizations, Mode=TwoWay}" Margin="0,4" Content="{s:Loc gaming.profile.fso}" />
+                <CheckBox IsChecked="{Binding StartHighPriority, Mode=TwoWay}" Margin="0,4" Content="{s:Loc gaming.profile.priority}" />
+                <CheckBox IsChecked="{Binding PermanentPriority, Mode=TwoWay}" Margin="0,4" Content="{s:Loc gaming.profile.permanent}"
+                          IsEnabled="{Binding CanUsePermanentPriority}" Visibility="{Binding ExpertMode, Converter={StaticResource BoolToVisibility}}" />
+                <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc gaming.profile.permanent.locked}" TextWrapping="Wrap">
+                    <TextBlock.Visibility>
+                        <MultiBinding Converter="{StaticResource AllTrueToVisibility}">
+                            <Binding Path="ExpertMode" />
+                            <Binding Path="Profile.HasAntiCheat" />
+                        </MultiBinding>
+                    </TextBlock.Visibility>
+                </TextBlock>
+                <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding StatusText}" Margin="0,8,0,0" TextWrapping="Wrap"
+                           Visibility="{Binding StatusText, Converter={StaticResource NullToCollapsed}}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:GameProfilesViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc gaming.profile.addmanual}" Command="{Binding AddManualCommand}" VerticalAlignment="Top" Margin="12,0,0,0" />
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc gaming.profiles.intro}" TextWrapping="Wrap" />
+                </DockPanel>
+            </Border>
+            <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc gaming.profiles.empty}" Visibility="{Binding HasProfiles, Converter={StaticResource InverseBoolToVisibility}}" Margin="0,0,0,8" />
+            <ItemsControl ItemsSource="{Binding Profiles}" Focusable="False" />
+            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc gaming.detected}" Margin="0,16,0,8" Visibility="{Binding HasDetected, Converter={StaticResource BoolToVisibility}}" />
+            <ItemsControl ItemsSource="{Binding Detected}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <DockPanel>
+                                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc gaming.detected.add}" VerticalAlignment="Center"
+                                                Command="{Binding DataContext.AddCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                AutomationProperties.HelpText="{Binding Game.Name}" />
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Game.Name}" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Detail}" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc gaming.detected.pickexe}" Visibility="{Binding NeedsExe, Converter={StaticResource BoolToVisibility}}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Leistung (Abschnitt 6.2): Bereichsauswahl, darunter der gewaehlte Bereich. -->
+    <DataTemplate DataType="{x:Type vm:PerformancePageViewModel}">
+        <StackPanel>
+            <ListBox Style="{StaticResource Segment.List}" ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection, Mode=TwoWay}"
+                     AutomationProperties.Name="{s:Loc perf.sections}" Margin="0,0,0,8">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource Text.Body}">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource LocKey}">
+                                    <Binding Path="TitleKey" />
+                                    <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ContentControl Content="{Binding CurrentSection}" Focusable="False" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:AutostartViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc perm.reload}" Command="{Binding ReloadCommand}" IsRunning="{Binding IsLoading}" VerticalAlignment="Top" />
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc autostart.intro}" TextWrapping="Wrap" />
+                </DockPanel>
+            </Border>
+            <TextBlock Style="{StaticResource Text.Body}" Foreground="{DynamicResource Brush.Danger}" Text="{Binding Error}" TextWrapping="Wrap"
+                       Visibility="{Binding Error, Converter={StaticResource NullToCollapsed}}" />
+            <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc autostart.empty}" Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}" />
+            <ItemsControl ItemsSource="{Binding Rows}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <DockPanel>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,0,0">
+                                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc autostart.disable}"
+                                                    Command="{Binding DataContext.DisableCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                    Visibility="{Binding CanDisable, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Entry.Name}" />
+                                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc autostart.enable}"
+                                                    Command="{Binding DataContext.EnableCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                    Visibility="{Binding CanEnable, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Entry.Name}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <WrapPanel>
+                                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Entry.Name}" Margin="0,0,12,4" VerticalAlignment="Center" />
+                                        <c:Badge Tone="{Binding RatingTone}" Symbol="Info16" Text="{Binding RatingText}" Margin="0,0,8,4" />
+                                        <c:Badge Tone="Neutral" Symbol="Power20" Text="{Binding StateText}" Margin="0,0,8,4" />
+                                    </WrapPanel>
+                                    <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Reason}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Memory}" Margin="0,0,0,4" Visibility="{Binding Memory, Converter={StaticResource NullToCollapsed}}" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Detail}" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Note}" TextWrapping="Wrap" Margin="0,4,0,0"
+                                               Visibility="{Binding Note, Converter={StaticResource NullToCollapsed}}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:CatalogServicesViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}">
+                <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc services.intro}" TextWrapping="Wrap" />
+            </Border>
+            <ItemsControl ItemsSource="{Binding Rows}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <DockPanel>
+                                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc card.details}" VerticalAlignment="Top"
+                                                Command="{Binding DataContext.DetailsCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                AutomationProperties.HelpText="{Binding Card.Name}" />
+                                <StackPanel>
+                                    <WrapPanel>
+                                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Card.Name}" Margin="0,0,12,4" VerticalAlignment="Center" />
+                                        <c:Badge Tone="{Binding Card.RiskTone}" Symbol="{Binding Card.RiskSymbol}" Text="{Binding Card.RiskText}" Filled="True" Margin="0,0,8,4" />
+                                        <c:Badge Tone="{Binding Card.EvidenceTone}" Symbol="{Binding Card.EvidenceSymbol}" Text="{Binding Card.EvidenceText}" Margin="0,0,8,4" />
+                                    </WrapPanel>
+                                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Card.Description}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                    <TextBlock Style="{StaticResource Text.Caption}"><Run Text="{Binding Service, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding DefaultText, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding CurrentText, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding TargetText, Mode=OneWay}" /></TextBlock>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:CatalogTasksViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}">
+                <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc tasks.intro}" TextWrapping="Wrap" />
+            </Border>
+            <ItemsControl ItemsSource="{Binding Rows}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <DockPanel>
+                                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc card.details}" VerticalAlignment="Top"
+                                                Command="{Binding DataContext.DetailsCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                AutomationProperties.HelpText="{Binding Card.Name}" />
+                                <StackPanel>
+                                    <WrapPanel>
+                                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Card.Name}" Margin="0,0,12,4" VerticalAlignment="Center" />
+                                        <c:Badge Tone="Neutral" Symbol="Clock16" Text="{Binding CurrentText}" Margin="0,0,8,4" />
+                                    </WrapPanel>
+                                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Card.Description}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding TaskPath}" TextTrimming="CharacterEllipsis" ToolTip="{Binding TaskPath}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ProcessRowTemplate">
+        <DockPanel Margin="0,4">
+            <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.BodyStrong}" Text="{Binding Value}" Margin="12,0,0,0" />
+            <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.Caption}" Text="{Binding Count}" Margin="12,0,0,0" VerticalAlignment="Center" />
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Explanation}" TextWrapping="Wrap" Visibility="{Binding Explanation, Converter={StaticResource NullToCollapsed}}" />
+                <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc processes.jump}" HorizontalAlignment="Left" Padding="0,2"
+                                Command="{Binding DataContext.JumpToAutostartCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                AutomationProperties.HelpText="{Binding Name}"
+                                Visibility="{Binding CanJump, Converter={StaticResource BoolToVisibility}}" />
+            </StackPanel>
+        </DockPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:ProcessesViewModel}">
+        <StackPanel>
+            <Border Style="{StaticResource Banner}">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc processes.measure}" Command="{Binding MeasureCommand}"
+                                    IsRunning="{Binding IsMeasuring}" VerticalAlignment="Top" Margin="12,0,0,0" />
+                    <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc processes.intro}" TextWrapping="Wrap" />
+                </DockPanel>
+            </Border>
+            <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding TotalText}" Margin="0,0,0,8" Visibility="{Binding TotalText, Converter={StaticResource NullToCollapsed}}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc processes.memory}" Margin="0,0,0,8" />
+                        <ItemsControl ItemsSource="{Binding ByMemory}" ItemTemplate="{StaticResource ProcessRowTemplate}" Focusable="False" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc processes.cpu}" Margin="0,0,0,8" TextWrapping="Wrap" />
+                        <ItemsControl ItemsSource="{Binding ByCpu}" ItemTemplate="{StaticResource ProcessRowTemplate}" Focusable="False" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Berechtigungs-Uebersicht (Abschnitt 6.4), nur Anzeige. -->
+    <DataTemplate DataType="{x:Type vm:PermissionOverviewViewModel}">
+        <Border Style="{StaticResource Card}" Margin="0,8,0,8">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,4">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc perm.reload}" Command="{Binding ReloadCommand}" IsRunning="{Binding IsLoading}" Margin="0,0,8,0" />
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc perm.open}" Command="{Binding OpenSettingsCommand}" />
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc perm.title}" VerticalAlignment="Center" />
+                </DockPanel>
+                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc perm.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Body}" Foreground="{DynamicResource Brush.Danger}" Text="{Binding Error}" TextWrapping="Wrap"
+                           Visibility="{Binding Error, Converter={StaticResource NullToCollapsed}}" />
+                <ItemsControl ItemsSource="{Binding Groups}" Focusable="False">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Expander Margin="0,4,0,0" AutomationProperties.Name="{Binding Title}" sv:A11y.NameParts="True">
+                                <Expander.Header>
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.Secondary}" Text="{Binding Summary}" Margin="12,0,12,0" VerticalAlignment="Center" />
+                                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Title}" VerticalAlignment="Center" />
+                                    </DockPanel>
+                                </Expander.Header>
+                                <ItemsControl ItemsSource="{Binding Apps}" Focusable="False">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel Margin="0,4,0,4">
+                                                <TextBlock DockPanel.Dock="Right" Style="{StaticResource Text.BodyStrong}" Text="{Binding State}" Margin="12,0,0,0" VerticalAlignment="Top" />
+                                                <StackPanel>
+                                                    <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Detail}" />
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Expander>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:TweakListPageViewModel}">
+        <StackPanel>
+            <ContentControl Content="{Binding Permissions}" Focusable="False" />
+            <ItemsControl ItemsSource="{Binding Cards}" Focusable="False" />
+            <Border>
+                <Border.Style>
+                    <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Cards.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc page.placeholder}" />
+            </Border>
+            <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc page.experthint}"
+                       Visibility="{Binding Workspace.ExpertMode, Converter={StaticResource InverseBoolToVisibility}}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Seitenpanel "Mehr Details", 420 Punkte. -->
+    <DataTemplate DataType="{x:Type sv:TweakDetailsViewModel}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="24">
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{Binding Card.Name}" Margin="0,0,0,8" />
+                <WrapPanel Margin="0,0,0,16">
+                    <c:Badge Tone="{Binding Card.RiskTone}" Symbol="{Binding Card.RiskSymbol}" Text="{Binding Card.RiskText}" Filled="True" Margin="0,0,8,4" />
+                    <c:Badge Tone="{Binding Card.EvidenceTone}" Symbol="{Binding Card.EvidenceSymbol}" Text="{Binding Card.EvidenceText}" Margin="0,0,8,4" />
+                </WrapPanel>
+                <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Card.Description}" Margin="0,0,0,16" />
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc details.sideeffects}" />
+                <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Card.SideEffects}" Margin="0,4,0,16" />
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc details.technical}" />
+                <ItemsControl ItemsSource="{Binding Technical}" Margin="0,4,0,16">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,8">
+                                <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Target}" />
+                                <TextBlock Style="{StaticResource Text.Body}">
+                                    <Run Text="{s:Loc dryrun.col.old}" /><Run Text=": " /><Run Text="{Binding Current, Mode=OneWay}" />
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource Text.Body}">
+                                    <Run Text="{s:Loc dryrun.col.new}" /><Run Text=": " /><Run Text="{Binding New, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc details.sources}" />
+                <ItemsControl ItemsSource="{Binding Sources}" Margin="0,4,0,16">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding}" Margin="0,0,0,8" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <WrapPanel Margin="0,0,0,16">
+                    <c:Badge Tone="Neutral" Symbol="ArrowClockwise16" Text="{Binding Card.RebootText}" Margin="0,0,8,4"
+                             Visibility="{Binding Card.Tweak.RequiresReboot, Converter={StaticResource BoolToVisibility}}" />
+                    <c:Badge Tone="Neutral" Symbol="Shield16" Text="{Binding Card.AdminText}" Margin="0,0,8,4"
+                             Visibility="{Binding Card.Tweak.RequiresAdmin, Converter={StaticResource BoolToVisibility}}" />
+                </WrapPanel>
+                <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc details.reset}" HorizontalAlignment="Left"
+                                Command="{Binding ResetCommand}" IsEnabled="{Binding CanReset}" />
+            </StackPanel>
+        </ScrollViewer>
+    </DataTemplate>
+
+    <!-- Dialoge: Radius 12, Flaeche Erhoeht. -->
+    <Style x:Key="Dialog" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource Brush.Elevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Large}" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="MaxWidth" Value="720" />
+        <Setter Property="MinWidth" Value="360" />
+        <Setter Property="Margin" Value="32" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <DataTemplate DataType="{x:Type sv:TextInputDialogViewModel}">
+        <Border Style="{StaticResource Dialog}" AutomationProperties.Name="{Binding Title}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{Binding Title}" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Label}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{Binding Label}" MinHeight="32" VerticalContentAlignment="Center" />
+                <TextBlock Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Danger}" Text="{Binding Error}" TextWrapping="Wrap" Margin="0,4,0,0"
+                           Visibility="{Binding Error, Converter={StaticResource NullToCollapsed}}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,24,0,0">
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{Binding CancelText}" Command="{Binding DeclineCommand}" IsCancel="True" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{Binding ConfirmText}" Command="{Binding ConfirmCommand}" IsDefault="True" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type sv:ConfirmDialogViewModel}">
+        <Border Style="{StaticResource Dialog}" AutomationProperties.Name="{Binding Title}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{Binding Title}" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Body}" Margin="0,0,0,24" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{Binding CancelText}" Command="{Binding DeclineCommand}" IsCancel="True" Margin="0,0,8,0" />
+                    <c:ActionButton Content="{Binding ConfirmText}" Command="{Binding ConfirmCommand}">
+                        <c:ActionButton.Style>
+                            <Style TargetType="c:ActionButton" BasedOn="{StaticResource Button.Primary}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsDanger}" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Danger}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource Brush.Danger}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </c:ActionButton.Style>
+                    </c:ActionButton>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type sv:PreviewDialogViewModel}">
+        <Border Style="{StaticResource Dialog}" AutomationProperties.Name="{s:Loc dryrun.title}">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource Text.Subtitle}" Text="{s:Loc dryrun.title}" Margin="0,0,0,16" />
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc dialog.close}" Command="{Binding DeclineCommand}" IsCancel="True" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc changebar.apply}" Command="{Binding ConfirmCommand}"
+                                    Visibility="{Binding PreviewOnly, Converter={StaticResource InverseBoolToVisibility}}" />
+                </StackPanel>
+                <ScrollViewer MaxHeight="420" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <!-- V2: "Das wird geaendert" in Klartext, gruppiert. -->
+                        <StackPanel Visibility="{Binding HasGroups, Converter={StaticResource BoolToVisibility}}" Margin="0,0,0,12">
+                            <ItemsControl ItemsSource="{Binding Groups}" Focusable="False">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,10">
+                                            <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding Title}" />
+                                            <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding}" TextWrapping="Wrap" Margin="12,2,0,0" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc simple.technical}" Command="{Binding ToggleTechnicalCommand}" HorizontalAlignment="Left" MinHeight="40" />
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding TableVisible, Converter={StaticResource BoolToVisibility}}">
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc dryrun.col.tweak}" />
+                            <TextBlock Grid.Column="1" Style="{StaticResource Text.Caption}" Text="{s:Loc dryrun.col.target}" />
+                            <TextBlock Grid.Column="2" Style="{StaticResource Text.Caption}" Text="{s:Loc dryrun.col.old}" />
+                            <TextBlock Grid.Column="3" Style="{StaticResource Text.Caption}" Text="{s:Loc dryrun.col.new}" />
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Rows}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Tweak}" Margin="0,0,8,0" />
+                                        <TextBlock Grid.Column="1" Style="{StaticResource Text.Secondary}" Text="{Binding Target}" Margin="0,0,8,0" />
+                                        <TextBlock Grid.Column="2" Style="{StaticResource Text.Body}" Text="{Binding Current}" Margin="0,0,8,0" />
+                                        <TextBlock Grid.Column="3" Style="{StaticResource Text.Body}" Text="{Binding New}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding HasReverts, Converter={StaticResource BoolToVisibility}}" Margin="0,8,0,0">
+                            <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc dryrun.reverts}" />
+                            <ItemsControl ItemsSource="{Binding Reverts}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource Text.Body}" Text="{Binding}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding HasExcluded, Converter={StaticResource BoolToVisibility}}" Margin="0,8,0,0">
+                            <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc dryrun.excluded}" />
+                            <ItemsControl ItemsSource="{Binding Excluded}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource Text.Secondary}">
+                                            <Run Text="{Binding Tweak, Mode=OneWay}" /><Run Text=": " /><Run Text="{Binding Text, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <WrapPanel Margin="0,16,0,0">
+                            <c:Badge Tone="Neutral" Symbol="ArrowClockwise16" Text="{s:Loc badge.reboot}" Margin="0,0,8,4"
+                                     Visibility="{Binding RebootRequired, Converter={StaticResource BoolToVisibility}}" />
+                            <c:Badge Tone="Neutral" Symbol="Shield16" Text="{s:Loc dryrun.uac}" Margin="0,0,8,4"
+                                     Visibility="{Binding AdminRequired, Converter={StaticResource BoolToVisibility}}" />
+                        </WrapPanel>
+                        <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc dryrun.backup}" Margin="0,8,0,0" />
+                        <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc dryrun.norestorepoint}" Margin="0,4,0,0"
+                                   Visibility="{Binding UserOnly, Converter={StaticResource BoolToVisibility}}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type sv:ExpertWarningViewModel}">
+        <Border Style="{StaticResource Dialog}" BorderBrush="{DynamicResource Brush.Danger}" AutomationProperties.Name="{s:Loc expert.title}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <c:Badge Tone="Danger" Filled="True" Symbol="ErrorCircle16" Text="{s:Loc risk.expert}" Margin="0,0,12,0" VerticalAlignment="Center" />
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc expert.title}" />
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding Tweaks}" Margin="0,0,0,12">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc expert.stage1}" Margin="0,0,0,16" />
+                <CheckBox Content="{s:Loc expert.stage2}" IsChecked="{Binding Understood}" Margin="0,0,0,16">
+                    <CheckBox.Style>
+                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Stage}" Value="2"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
+                                <DataTrigger Binding="{Binding Stage}" Value="3"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </CheckBox.Style>
+                </CheckBox>
+                <StackPanel Margin="0,0,0,16">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Stage}" Value="3"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock x:Name="Stage3Label" Style="{StaticResource Text.Body}" Text="{s:Loc expert.stage3}" Margin="0,0,0,8" />
+                    <ui:TextBox Text="{Binding Typed, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.LabeledBy="{Binding ElementName=Stage3Label}" AutomationProperties.Name="{s:Loc expert.stage3}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc dialog.cancel}" Command="{Binding DeclineCommand}" IsCancel="True" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc dialog.continue}" Command="{Binding ContinueCommand}" IsEnabled="{Binding CanContinue}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type sv:ProgressDialogViewModel}">
+        <Border Style="{StaticResource Dialog}" AutomationProperties.Name="{s:Loc progress.title}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc progress.title}" Margin="0,0,0,16" />
+                <ProgressBar Height="4" Minimum="0" Maximum="{Binding Total}" Value="{Binding Current}" IsIndeterminate="{Binding IsIndeterminate}" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Body}" Text="{Binding CurrentTweak}" Margin="0,0,0,16" AutomationProperties.LiveSetting="Polite" />
+                <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc progress.cancel}" HorizontalAlignment="Right"
+                                Command="{Binding RequestCancelCommand}" IsRunning="{Binding IsCancelling}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type sv:ResultDialogViewModel}">
+        <Border Style="{StaticResource Dialog}" AutomationProperties.Name="{Binding Title}">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Margin="0,0,0,16">
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{Binding Title}" />
+                    <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Summary}" Visibility="{Binding Summary, Converter={StaticResource EmptyToCollapsed}}" />
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
+                    <c:Badge Tone="Warning" Filled="True" Symbol="ArrowClockwise16" Text="{s:Loc result.reboot}" HorizontalAlignment="Left" Margin="0,0,0,16"
+                             Visibility="{Binding RebootRequired, Converter={StaticResource BoolToVisibility}}" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc dialog.close}" HorizontalAlignment="Right" Command="{Binding DoneCommand}" IsDefault="True"
+                                    Visibility="{Binding HasUndo, Converter={StaticResource InverseBoolToVisibility}}" />
+                    <!-- V2: Nach einem Preset gross "Alles wieder rueckgaengig", klein "Fertig". -->
+                    <DockPanel Visibility="{Binding HasUndo, Converter={StaticResource BoolToVisibility}}">
+                        <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc result.done}" Command="{Binding DoneCommand}" IsDefault="True" MinHeight="40" />
+                        <c:ActionButton Style="{StaticResource Button.Primary}" Content="{Binding UndoText}" Command="{Binding UndoCommand}" HorizontalAlignment="Left" MinHeight="44" Padding="20,8" />
+                    </DockPanel>
+                </StackPanel>
+                <ScrollViewer MaxHeight="420" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Rows}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:SymbolIcon FontSize="16" Margin="0,2,8,0" VerticalAlignment="Top">
+                                        <ui:SymbolIcon.Style>
+                                            <Style TargetType="ui:SymbolIcon">
+                                                <Setter Property="Symbol" Value="CheckmarkCircle16" />
+                                                <Setter Property="Foreground" Value="{DynamicResource Brush.Success}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Ok}" Value="False">
+                                                        <Setter Property="Symbol" Value="ErrorCircle16" />
+                                                        <Setter Property="Foreground" Value="{DynamicResource Brush.Danger}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ui:SymbolIcon.Style>
+                                    </ui:SymbolIcon>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Tweak}" />
+                                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Message}" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type sv:ConflictDialogViewModel}">
+        <Border Style="{StaticResource Dialog}" AutomationProperties.Name="{s:Loc conflict.title}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc conflict.title}" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Tweak}" />
+                <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc conflict.body}" Margin="0,4,0,8" />
+                <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding Target}" />
+                <TextBlock Style="{StaticResource Text.Body}"><Run Text="{s:Loc conflict.current}" /><Run Text=": " /><Run Text="{Binding Current, Mode=OneWay}" /></TextBlock>
+                <TextBlock Style="{StaticResource Text.Body}" Margin="0,0,0,24"><Run Text="{s:Loc conflict.original}" /><Run Text=": " /><Run Text="{Binding Original, Mode=OneWay}" /></TextBlock>
+                <WrapPanel HorizontalAlignment="Right">
+                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc dialog.cancel}" Command="{Binding AbortCommand}" IsCancel="True" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc conflict.keep}" Command="{Binding KeepCurrentCommand}" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc conflict.restore}" Command="{Binding RestoreOriginalCommand}" />
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:FirstStepsViewModel}">
+        <v:FirstStepsView />
+    </DataTemplate>
+</ResourceDictionary>

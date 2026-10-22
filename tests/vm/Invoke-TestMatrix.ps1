@@ -33,12 +33,12 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 
 $Modules = @($Modules | ForEach-Object { $_.Split(',') } | Where-Object { $_ })
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
-$cli = Join-Path $repo "src\TweakPilot.Cli\bin\$Configuration\net8.0-windows10.0.19041.0\tweakpilot-cli.exe"
+$cli = Join-Path $repo "src\AscendedTweaks.Cli\bin\$Configuration\net8.0-windows10.0.19041.0\ascendedtweaks-cli.exe"
 $snap = Join-Path $repo "tools\registry-snapshot\bin\$Configuration\net8.0-windows\registry-snapshot.exe"
 $single = Join-Path $PSScriptRoot 'Invoke-TweakIntegrationTest.ps1'
 $build = [Environment]::OSVersion.Version.Build
 $edition = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').EditionID
-$state = Join-Path $env:ProgramData 'TweakPilot.TestMatrix\state'
+$state = Join-Path $env:ProgramData 'AscendedTweaks.TestMatrix\state'
 $report = Join-Path $OutDir "report-$build-$edition-$Phase.json"
 $roots = @('HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion', 'HKLM\SOFTWARE\Policies', 'HKLM\SYSTEM\CurrentControlSet\Services', 'HKLM\SYSTEM\CurrentControlSet\Control', 'HKCU')
 
@@ -91,7 +91,7 @@ switch ($Phase) {
         }
     }
     'RebootApply' {
-        $catalog = Join-Path $repo 'src\TweakPilot.Catalog\tweaks'
+        $catalog = Join-Path $repo 'src\AscendedTweaks.Catalog\tweaks'
         $reboot = @(Get-ChildItem $catalog -Recurse -Filter '*.json' | Where-Object { $_.DirectoryName -notlike '*i18n*' } |
             ForEach-Object { Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json } |
             Where-Object { $_.requiresReboot -and ($Modules -contains $_.id.Split('-')[0]) } | ForEach-Object { $_.id })

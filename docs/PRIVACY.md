@@ -6,11 +6,11 @@ Wir sammeln nichts. Keine Konten, keine Telemetrie, keine Werbung. Protokolle li
 
 | Ort | Inhalt |
 |---|---|
-| `%LOCALAPPDATA%\TweakPilot\settings.json` | Sprache, Design, Expertenmodus |
-| `%LOCALAPPDATA%\TweakPilot\State` | Sicherungen, Journal und Ledger der Benutzer-Tweaks |
-| `%LOCALAPPDATA%\TweakPilot\profiles`, `games.json` | Eigene Profile und Spielprofile |
-| `%LOCALAPPDATA%\TweakPilot\Logs` | Protokolle (JSON-Zeilen, höchstens 10 Dateien zu je 5 MB). Benutzername und Profilpfad sind durch `%USERNAME%` und `%USERPROFILE%` ersetzt. |
-| `%ProgramData%\TweakPilot` | Sicherungen und Protokolle der maschinenweiten Änderungen (nur Administratoren dürfen schreiben) |
+| `%LOCALAPPDATA%\AscendedTweaks\settings.json` | Sprache, Design, Expertenmodus |
+| `%LOCALAPPDATA%\AscendedTweaks\State` | Sicherungen, Journal und Ledger der Benutzer-Tweaks |
+| `%LOCALAPPDATA%\AscendedTweaks\profiles`, `games.json` | Eigene Profile und Spielprofile |
+| `%LOCALAPPDATA%\AscendedTweaks\Logs` | Protokolle (JSON-Zeilen, höchstens 10 Dateien zu je 5 MB). Benutzername und Profilpfad sind durch `%USERNAME%` und `%USERPROFILE%` ersetzt. |
+| `%ProgramData%\AscendedTweaks` | Sicherungen und Protokolle der maschinenweiten Änderungen (nur Administratoren dürfen schreiben) |
 
 Nichts davon wird gesendet. Protokolle lassen sich in den Einstellungen löschen.
 

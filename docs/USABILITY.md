@@ -1,6 +1,6 @@
 # Usability-Test (V2, Abschnitt 3)
 
-Ziel: Ein Mensch ohne Vorwissen schafft jede Aufgabe in höchstens 3 Klicks. Gezählt wird jeder Klick in TweakPilot ab dem geöffneten Fenster im Einfach-Modus. Eine Windows-Rückfrage nach Administratorrechten (UAC) zählt nicht als Klick in der App, wird aber notiert.
+Ziel: Ein Mensch ohne Vorwissen schafft jede Aufgabe in höchstens 3 Klicks. Gezählt wird jeder Klick in Ascended Tweaks ab dem geöffneten Fenster im Einfach-Modus. Eine Windows-Rückfrage nach Administratorrechten (UAC) zählt nicht als Klick in der App, wird aber notiert.
 
 ## Aufgaben und Klickpfade
 

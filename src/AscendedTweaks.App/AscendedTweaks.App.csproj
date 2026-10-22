@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>AscendedTweaks.App</RootNamespace>
+    <AssemblyName>AscendedTweaks.App</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\assets\icon\ascendedtweaks.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WPF-UI" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AscendedTweaks.Core\AscendedTweaks.Core.csproj" />
+    <ProjectReference Include="..\AscendedTweaks.Catalog\AscendedTweaks.Catalog.csproj" />
+    <ProjectReference Include="..\AscendedTweaks.Engine\AscendedTweaks.Engine.csproj" />
+    <ProjectReference Include="..\AscendedTweaks.Ipc\AscendedTweaks.Ipc.csproj" />
+    <ProjectReference Include="..\AscendedTweaks.Localization\AscendedTweaks.Localization.csproj" />
+    <!-- Der Helfer muss im selben Verzeichnis liegen (Pfadpruefung im Helfer). -->
+    <ProjectReference Include="..\AscendedTweaks.Helper\AscendedTweaks.Helper.csproj" />
+    <ProjectReference Include="..\AscendedTweaks.Appx\AscendedTweaks.Appx.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AscendedTweaks.App.Tests" />
+  </ItemGroup>
+
+  <!-- V3-2: Symbol fuer Fenster und Titelleiste; die EXE nutzt ApplicationIcon. -->
+  <ItemGroup>
+    <Resource Include="..\..\assets\icon\ascendedtweaks.ico" Link="Assets\ascendedtweaks.ico" />
+    <Resource Include="..\..\assets\icon\ascendedtweaks-32.png" Link="Assets\ascendedtweaks-32.png" />
+  </ItemGroup>
+
+  <!-- Unter "Über" geoeffnete Dokumente (Abschnitt 13). -->
+  <ItemGroup>
+    <Content Include="..\..\docs\SOURCES.md" Link="docs\SOURCES.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\PRIVACY.md" Link="docs\PRIVACY.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\THIRD-PARTY-NOTICES.md" Link="docs\THIRD-PARTY-NOTICES.md" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- V2-7: package.ps1 setzt HelperSha256; die App startet den Helfer dann nur mit genau diesem Inhalt. -->
+  <ItemGroup Condition="'$(HelperSha256)' != ''">
+    <AssemblyMetadata Include="HelperSha256" Value="$(HelperSha256)" />
+  </ItemGroup>
+</Project>

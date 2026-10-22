@@ -1,4 +1,4 @@
-# TweakPilot
+# Ascended Tweaks
 
 Open-source Windows tuning that previews every change and can undo everything.
 
@@ -6,16 +6,16 @@ Open-source Windows tuning that previews every change and can undo everything.
 - **No telemetry.** The app sends nothing. It only goes online when you click "Check for updates".
 - **Open source.** Every tweak names its source, so you can check what it does.
 
-![TweakPilot dashboard](docs/screenshots/phase12/Dark-100-dashboard.png)
+![Ascended Tweaks dashboard](docs/screenshots/phase12/Dark-100-dashboard.png)
 
 ## Download
 
-Get the latest ZIP from [GitHub Releases](https://github.com/TweakPilot/TweakPilot/releases/latest).
+Get the latest ZIP from [GitHub Releases](https://github.com/AscendedTweaks/AscendedTweaks/releases/latest).
 
-1. Download `TweakPilot-<version>-win-x64.zip` and `SHA256SUMS.txt`.
-2. Check the file (PowerShell): `Get-FileHash .\TweakPilot-<version>-win-x64.zip -Algorithm SHA256`.
+1. Download `AscendedTweaks-<version>-win-x64.zip` and `SHA256SUMS.txt`.
+2. Check the file (PowerShell): `Get-FileHash .\AscendedTweaks-<version>-win-x64.zip -Algorithm SHA256`.
    The hash must match the line in `SHA256SUMS.txt`.
-3. Unzip, open the `TweakPilot` folder and start `TweakPilot.exe`. `START HERE.txt` explains install, reset and removal.
+3. Unzip it and start `AscendedTweaks.exe`. `START HERE.txt` explains install, reset and removal.
 
 Requirements: Windows 10 22H2 (build 19045) or Windows 11, 64-bit.
 
@@ -25,14 +25,14 @@ The files are not code-signed yet, so SmartScreen may show "Windows protected yo
 You can also verify that the ZIP was built from this repository:
 
 ```
-gh attestation verify TweakPilot-<version>-win-x64.zip --repo TweakPilot/TweakPilot
+gh attestation verify AscendedTweaks-<version>-win-x64.zip --repo AscendedTweaks/AscendedTweaks
 ```
 
 Do not turn off Microsoft Defender or SmartScreen for this or any other app.
 
 ## What it does not do
 
-TweakPilot never turns off Defender, the firewall, UAC, SmartScreen or Windows Update. Deleted files and removed apps
+Ascended Tweaks never turns off Defender, the firewall, UAC, SmartScreen or Windows Update. Deleted files and removed apps
 cannot always be restored; the app says so before you confirm.
 
 ## Build
@@ -50,9 +50,9 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File build.ps1
 ## Command line
 
 ```
-tweakpilot-cli --list [--module PRIV] [--json]
-tweakpilot-cli --apply PRIV-001,PRIV-013 [--dry-run]
-tweakpilot-cli --revert PRIV-001 | --revert-all
+ascendedtweaks-cli --list [--module PRIV] [--json]
+ascendedtweaks-cli --apply PRIV-001,PRIV-013 [--dry-run]
+ascendedtweaks-cli --revert PRIV-001 | --revert-all
 ```
 
 ## License

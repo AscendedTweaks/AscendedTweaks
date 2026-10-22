@@ -1,0 +1,218 @@
+<ui:FluentWindow x:Class="AscendedTweaks.App.Views.ShellWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:c="clr-namespace:AscendedTweaks.App.Controls"
+                 xmlns:s="clr-namespace:AscendedTweaks.App.Services"
+                 xmlns:loc="clr-namespace:AscendedTweaks.Localization;assembly=AscendedTweaks.Localization"
+                 Title="{s:Loc app.title}"
+                 Icon="pack://application:,,,/Assets/ascendedtweaks.ico"
+                 Width="1280" Height="800" MinWidth="800" MinHeight="480"
+                 WindowStartupLocation="CenterScreen"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowBackdropType="None"
+                 WindowCornerPreference="Round"
+                 Background="{DynamicResource Brush.Background}"
+                 Foreground="{DynamicResource Brush.TextPrimary}"
+                 FontFamily="{StaticResource Font.Text}"
+                 FontSize="14"
+                 SizeChanged="OnSizeChanged">
+    <Grid x:Name="RootGrid" Background="{DynamicResource Brush.Background}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{s:Loc app.title}">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/Assets/ascendedtweaks-32.png" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Navigation links, 240 Punkte; unter 1000 Punkten Fensterbreite eingeklappt auf 56 Punkte. -->
+            <Border Grid.Column="0" Width="{Binding NavWidth}" Background="{DynamicResource Brush.Surface}"
+                    BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,1,0" Padding="8">
+                <DockPanel LastChildFill="True">
+                    <!-- V2: Zurueck und Einstellungen fest am unteren Rand (nur Einfach-Modus). -->
+                    <ListBox DockPanel.Dock="Bottom" Style="{StaticResource Nav.List}" ItemsSource="{Binding FooterItems}" SelectedItem="{Binding SelectedFooterItem}"
+                             AutomationProperties.Name="{s:Loc nav.footer}" ItemContainerStyle="{Binding ItemContainerStyle, ElementName=NavList}" ItemTemplate="{Binding ItemTemplate, ElementName=NavList}"
+                             Margin="0,8,0,0" />
+                    <c:ActionButton DockPanel.Dock="Top" Style="{StaticResource Button.Text}" HorizontalAlignment="Left"
+                                    Padding="10,8" Margin="0,0,0,8" Command="{Binding ToggleNavCommand}"
+                                    ToolTip="{s:Loc nav.toggle}" AutomationProperties.Name="{s:Loc nav.toggle}">
+                        <ui:SymbolIcon Symbol="Navigation24" FontSize="20" />
+                    </c:ActionButton>
+                    <ListBox x:Name="NavList" Style="{StaticResource Nav.List}" ItemsSource="{Binding Items}"
+                             SelectedItem="{Binding SelectedItem}" AutomationProperties.Name="{s:Loc app.title}"
+                             ScrollViewer.VerticalScrollBarVisibility="{Binding IsNavCollapsed, Converter={StaticResource CollapsedScrollBar}}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource Nav.Item}">
+                                <Setter Property="AutomationProperties.Name">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource LocKey}">
+                                            <Binding Path="Key" />
+                                            <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel.ToolTip>
+                                        <MultiBinding Converter="{StaticResource LocKey}">
+                                            <Binding Path="Key" />
+                                            <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                        </MultiBinding>
+                                    </StackPanel.ToolTip>
+                                    <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="20" Foreground="{DynamicResource Brush.TextPrimary}" />
+                                    <TextBlock Margin="12,0,0,0" Style="{StaticResource Text.Body}" TextWrapping="NoWrap" VerticalAlignment="Center"
+                                               Visibility="{Binding DataContext.IsNavCollapsed, RelativeSource={RelativeSource AncestorType=ListBox}, Converter={StaticResource InverseBoolToVisibility}}">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource LocKey}">
+                                                <Binding Path="Key" />
+                                                <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <!-- Hauptbereich: Hinweise, Seitentitel, Seite. -->
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+                <StackPanel Margin="32,24,32,32">
+                    <Border Visibility="{Binding BannerKind, Converter={StaticResource BannerVisibility}}" Style="{StaticResource Banner}"
+                            AutomationProperties.LiveSetting="Polite">
+                        <StackPanel Orientation="Horizontal">
+                            <c:Badge Tone="{Binding BannerTone}" Symbol="{Binding BannerSymbol}" Filled="True" Text="{Binding BannerBadgeText}" Margin="0,0,12,0" VerticalAlignment="Top" />
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding BannerTitle}"
+                                           Visibility="{Binding BannerTitle, Converter={StaticResource EmptyToCollapsed}}" />
+                                <TextBlock Style="{StaticResource Text.Body}" Text="{Binding BannerText}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <DockPanel Margin="0,0,0,16">
+                        <!-- V2: Umschalter "Einfach / Experte" oben rechts. -->
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center"
+                                    Visibility="{Binding SupportsModes, Converter={StaticResource BoolToVisibility}}" AutomationProperties.Name="{s:Loc mode.title}">
+                            <c:ActionButton Content="{s:Loc mode.simple}" Command="{Binding UseSimpleCommand}" MinHeight="40" Margin="0,0,4,0">
+                                <c:ActionButton.Style>
+                                    <Style TargetType="c:ActionButton" BasedOn="{StaticResource Button.Secondary}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsExpertMode}" Value="False">
+                                                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+                                                <Setter Property="BorderThickness" Value="2" />
+                                                <Setter Property="FontWeight" Value="SemiBold" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </c:ActionButton.Style>
+                            </c:ActionButton>
+                            <c:ActionButton Content="{s:Loc mode.expert}" Command="{Binding UseExpertCommand}" MinHeight="40">
+                                <c:ActionButton.Style>
+                                    <Style TargetType="c:ActionButton" BasedOn="{StaticResource Button.Secondary}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsExpertMode}" Value="True">
+                                                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+                                                <Setter Property="BorderThickness" Value="2" />
+                                                <Setter Property="FontWeight" Value="SemiBold" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </c:ActionButton.Style>
+                            </c:ActionButton>
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource Text.Title}" VerticalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource LocKey}">
+                                    <Binding Path="CurrentPage.TitleKey" />
+                                    <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DockPanel>
+
+                    <Border Style="{StaticResource Banner}" Visibility="{Binding CurrentPage.ShowHonestyBanner, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Info16" FontSize="16" Foreground="{DynamicResource Brush.Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc banner.honesty}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <ContentControl x:Name="PageHost" Content="{Binding CurrentPage}" Focusable="False" />
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Seitenpanel "Mehr Details", 420 Punkte rechts; unter 1000 Punkten ueberlagert es den Inhalt. -->
+            <Border HorizontalAlignment="Right" Width="420"
+                    Background="{DynamicResource Brush.Elevated}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,1,0,0"
+                    Visibility="{Binding Workspace.Details, Converter={StaticResource NullToCollapsed}}">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <!-- Ab 1000 Punkten verdraengt das Panel den Inhalt (eigene Spalte), darunter ueberlagert es ihn. -->
+                        <Setter Property="Grid.Column" Value="2" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsNarrow}" Value="True">
+                                <Setter Property="Grid.Column" Value="1" />
+                                <Setter Property="Grid.ColumnSpan" Value="2" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Top" HorizontalAlignment="Right" Style="{StaticResource Button.Text}" Margin="8" Padding="8"
+                                    Command="{Binding Workspace.CloseDetailsCommand}" ToolTip="{s:Loc dialog.close}" AutomationProperties.Name="{s:Loc dialog.close}">
+                        <ui:SymbolIcon Symbol="Dismiss16" FontSize="16" />
+                    </c:ActionButton>
+                    <ContentControl Content="{Binding Workspace.Details}" Focusable="False" />
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <!-- Aenderungsleiste: 56 Punkte, nur bei ausstehenden Aenderungen. -->
+        <Border Grid.Row="2" Height="56" Padding="24,0" Background="{DynamicResource Brush.Elevated}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0"
+                Visibility="{Binding Workspace.HasPending, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}"
+                AutomationProperties.LiveSetting="Polite" AutomationProperties.Name="{Binding Workspace.PendingText}">
+            <DockPanel VerticalAlignment="Center">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc changebar.discard}" Command="{Binding Workspace.DiscardCommand}" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc changebar.preview}" Command="{Binding Workspace.PreviewCommand}" Margin="0,0,8,0" />
+                    <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc changebar.apply}" Command="{Binding Workspace.ApplyCommand}"
+                                    IsRunning="{Binding Workspace.IsBusy}" IsEnabled="{Binding IsReadOnly, Converter={StaticResource InverseBool}}" />
+                </StackPanel>
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Workspace.PendingText}" VerticalAlignment="Center" />
+            </DockPanel>
+        </Border>
+
+        <!-- Dialog-Ebene: abgedunkelt, oberster Dialog vorn. -->
+        <ItemsControl Grid.Row="0" Grid.RowSpan="3" ItemsSource="{Binding Dialogs.Stack}" Focusable="False" KeyboardNavigation.TabNavigation="Cycle">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="{DynamicResource Brush.Scrim}" Loaded="OnDialogLoaded">
+                        <ContentControl Content="{Binding}" Focusable="False" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</ui:FluentWindow>

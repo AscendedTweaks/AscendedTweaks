@@ -1,4 +1,4 @@
-# Renders assets/icon/*.svg with Microsoft Edge (headless) and packs a multi-size tweakpilot.ico.
+# Renders assets/icon/*.svg with Microsoft Edge (headless) and packs a multi-size ascendedtweaks.ico.
 # Sizes 16 to 48 use the simplified SVG, 64 to 256 the detailed one. All ICO entries are PNG-compressed
 # (allowed since Windows Vista). Writes only to assets/icon/. Usage: powershell -File tools\make-icon.ps1
 [CmdletBinding()]
@@ -13,12 +13,12 @@ if (-not (Test-Path $Edge)) { $Edge = "$env:ProgramFiles\Microsoft\Edge\Applicat
 if (-not (Test-Path $Edge)) { throw "Microsoft Edge not found. Pass -Edge <path to msedge.exe>." }
 
 $sizes = 16, 20, 24, 32, 40, 48, 64, 128, 256
-$temp = Join-Path ([IO.Path]::GetTempPath()) ("tweakpilot-icon-" + [guid]::NewGuid())
+$temp = Join-Path ([IO.Path]::GetTempPath()) ("ascendedtweaks-icon-" + [guid]::NewGuid())
 New-Item -ItemType Directory -Path $temp | Out-Null
 try {
     $pngs = @{}
     foreach ($size in $sizes) {
-        $source = if ($size -le 48) { 'tweakpilot-small.svg' } else { 'tweakpilot.svg' }
+        $source = if ($size -le 48) { 'ascendedtweaks-small.svg' } else { 'ascendedtweaks.svg' }
         $svg = Get-Content -Raw (Join-Path $iconDir $source)
         $svg = $svg -replace 'width="\d+" height="\d+"', "width=`"$size`" height=`"$size`""
         $html = Join-Path $temp "icon-$size.html"
@@ -31,7 +31,7 @@ try {
     }
 
     # ICO: 6-byte header, 16 bytes per entry, then the PNG data.
-    $out = Join-Path $iconDir 'tweakpilot.ico'
+    $out = Join-Path $iconDir 'ascendedtweaks.ico'
     $stream = [IO.File]::Create($out)
     $writer = New-Object IO.BinaryWriter($stream)
     try {
@@ -50,7 +50,7 @@ try {
         $writer.Dispose()
     }
 
-    Copy-Item (Join-Path $temp 'icon-32.png') (Join-Path $iconDir 'tweakpilot-32.png') -Force
+    Copy-Item (Join-Path $temp 'icon-32.png') (Join-Path $iconDir 'ascendedtweaks-32.png') -Force
 
     # Check: list the sizes stored in the ICO.
     $bytes = [IO.File]::ReadAllBytes($out)

@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TweakPilot.Tools.PerfMeasure;
+namespace AscendedTweaks.Tools.PerfMeasure;
 
 /// <summary>Kennzahlen eines Laufs aus einer PresentMon-Aufzeichnung.</summary>
 internal sealed record FrameStats(int Frames, double AverageFps, double OnePercentLowFps)

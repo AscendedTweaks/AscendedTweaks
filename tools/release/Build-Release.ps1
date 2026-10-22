@@ -5,7 +5,7 @@
 .DESCRIPTION
     - Ohne -CertificateThumbprint und ohne -TrustedSigningMetadata wird nichts signiert (Entwicklungs-Build).
     - Der Installer entsteht nur, wenn Inno Setup 6 (ISCC.exe) installiert ist.
-    - Ausgabe: artifacts\publish, artifacts\TweakPilot-<Version>-portable-win-x64.zip, artifacts\TweakPilot-<Version>-Setup.exe, artifacts\SHA256SUMS.txt
+    - Ausgabe: artifacts\publish, artifacts\AscendedTweaks-<Version>-portable-win-x64.zip, artifacts\AscendedTweaks-<Version>-Setup.exe, artifacts\SHA256SUMS.txt
 .EXAMPLE
     powershell -NoProfile -ExecutionPolicy RemoteSigned -File tools\release\Build-Release.ps1
 #>
@@ -25,7 +25,7 @@ if (Test-Path $artifacts) { Remove-Item $artifacts -Recurse -Force }
 New-Item -ItemType Directory -Path $publish | Out-Null
 
 # Alle drei Programme in denselben Ordner: Der Helfer prueft, dass der Client aus seinem Installationsordner kommt.
-foreach ($project in 'TweakPilot.App', 'TweakPilot.Helper', 'TweakPilot.Cli') {
+foreach ($project in 'AscendedTweaks.App', 'AscendedTweaks.Helper', 'AscendedTweaks.Cli') {
     & dotnet publish (Join-Path $repo "src\$project") -c Release -r win-x64 --self-contained true -p:PublishReadyToRun=true -o $publish --nologo
     if ($LASTEXITCODE -ne 0) { throw "Veroeffentlichen von $project fehlgeschlagen." }
 }
@@ -36,15 +36,15 @@ if ($CertificateThumbprint -or $TrustedSigningMetadata) {
     Write-Warning 'Nicht signiert: Entwicklungs-Build. Fuer einen Release -CertificateThumbprint oder -TrustedSigningMetadata angeben.'
 }
 
-$zip = Join-Path $artifacts "TweakPilot-$version-portable-win-x64.zip"
+$zip = Join-Path $artifacts "AscendedTweaks-$version-portable-win-x64.zip"
 Compress-Archive -Path (Join-Path $publish '*') -DestinationPath $zip
 
 $iscc = @("${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe", "$env:ProgramFiles\Inno Setup 6\ISCC.exe") | Where-Object { Test-Path $_ } | Select-Object -First 1
 if (-not $SkipInstaller) {
     if ($iscc) {
-        & $iscc "/DAppVersion=$version" "/DSourceDir=$publish" "/DOutputDir=$artifacts" (Join-Path $repo 'installer\TweakPilot.iss')
+        & $iscc "/DAppVersion=$version" "/DSourceDir=$publish" "/DOutputDir=$artifacts" (Join-Path $repo 'installer\AscendedTweaks.iss')
         if ($LASTEXITCODE -ne 0) { throw 'Installer fehlgeschlagen.' }
-        $setup = Join-Path $artifacts "TweakPilot-$version-Setup.exe"
+        $setup = Join-Path $artifacts "AscendedTweaks-$version-Setup.exe"
         if ($CertificateThumbprint -or $TrustedSigningMetadata) {
             & (Join-Path $PSScriptRoot 'Sign-Release.ps1') -Path $setup -CertificateThumbprint $CertificateThumbprint -TrustedSigningMetadata $TrustedSigningMetadata
         }

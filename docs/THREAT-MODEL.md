@@ -4,9 +4,9 @@ Stand Phase 2. Grundlage: Abschnitt 9.5 des Auftrags. Für jeden Angreifer gibt 
 
 ## Schützenswerte Güter
 
-- Administratorrechte des Helfer-Prozesses `TweakPilot.Helper.exe`.
+- Administratorrechte des Helfer-Prozesses `AscendedTweaks.Helper.exe`.
 - Integrität der Windows-Konfiguration (Registry, Dienste, Energiepläne).
-- Sicherungen, Journal und Ledger unter `%ProgramData%\TweakPilot\State`, weil sie beim Zurücksetzen geschrieben werden.
+- Sicherungen, Journal und Ledger unter `%ProgramData%\AscendedTweaks\State`, weil sie beim Zurücksetzen geschrieben werden.
 - Vertrauen in die Anzeige: Vorschau und Protokoll müssen zeigen, was wirklich passiert.
 
 ## A: Schadprogramm mit Benutzerrechten will den Helfer missbrauchen
@@ -16,7 +16,7 @@ Ziel des Angreifers: Admin-Aktionen über den laufenden Helfer auslösen, ohne s
 | Schutzmaßnahme | Umsetzung |
 |---|---|
 | Kein Dauerdienst, keine Persistenz | Der Helfer läuft nur auf Anforderung (UAC) und endet nach 120 s Leerlauf, nach `Shutdown` oder wenn der startende Prozess endet. Es gibt keinen Autostart, keinen Dienst und keine geplante Aufgabe. |
-| Zufälliger Pipe-Name | `TweakPilot.<SID>.<GUID>`. Die GUID erzeugt der Client erst beim Start. |
+| Zufälliger Pipe-Name | `Ascended Tweaks.<SID>.<GUID>`. Die GUID erzeugt der Client erst beim Start. |
 | Pipe-ACL | Geschützte DACL: nur die SID des startenden Benutzers (Lesen/Schreiben) und SYSTEM. Keine geerbten Einträge. |
 | Client-Prüfung im Helfer | Die Prozess-ID des Clients muss der beim Start übergebenen Eltern-PID entsprechen. Das Client-Programm muss im Installationsverzeichnis des Helfers liegen. Die Benutzer-SID wird per Impersonation (Identifikationsstufe) bestätigt. In Release-Builds wird zusätzlich eine gültige Authenticode-Signatur vom selben Herausgeber wie der Helfer verlangt. |
 | Server-Prüfung im Client | Der Client verbindet nur mit dem Prozess, den er selbst gestartet hat (`GetNamedPipeServerProcessId`). Ein Squatter auf dem Pipe-Namen wird abgewiesen. |
@@ -31,12 +31,12 @@ Ziel des Angreifers: Admin-Aktionen über den laufenden Helfer auslösen, ohne s
 | Apps entfernen im Helfer | Befehl `RemoveApps` nimmt nur Paketnamen (Format geprüft, höchstens 60). Gesperrte Systemapps werden abgelehnt; Pakete außerhalb des Katalogs nur, wenn sie weder von Microsoft stammen noch systemsigniert sind. Der Helfer ermittelt die vollständigen Paketnamen selbst. |
 | Aufgabenplanung | `schtasks.exe` nur aus System32, ohne Shell, Argumente einzeln; Aufgabenpfade nur unter `\Microsoft\Windows\` mit erlaubten Zeichen, keine relativen Teile; geschrieben werden nur `/ENABLE` und `/DISABLE`. |
 | Protokoll-Härtung | Rahmen höchstens 1 MB, Protokollversion, streng steigender Zähler gegen Wiederholung, unbekannte JSON-Felder werden abgelehnt. Nach einem Protokollverstoß wird die Verbindung getrennt. |
-| Zustandsdateien | `%ProgramData%\TweakPilot`: Administratoren und SYSTEM Vollzugriff, Benutzer nur Lesen. Die Vererbung ist abgeschaltet. Backup-Sets haben SHA-256-Prüfsummen, die vor jeder Wiederherstellung geprüft werden. |
+| Zustandsdateien | `%ProgramData%\AscendedTweaks`: Administratoren und SYSTEM Vollzugriff, Benutzer nur Lesen. Die Vererbung ist abgeschaltet. Backup-Sets haben SHA-256-Prüfsummen, die vor jeder Wiederherstellung geprüft werden. |
 
 Restrisiko:
 - Schadcode, der bereits im Prozess der App oder CLI läuft (DLL-Injection mit Benutzerrechten), kann den Helfer über die legitime Verbindung steuern. Er bleibt aber auf die Whitelist und den Katalog beschränkt; die Wirkung entspricht dem, was der Nutzer in der App selbst auslösen kann.
 - In Debug-Builds gibt es keine Signaturprüfung. Debug-Builds werden nicht ausgeliefert.
-- Ein Angreifer mit Benutzerrechten kann `%LOCALAPPDATA%\TweakPilot` (Benutzer-Tweaks) verändern. Er hätte diese Rechte an der Registry ohnehin.
+- Ein Angreifer mit Benutzerrechten kann `%LOCALAPPDATA%\AscendedTweaks` (Benutzer-Tweaks) verändern. Er hätte diese Rechte an der Registry ohnehin.
 
 ## B: Manipulierter Katalog oder Profil-Import
 

@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
-using TweakPilot.Core;
-using TweakPilot.Engine.Windows;
+using AscendedTweaks.Core;
+using AscendedTweaks.Engine.Windows;
 
 // Exportiert Registry-Baeume als normalisierte, sortierte Textdatei und vergleicht zwei Snapshots.
 //   registry-snapshot snapshot --out <datei> <HKCU\Pfad> [<HKLM\Pfad> ...]
@@ -75,7 +75,7 @@ static void Walk(WindowsRegistryAccess registry, RegHive hive, string path, List
             Walk(registry, hive, path.Length == 0 ? sub : $"{path}\\{sub}", lines);
         }
     }
-    catch (TweakPilotException ex)
+    catch (AscendedTweaksException ex)
     {
         lines.Add($"E|{display}|{ex.Kind}");
     }

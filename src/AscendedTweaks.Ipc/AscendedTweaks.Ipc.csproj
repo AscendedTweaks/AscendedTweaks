@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>AscendedTweaks.Ipc</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AscendedTweaks.Core\AscendedTweaks.Core.csproj" />
+    <ProjectReference Include="..\AscendedTweaks.Engine\AscendedTweaks.Engine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AscendedTweaks.Ipc.Tests" />
+  </ItemGroup>
+
+</Project>

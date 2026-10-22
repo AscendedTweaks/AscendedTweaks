@@ -5,7 +5,7 @@
     Zwei Wege, je nach Entscheidung (offener Punkt 4):
       -CertificateThumbprint   Zertifikat im Zertifikatspeicher (Standard-Codesignierzertifikat oder Testzertifikat in der VM)
       -TrustedSigningMetadata  JSON-Datei fuer Azure Trusted Signing (signtool /dlib); der Pfad zur DLib steht in $env:TRUSTED_SIGNING_DLIB
-    Signiert nur eigene Dateien (TweakPilot.*, tweakpilot-cli, Setup); Dateien von Microsoft und Dritten bleiben unveraendert.
+    Signiert nur eigene Dateien (AscendedTweaks.*, ascendedtweaks-cli, Setup); Dateien von Microsoft und Dritten bleiben unveraendert.
     Das Skript legt keine Zertifikate an und vertraut keinem Zertifikat.
 #>
 param(
@@ -21,7 +21,7 @@ $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin" -Recurs
 if (-not $signtool) { throw 'signtool.exe nicht gefunden (Windows SDK installieren).' }
 
 $files = if (Test-Path $Path -PathType Leaf) { @(Get-Item $Path) } else {
-    Get-ChildItem $Path -Recurse -Include 'TweakPilot*.exe', 'TweakPilot*.dll', 'tweakpilot-cli.exe', 'catalog-lint.exe'
+    Get-ChildItem $Path -Recurse -Include 'Ascended Tweaks*.exe', 'Ascended Tweaks*.dll', 'ascendedtweaks-cli.exe', 'catalog-lint.exe'
 }
 
 foreach ($file in $files) {

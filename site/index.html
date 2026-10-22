@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TweakPilot - Tune Windows. Undo anything.</title>
+  <title>Ascended Tweaks - Tune Windows. Undo anything.</title>
   <meta name="description" content="Open-source Windows tuning that previews every change and can undo everything. No telemetry.">
   <meta name="theme-color" content="#000000">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="TweakPilot - Tune Windows. Undo anything.">
+  <meta property="og:title" content="Ascended Tweaks - Tune Windows. Undo anything.">
   <meta property="og:description" content="Open-source Windows tuning that previews every change and can undo everything. No telemetry.">
-  <meta property="og:image" content="https://tweakpilot.github.io/TweakPilot/og-image.png">
+  <meta property="og:image" content="https://ascendedtweaks.github.io/AscendedTweaks/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
@@ -23,7 +23,7 @@
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="nav" aria-label="Main">
-    <a class="brand" href="#top"><img src="favicon.svg" alt="" width="28" height="28">TweakPilot</a>
+    <a class="brand" href="#top"><img src="favicon.svg" alt="" width="28" height="28">Ascended Tweaks</a>
     <ul class="nav-links">
       <li><a href="#top">Home</a></li>
       <li><a href="#features">Features</a></li>
@@ -42,7 +42,7 @@
 
   <main id="main">
     <div class="hero wrap" id="top">
-      <span class="pill-label">TWEAKPILOT <span data-text="version">1.1</span></span>
+      <span class="pill-label">ASCENDED TWEAKS <span data-text="version">1.1</span></span>
       <h1>Tune Windows. Undo anything.</h1>
       <p class="lead">Open source and free of telemetry. Every change is previewed first and can be reversed with one click.</p>
       <div class="hero-actions">
@@ -56,7 +56,7 @@
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>No telemetry</li>
       </ul>
       <!-- Screenshots load only when CONFIG.screenshots in app.js is true (English UI from the app's SnapshotRenderer). -->
-      <img class="shot" data-screenshot="img/app.webp" width="1280" height="800" alt="TweakPilot start page in simple mode with presets" hidden>
+      <img class="shot" data-screenshot="img/app.webp" width="1280" height="800" alt="Ascended Tweaks start page in simple mode with presets" hidden>
     </div>
 
     <section id="compare" hidden aria-labelledby="compare-title">
@@ -78,7 +78,7 @@
       <div class="wrap">
         <p class="eyebrow">Safety first</p>
         <h2 id="safety-title">Every change has a way back.</h2>
-        <p class="section-lead">TweakPilot shows what will change, saves what was there before and lets you return to it.</p>
+        <p class="section-lead">Ascended Tweaks shows what will change, saves what was there before and lets you return to it.</p>
         <div class="grid">
           <div class="card reveal">
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v6H4zM4 14h16v6H4z"/><path d="M8 7h.01M8 17h.01"/></svg></div>
@@ -152,8 +152,8 @@
         <p class="section-lead">Requires Windows 10 22H2 or Windows 11, 64-bit. No installed .NET needed.</p>
         <ol class="steps">
           <li class="card reveal"><h3>Download the ZIP</h3><p>Get the ZIP and <code>SHA256SUMS.txt</code> from the latest release.</p><p style="margin-top:16px"><a class="btn btn-primary btn-small" data-link="latest" href="https://github.com/">Latest release</a></p></li>
-          <li class="card reveal"><h3>Check the checksum</h3><p>In PowerShell, compare the result with the line in <code>SHA256SUMS.txt</code>.</p><pre>Get-FileHash .\TweakPilot-*.zip -Algorithm SHA256</pre></li>
-          <li class="card reveal"><h3>Start TweakPilot.exe</h3><p>Unzip, open the folder and start <code>TweakPilot.exe</code>. Choose Install or Try it portable.</p></li>
+          <li class="card reveal"><h3>Check the checksum</h3><p>In PowerShell, compare the result with the line in <code>SHA256SUMS.txt</code>.</p><pre>Get-FileHash .\AscendedTweaks-*.zip -Algorithm SHA256</pre></li>
+          <li class="card reveal"><h3>Start AscendedTweaks.exe</h3><p>Unzip, open the folder and start <code>AscendedTweaks.exe</code>. Choose Install or Try it portable.</p></li>
         </ol>
         <div class="callout"><strong>Why Windows may warn you:</strong> the files are not code-signed yet, so SmartScreen can show "Windows protected your PC". Check the checksum first. Never turn off Defender or SmartScreen for this or any other app.</div>
       </div>
@@ -166,7 +166,7 @@
         <details><summary>Is it safe?</summary><p>Every change is previewed, backed up and reversible. Risky tweaks are hidden unless you switch to expert mode. Still, it changes Windows settings, so read the preview before you confirm.</p></details>
         <details><summary>Will it make my games faster?</summary><p>Sometimes a little, often not measurably. Each tweak shows whether its effect is proven, small or unclear. There are no FPS promises.</p></details>
         <details><summary>Does it disable Defender?</summary><p>No. Defender, the firewall, UAC, SmartScreen and Windows Update stay on. The only Defender setting it offers is how much CPU a scheduled scan may use.</p></details>
-        <details><summary>Will anti-cheat complain?</summary><p>TweakPilot does not touch game files or inject anything into games, and security features such as Secure Boot and memory integrity stay on.</p></details>
+        <details><summary>Will anti-cheat complain?</summary><p>Ascended Tweaks does not touch game files or inject anything into games, and security features such as Secure Boot and memory integrity stay on.</p></details>
         <details><summary>Does it collect data?</summary><p>No. The app sends nothing and only goes online when you click "Check for updates". This website sets no cookies and loads nothing from other servers.</p></details>
         <details><summary>How do I undo?</summary><p>Open Restore in the app and reset a single tweak, a preset or everything. If a change was interrupted, the app detects it on the next start.</p></details>
         <details><summary>Why is Windows warning me?</summary><p>The files are not code-signed yet. Check the SHA-256 checksum from the release page before you start the app.</p></details>
@@ -183,7 +183,7 @@
       <div>
         <p>Privacy: This site and the app collect nothing.</p>
         <p>Not affiliated with Microsoft or any game publisher.</p>
-        <p>&copy; <span data-text="year">2026</span> <span data-text="copyright">TweakPilot</span></p>
+        <p>&copy; <span data-text="year">2026</span> <span data-text="copyright">Ascended Tweaks</span></p>
       </div>
     </div>
   </footer>

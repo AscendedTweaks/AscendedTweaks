@@ -1,10 +1,10 @@
-using TweakPilot.Catalog;
+using AscendedTweaks.Catalog;
 
 // Prueft alle Tweak-Dateien im Quellordner gegen Schema und Linter-Regeln. Exit 0 = sauber, 1 = Befunde.
 var directory = args.Length > 0 ? args[0] : FindCatalogDirectory();
 if (directory is null || !Directory.Exists(directory))
 {
-    Console.Error.WriteLine("Katalogordner nicht gefunden. Aufruf: catalog-lint <Pfad zu src/TweakPilot.Catalog>");
+    Console.Error.WriteLine("Katalogordner nicht gefunden. Aufruf: catalog-lint <Pfad zu src/AscendedTweaks.Catalog>");
     return 2;
 }
 
@@ -24,7 +24,7 @@ static string? FindCatalogDirectory()
 {
     for (var dir = new DirectoryInfo(Environment.CurrentDirectory); dir is not null; dir = dir.Parent)
     {
-        var candidate = Path.Combine(dir.FullName, "src", "TweakPilot.Catalog");
+        var candidate = Path.Combine(dir.FullName, "src", "AscendedTweaks.Catalog");
         if (Directory.Exists(candidate))
         {
             return candidate;

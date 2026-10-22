@@ -25,7 +25,7 @@ Gilt für alle Leistungs- und Gaming-Tweaks, die "Belegt" oder "Gering" tragen s
 1. Spiel und Szene festlegen, die reproduzierbar ist (eingebauter Benchmark oder feste Wiederholung, 60 Sekunden).
 2. Aufzeichnung mit PresentMon (Entwicklungswerkzeug, nicht im Lieferumfang), CSV je Lauf.
 3. `perf-measure fps vorher lauf1.csv … lauf5.csv > vorher.json`
-4. Tweak über TweakPilot anwenden, Neustart, Schritte 2 und 3 mit `nachher` wiederholen.
+4. Tweak über Ascended Tweaks anwenden, Neustart, Schritte 2 und 3 mit `nachher` wiederholen.
 5. `perf-measure compare vorher.json nachher.json`
 6. Tweak zurücksetzen und prüfen, dass der Ausgangszustand wieder erreicht ist (Integrationstest Schritt 6).
 

@@ -1,8 +1,8 @@
-TweakPilot - START HERE
+Ascended Tweaks - START HERE
 =======================
 
-1. Start: double-click "TweakPilot.exe". On first start TweakPilot asks: "Install (recommended)" or "Just try it (portable)". Neither needs administrator rights. You can switch the language to Deutsch in that window and in First steps.
-2. Undo: in TweakPilot under "Undo" you reset each change one by one or all at once. TweakPilot backs up every value before it changes it.
-3. Remove: Windows Settings > Apps > Installed apps > TweakPilot > Uninstall. To remove a portable copy, delete its folder.
-4. "Windows protected your PC": this version is not signed yet. Check the checksum first: in PowerShell run "Get-FileHash .\TweakPilot.exe" and compare the result with "Docs\Checksums.txt". If it matches, click "More info" > "Run anyway". Never turn off Microsoft Defender or any other antivirus.
+1. Start: double-click "AscendedTweaks.exe". On first start Ascended Tweaks asks: "Install (recommended)" or "Just try it (portable)". Neither needs administrator rights. You can switch the language to Deutsch in that window and in First steps.
+2. Undo: in Ascended Tweaks under "Undo" you reset each change one by one or all at once. Ascended Tweaks backs up every value before it changes it.
+3. Remove: Windows Settings > Apps > Installed apps > Ascended Tweaks > Uninstall. To remove a portable copy, delete its folder.
+4. "Windows protected your PC": this version is not signed yet. Check the checksum first: in PowerShell run "Get-FileHash .\AscendedTweaks.exe" and compare the result with "Docs\Checksums.txt". If it matches, click "More info" > "Run anyway". Never turn off Microsoft Defender or any other antivirus.
 5. Privacy, licenses, changes and sources are in the "Docs" folder.

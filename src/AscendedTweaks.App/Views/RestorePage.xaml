@@ -1,0 +1,126 @@
+<UserControl x:Class="AscendedTweaks.App.Views.RestorePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:c="clr-namespace:AscendedTweaks.App.Controls"
+             xmlns:s="clr-namespace:AscendedTweaks.App.Services"
+             xmlns:loc="clr-namespace:AscendedTweaks.Localization;assembly=AscendedTweaks.Localization">
+    <!-- Wiederherstellung (Abschnitt 7.6) mit den Grenzen aus 7.5. -->
+    <StackPanel>
+        <Border Style="{StaticResource Banner}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc restore.limits.title}" Margin="0,0,0,4" />
+                <ItemsControl ItemsSource="{Binding LimitKeys}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                <ui:SymbolIcon Symbol="Info16" FontSize="14" Foreground="{DynamicResource Brush.Accent}" Margin="0,0,8,0" VerticalAlignment="Top" />
+                                <TextBlock Style="{StaticResource Text.Body}">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource LocKey}">
+                                            <Binding />
+                                            <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <WrapPanel Margin="0,0,0,16">
+            <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc restore.undoall}" Command="{Binding UndoAllCommand}"
+                            IsRunning="{Binding IsBusy}" IsEnabled="{Binding HasApplied}" Margin="0,0,8,8" />
+            <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc restore.openrestorepoint}" Command="{Binding OpenRestorePointCommand}" Margin="0,0,8,8" />
+            <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc restore.openfolder}" Command="{Binding OpenBackupFolderCommand}" Margin="0,0,8,8" />
+        </WrapPanel>
+
+        <Border Style="{StaticResource Card}" BorderBrush="{DynamicResource Brush.Warning}" Visibility="{Binding HasInterrupted, Converter={StaticResource BoolToVisibility}}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc restore.interrupted}" Margin="0,0,0,8" />
+                <ItemsControl ItemsSource="{Binding Interrupted}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel Margin="0,0,0,8">
+                                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Primary}" Content="{s:Loc restore.recover}"
+                                                Command="{Binding DataContext.RecoverCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" />
+                                <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Tweaks}" VerticalAlignment="Center" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc restore.applied}" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc restore.applied.empty}"
+                           Visibility="{Binding HasApplied, Converter={StaticResource InverseBoolToVisibility}}" />
+                <ItemsControl ItemsSource="{Binding Applied}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel Margin="0,0,0,8">
+                                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc details.reset}"
+                                                Command="{Binding DataContext.ResetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding TweakId}"
+                                                AutomationProperties.HelpText="{Binding Name}" />
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Name}" />
+                                    <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding When}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc restore.backups}" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc restore.backups.empty}"
+                           Visibility="{Binding HasBackups, Converter={StaticResource InverseBoolToVisibility}}" />
+                <ItemsControl ItemsSource="{Binding Backups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel Margin="0,0,0,8">
+                                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc restore.delete}"
+                                                Command="{Binding DataContext.DeleteBackupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"
+                                                Visibility="{Binding CanDelete, Converter={StaticResource BoolToVisibility}}" />
+                                <c:Badge DockPanel.Dock="Right" Tone="Accent" Symbol="LockClosed16" Text="{s:Loc restore.baseline}" Margin="0,0,8,0" VerticalAlignment="Center"
+                                         Visibility="{Binding IsBaseline, Converter={StaticResource BoolToVisibility}}" />
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource Text.Body}" Text="{Binding Tweaks}" />
+                                    <TextBlock Style="{StaticResource Text.Caption}"><Run Text="{Binding When, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding Size, Mode=OneWay}" /></TextBlock>
+                                </StackPanel>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+        <Border Style="{StaticResource Card}" Visibility="{Binding HasRemovedApps, Converter={StaticResource BoolToVisibility}}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc restore.apps.title}" Margin="0,0,0,4" />
+                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc restore.apps.note}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                <ItemsControl ItemsSource="{Binding RemovedApps}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel Margin="0,0,0,8">
+                                <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc restore.apps.restore}"
+                                                Command="{Binding DataContext.RestoreAppCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"
+                                                AutomationProperties.HelpText="{Binding App.PackageName}" />
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding App.PackageName}" />
+                                    <TextBlock Style="{StaticResource Text.Caption}"><Run Text="{Binding When, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding State, Mode=OneWay}" /></TextBlock>
+                                </StackPanel>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

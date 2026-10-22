@@ -1,18 +1,18 @@
 <#
 .SYNOPSIS
-    Builds the finished "TweakPilot" folder on the desktop: three programs as single files that need no installed .NET,
+    Builds the finished "Ascended Tweaks" folder on the desktop: three programs as single files that need no installed .NET,
     Docs, START HERE.txt and checksums, plus a ZIP file with the same content in artifacts.
 .DESCRIPTION
-    - Der Zielordner wird vor dem Schreiben nur geleert, wenn er die Markierung ".tweakpilot-package" enthaelt.
-      Existiert er ohne Markierung, entsteht "TweakPilot (2)" (oder die naechste freie Nummer); fremde Ordner werden nie ueberschrieben.
+    - Der Zielordner wird vor dem Schreiben nur geleert, wenn er die Markierung ".ascendedtweaks-package" enthaelt.
+      Existiert er ohne Markierung, entsteht "Ascended Tweaks (2)" (oder die naechste freie Nummer); fremde Ordner werden nie ueberschrieben.
     - Der SHA-256 des Helfers wird in App und Kommandozeile eingebettet; sie starten den Helfer nur mit genau diesem Inhalt.
-    - -PublishDir ueberspringt das Veroeffentlichen (Test-Hook): erwartet app\TweakPilot.App.exe, helper\TweakPilot.Helper.exe, cli\tweakpilot-cli.exe.
+    - -PublishDir ueberspringt das Veroeffentlichen (Test-Hook): erwartet app\AscendedTweaks.App.exe, helper\AscendedTweaks.Helper.exe, cli\ascendedtweaks-cli.exe.
 .EXAMPLE
     powershell -NoProfile -ExecutionPolicy RemoteSigned -File package.ps1
 #>
 [CmdletBinding()]
 param(
-    [string]$Destination = (Join-Path ([Environment]::GetFolderPath('Desktop')) 'TweakPilot'),
+    [string]$Destination = (Join-Path ([Environment]::GetFolderPath('Desktop')) 'Ascended Tweaks'),
     [string]$PublishDir,
     [string]$ZipDirectory
 )
@@ -22,7 +22,7 @@ $repo = $PSScriptRoot
 [xml]$props = Get-Content (Join-Path $repo 'Directory.Build.props')
 $version = $props.Project.PropertyGroup.Version
 if (-not $ZipDirectory) { $ZipDirectory = Join-Path $repo 'artifacts' }
-$marker = '.tweakpilot-package'
+$marker = '.ascendedtweaks-package'
 
 function Publish([string]$Project, [string]$Output, [string]$HelperHash) {
     $arguments = @('publish', (Join-Path $repo "src\$Project"), '-c', 'Release', '-r', 'win-x64', '--self-contained', 'true',
@@ -37,16 +37,16 @@ function Publish([string]$Project, [string]$Output, [string]$HelperHash) {
 if (-not $PublishDir) {
     $PublishDir = Join-Path $repo 'artifacts\package-publish'
     if (Test-Path $PublishDir) { Remove-Item $PublishDir -Recurse -Force }
-    Publish 'TweakPilot.Helper' (Join-Path $PublishDir 'helper') $null
-    $helperHash = (Get-FileHash (Join-Path $PublishDir 'helper\TweakPilot.Helper.exe') -Algorithm SHA256).Hash
-    Publish 'TweakPilot.Cli' (Join-Path $PublishDir 'cli') $helperHash
-    Publish 'TweakPilot.App' (Join-Path $PublishDir 'app') $helperHash
+    Publish 'AscendedTweaks.Helper' (Join-Path $PublishDir 'helper') $null
+    $helperHash = (Get-FileHash (Join-Path $PublishDir 'helper\AscendedTweaks.Helper.exe') -Algorithm SHA256).Hash
+    Publish 'AscendedTweaks.Cli' (Join-Path $PublishDir 'cli') $helperHash
+    Publish 'AscendedTweaks.App' (Join-Path $PublishDir 'app') $helperHash
 }
 
 $sources = @{
-    'TweakPilot.exe'            = Join-Path $PublishDir 'app\TweakPilot.App.exe'
-    'app\TweakPilot.Helper.exe' = Join-Path $PublishDir 'helper\TweakPilot.Helper.exe'
-    'app\tweakpilot-cli.exe'    = Join-Path $PublishDir 'cli\tweakpilot-cli.exe'
+    'AscendedTweaks.exe'            = Join-Path $PublishDir 'app\AscendedTweaks.App.exe'
+    'app\AscendedTweaks.Helper.exe' = Join-Path $PublishDir 'helper\AscendedTweaks.Helper.exe'
+    'app\ascendedtweaks-cli.exe'    = Join-Path $PublishDir 'cli\ascendedtweaks-cli.exe'
 }
 foreach ($source in $sources.Values) {
     if (-not (Test-Path $source)) { throw "Fehlt: $source" }
@@ -79,12 +79,12 @@ $sums = Get-ChildItem -LiteralPath $target -Recurse -Filter '*.exe' | Sort-Objec
     '{0}  {1}' -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash, $_.FullName.Substring($target.Length + 1)
 }
 Set-Content -LiteralPath (Join-Path $target 'Docs\Checksums.txt') -Value $sums -Encoding ascii
-Set-Content -LiteralPath (Join-Path $target $marker) -Value "TweakPilot $version" -Encoding ascii
+Set-Content -LiteralPath (Join-Path $target $marker) -Value "Ascended Tweaks $version" -Encoding ascii
 (Get-Item -LiteralPath (Join-Path $target $marker) -Force).Attributes = 'Hidden'
 
 # 4. ZIP with the same content for sharing.
 New-Item -ItemType Directory -Path $ZipDirectory -Force | Out-Null
-$zip = Join-Path $ZipDirectory "TweakPilot-$version-win-x64.zip"
+$zip = Join-Path $ZipDirectory "AscendedTweaks-$version-win-x64.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Compress-Archive -Path (Join-Path $target '*') -DestinationPath $zip
 

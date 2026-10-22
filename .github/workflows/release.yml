@@ -30,7 +30,9 @@ jobs:
           Set-Location artifacts
           Get-ChildItem -Filter *.zip | ForEach-Object { '{0}  {1}' -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $_.Name } |
             Set-Content SHA256SUMS.txt -Encoding ascii
+      # Build attestations need a public repository on the free plan.
       - uses: actions/attest-build-provenance@v2
+        if: ${{ !github.event.repository.private }}
         with:
           subject-path: artifacts/*.zip
       - name: Draft release

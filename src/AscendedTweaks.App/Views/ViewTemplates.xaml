@@ -55,7 +55,7 @@
         <StackPanel>
             <c:ActionButton Style="{StaticResource Button.Text}" Command="{Binding ToggleCommand}" HorizontalAlignment="Left" MinHeight="40" AutomationProperties.Name="{s:Loc simple.help}">
                 <StackPanel Orientation="Horizontal">
-                    <ui:SymbolIcon Symbol="QuestionCircle16" FontSize="16" Margin="0,0,6,0" />
+                    <ui:SymbolIcon Symbol="QuestionCircle16" FontSize="16" Margin="0,0,8,0" />
                     <TextBlock Text="{s:Loc simple.help}" VerticalAlignment="Center" />
                 </StackPanel>
             </c:ActionButton>
@@ -150,7 +150,7 @@
                                                     HorizontalAlignment="Left" MinHeight="40" AutomationProperties.HelpText="{Binding Name}" />
                                 </DockPanel>
                                 <ListBox DockPanel.Dock="Bottom" Style="{StaticResource Segment.List}" ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel, Mode=TwoWay}"
-                                         AutomationProperties.Name="{s:Loc level.title}" Margin="0,10,0,0" Visibility="{Binding HasLevels, Converter={StaticResource BoolToVisibility}}">
+                                         AutomationProperties.Name="{s:Loc level.title}" Margin="0,8,0,0" Visibility="{Binding HasLevels, Converter={StaticResource BoolToVisibility}}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Label}" />
@@ -159,7 +159,7 @@
                                 </ListBox>
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="22" Foreground="{DynamicResource Brush.TextSecondary}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                        <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="24" Foreground="{DynamicResource Brush.TextSecondary}" Margin="0,0,12,0" VerticalAlignment="Center" />
                                         <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" />
                                     </StackPanel>
                                     <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Description}" TextWrapping="Wrap" Margin="0,4,0,0" />
@@ -173,7 +173,7 @@
             <c:ActionButton Style="{StaticResource Button.Text}" Command="{Binding CreateOwnCommand}" HorizontalAlignment="Left" MinHeight="40" AutomationProperties.Name="{s:Loc simple.preset.own}"
                             Visibility="{Binding CanCreateOwn, Converter={StaticResource BoolToVisibility}}">
                 <StackPanel Orientation="Horizontal">
-                    <ui:SymbolIcon Symbol="Add16" FontSize="16" Margin="0,0,6,0" />
+                    <ui:SymbolIcon Symbol="Add16" FontSize="16" Margin="0,0,8,0" />
                     <TextBlock Text="{s:Loc simple.preset.own}" VerticalAlignment="Center" />
                 </StackPanel>
             </c:ActionButton>
@@ -429,7 +429,7 @@
                                LineHeight="20" LineStackingStrategy="BlockLineHeight" MaxHeight="40" TextTrimming="WordEllipsis" />
                     <!-- Grund fuer einen gesperrten Schalter auch als Text, weil Tooltips deaktivierter Elemente per Tastatur nicht erreichbar sind. -->
                     <DockPanel Margin="0,0,0,8" Visibility="{Binding ToggleToolTip, Converter={StaticResource EmptyToCollapsed}}">
-                        <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Info16" FontSize="14" Foreground="{DynamicResource Brush.TextSecondary}" Margin="0,0,6,0" VerticalAlignment="Top" />
+                        <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Info16" FontSize="16" Foreground="{DynamicResource Brush.TextSecondary}" Margin="0,0,8,0" VerticalAlignment="Top" />
                         <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding ToggleToolTip}" />
                     </DockPanel>
                     <WrapPanel>
@@ -930,7 +930,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <DockPanel Margin="0,4,0,0">
-                                    <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Warning16" FontSize="14" Foreground="{DynamicResource Brush.Warning}" Margin="0,0,8,0" VerticalAlignment="Top" />
+                                    <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Warning16" FontSize="16" Foreground="{DynamicResource Brush.Warning}" Margin="0,0,8,0" VerticalAlignment="Top" />
                                     <TextBlock Style="{StaticResource Text.Body}" Text="{Binding}" TextWrapping="Wrap" />
                                 </DockPanel>
                             </DataTemplate>
@@ -1524,7 +1524,7 @@
                             <ItemsControl ItemsSource="{Binding Groups}" Focusable="False">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Margin="0,0,0,10">
+                                        <StackPanel Margin="0,0,0,12">
                                             <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding Title}" />
                                             <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
                                                 <ItemsControl.ItemTemplate>

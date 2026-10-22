@@ -79,7 +79,7 @@
                         <ui:TextBox Text="300.1.1.1" BorderBrush="{DynamicResource Brush.Danger}" AutomationProperties.Name="{s:Loc catalog.input.placeholder}"
                                     AutomationProperties.HelpText="{s:Loc catalog.input.error}" />
                         <StackPanel Orientation="Horizontal" Margin="0,4,0,8">
-                            <ui:SymbolIcon Symbol="ErrorCircle16" FontSize="14" Foreground="{DynamicResource Brush.Danger}" Margin="0,0,4,0" />
+                            <ui:SymbolIcon Symbol="ErrorCircle16" FontSize="16" Foreground="{DynamicResource Brush.Danger}" Margin="0,0,8,0" />
                             <TextBlock Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Danger}" Text="{s:Loc catalog.input.error}" />
                         </StackPanel>
                         <ComboBox SelectedIndex="0" AutomationProperties.Name="{s:Loc catalog.inputs}">

@@ -14,7 +14,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                <ui:SymbolIcon Symbol="Info16" FontSize="14" Foreground="{DynamicResource Brush.Accent}" Margin="0,0,8,0" VerticalAlignment="Top" />
+                                <ui:SymbolIcon Symbol="Info16" FontSize="16" Foreground="{DynamicResource Brush.Accent}" Margin="0,0,8,0" VerticalAlignment="Top" />
                                 <TextBlock Style="{StaticResource Text.Body}">
                                     <TextBlock.Text>
                                         <MultiBinding Converter="{StaticResource LocKey}">

@@ -1,0 +1,320 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--text:#f5f5f7;--text2:#8e8e96;--accent:#3b8cff;--green:#30d158;--card:rgba(255,255,255,.035);--line:rgba(255,255,255,.08)}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#02040a;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--text)}
+.bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 110% 55% at 50% 108%,rgba(24,92,255,.42),transparent 62%),
+  radial-gradient(ellipse 70% 35% at 50% -8%,rgba(60,120,255,.14),transparent 70%)}
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse 85% 70% at 50% 45%,transparent 55%,rgba(0,0,0,.55))}
+#bar{position:absolute;left:90px;top:110px;width:900px;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
+#barFill{height:100%;width:0;background:#fff;border-radius:3px}
+.scene{position:absolute;inset:0;opacity:0}
+.top{position:absolute;left:0;right:0;top:300px;display:flex;flex-direction:column;align-items:center}
+.badge{display:flex;align-items:center;gap:16px;font-size:26px;font-weight:700;letter-spacing:.22em;color:var(--accent)}
+.badge i{font-style:normal;width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:26px;letter-spacing:0}
+.label{font-size:26px;font-weight:700;letter-spacing:.24em;color:var(--accent)}
+h1{margin:26px 0 0;font-size:96px;font-weight:800;letter-spacing:-.035em;line-height:1.02;text-align:center}
+.subline{margin-top:20px;font-size:36px;color:var(--text2);font-weight:500}
+.card{margin-top:64px;width:860px;border-radius:36px;background:var(--card);border:1.5px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 40px 100px rgba(0,0,0,.5);overflow:hidden}
+.row{display:flex;align-items:center;justify-content:space-between;height:112px;padding:0 42px;font-size:36px;border-top:1.5px solid var(--line)}
+.row:first-child{border-top:0}
+.row .r{display:flex;align-items:center;gap:20px;font-weight:600}
+.muted{color:var(--text2)}
+.chk{width:46px;height:46px;border-radius:50%;border:3px solid rgba(255,255,255,.22);display:grid;place-items:center;position:relative}
+.chk svg{opacity:0}
+.toggle{width:96px;height:56px;border-radius:28px;background:rgba(255,255,255,.14);position:relative}
+.toggle b{position:absolute;top:6px;left:6px;width:44px;height:44px;border-radius:50%;background:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:30px}
+.tile{height:220px;border-radius:28px;background:rgba(255,255,255,.04);border:1.5px solid var(--line);padding:32px;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+.tile .ic{width:80px;height:80px;border-radius:22px;background:rgba(59,140,255,.14);display:grid;place-items:center;color:var(--accent)}
+.tile b{font-size:42px;font-weight:700;letter-spacing:-.02em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:16px;height:104px;padding:0 64px;border-radius:52px;font-size:40px;font-weight:700}
+.btn.white{background:#fff;color:#000}
+.btn.blue{background:var(--accent);color:#fff}
+.pill{display:inline-flex;align-items:center;gap:16px;padding:22px 38px;border-radius:999px;font-size:36px;font-weight:650}
+.dots{display:flex;gap:22px;margin-top:56px}
+.dots i{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.18)}
+.caption{position:absolute;left:70px;right:70px;top:1440px;text-align:center;font-size:58px;font-weight:750;letter-spacing:-.02em;line-height:1.18}
+.caption span{display:inline-block;white-space:pre}
+.caption .k{color:var(--accent)}
+#cursor{position:absolute;left:0;top:0;width:84px;height:84px;opacity:0;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6));z-index:20}
+.ripple{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:4px solid rgba(255,255,255,.85);opacity:0;z-index:19}
+.logoRing{width:300px;height:300px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,rgba(59,140,255,.18),transparent 70%);border:1.5px solid rgba(255,255,255,.1)}
+</style></head>
+<body>
+<div class="bg"></div><div class="vignette"></div>
+<div id="bar"><div id="barFill"></div></div>
+
+<!-- Hook: a settings card where everything is switched on -->
+<div class="scene" id="sHook"><div class="top">
+  <h1>Windows is full<br>of settings you<br><span style="color:var(--accent)">never asked for.</span></h1>
+  <div class="card">
+    <div class="row hrow"><span>Advertising ID</span><div class="toggle"><b></b></div></div>
+    <div class="row hrow"><span>Tips and suggestions</span><div class="toggle"><b></b></div></div>
+    <div class="row hrow"><span>Start menu ads</span><div class="toggle"><b></b></div></div>
+    <div class="row hrow"><span>Activity history</span><div class="toggle"><b></b></div></div>
+    <div class="row hrow"><span>Background apps</span><div class="toggle"><b></b></div></div>
+  </div>
+</div></div>
+
+<!-- Take control in three steps -->
+<div class="scene" id="sIntro"><div class="top" style="top:430px">
+  <div class="logoRing" id="introLogo"><svg viewBox="0 0 256 256" width="170" height="170"><rect x="4" y="4" width="248" height="248" rx="55" fill="#0A0A0C"/><rect x="5" y="5" width="246" height="246" rx="54" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="2"/><path d="M202 54 L70 110 L128 128 L146 186 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><path d="M56 172 L80 196 L118 158" fill="none" stroke="#2997FF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="label" style="margin-top:56px">TWEAKPILOT</div>
+  <h1 style="margin-top:20px">Take control.</h1>
+  <div class="subline">Three simple steps.</div>
+  <div class="dots"><i></i><i></i><i></i></div>
+</div></div>
+
+<!-- Step 1 -->
+<div class="scene" id="s1"><div class="top">
+  <div class="badge"><i>1</i>STEP 1 OF 3</div>
+  <h1>Pick a goal.</h1>
+  <div class="card"><div class="grid">
+    <div class="tile" id="tGaming"><div class="ic"><svg viewBox="0 0 24 24" width="46" height="46" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M6 12h4M8 10v4"/><circle cx="15.5" cy="11" r="1" fill="currentColor"/><circle cx="17.5" cy="13" r="1" fill="currentColor"/></svg></div><b>Gaming</b></div>
+    <div class="tile" id="tPrivacy"><div class="ic"><svg viewBox="0 0 24 24" width="46" height="46" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><b>Privacy</b></div>
+    <div class="tile"><div class="ic"><svg viewBox="0 0 24 24" width="46" height="46" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M14 4l6 6-9 9H5v-6z"/></svg></div><b>Clean Up</b></div>
+    <div class="tile"><div class="ic"><svg viewBox="0 0 24 24" width="46" height="46" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M3 3l18 18"/></svg></div><b>Quiet Office</b></div>
+  </div></div>
+</div></div>
+
+<!-- Step 2 -->
+<div class="scene" id="s2"><div class="top">
+  <div class="badge"><i>2</i>STEP 2 OF 3</div>
+  <h1>Check the preview.</h1>
+  <div class="card">
+    <div class="row prow"><span>Mouse acceleration</span><span class="r"><span class="muted">On &rarr;</span>Off<span class="chk"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#000" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span></span></div>
+    <div class="row prow"><span>Advertising ID</span><span class="r"><span class="muted">On &rarr;</span>Off<span class="chk"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#000" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span></span></div>
+    <div class="row prow"><span>Background apps</span><span class="r"><span class="muted">On &rarr;</span>Off<span class="chk"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#000" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span></span></div>
+    <div class="row prow"><span>Game Mode</span><span class="r"><span class="muted">Off &rarr;</span>On<span class="chk"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#000" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span></span></div>
+  </div>
+</div></div>
+
+<!-- Backup -->
+<div class="scene" id="sBk"><div class="top">
+  <div class="label">AUTOMATIC BACKUP</div>
+  <h1>Backed up first.</h1>
+  <div class="card" style="padding:44px 44px 48px;display:flex;flex-direction:column;align-items:stretch">
+    <div style="display:flex;justify-content:space-between;font-size:36px"><span class="muted">Settings</span><b>4 values</b></div>
+    <div style="display:flex;justify-content:space-between;font-size:36px;margin-top:26px"><span class="muted">Backup</span><b id="bkState">In progress</b></div>
+    <div style="margin-top:40px;height:18px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden"><div id="prog" style="height:100%;width:0;background:var(--accent);border-radius:9px"></div></div>
+    <div id="progText" style="margin-top:18px;font-size:30px;color:var(--text2);font-family:'JetBrains Mono',monospace">Backing up... 0%</div>
+    <div style="margin-top:40px;display:flex;justify-content:center;height:104px">
+      <div class="pill" id="saved" style="margin-top:8px;height:88px;background:rgba(48,209,88,.14);color:var(--green);border:1.5px solid rgba(48,209,88,.4);opacity:0"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Backup saved</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- Step 3 -->
+<div class="scene" id="s3"><div class="top">
+  <div class="badge"><i>3</i>STEP 3 OF 3</div>
+  <h1>Hit apply.</h1>
+  <div class="card" style="padding:44px 44px 48px;display:flex;flex-direction:column;align-items:stretch">
+    <div style="display:flex;justify-content:space-between;font-size:36px"><span class="muted">Changes</span><b>4 ready</b></div>
+    <div style="display:flex;justify-content:space-between;font-size:36px;margin-top:26px"><span class="muted">Backup</span><b style="color:var(--green)">Saved</b></div>
+    <div style="margin-top:56px;display:flex;justify-content:center;position:relative;height:104px">
+      <div class="btn white" id="btnApply" style="position:absolute">Apply</div>
+      <div class="pill" id="applied" style="position:absolute;top:8px;background:rgba(59,140,255,.14);color:var(--accent);border:1.5px solid rgba(59,140,255,.45);opacity:0"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>4 changes applied</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- Undo -->
+<div class="scene" id="sUndo"><div class="top">
+  <div class="label">CHANGED YOUR MIND?</div>
+  <h1>One click back.</h1>
+  <div class="card">
+    <div class="row urow"><span>Mouse acceleration</span><b class="val">Off</b></div>
+    <div class="row urow"><span>Advertising ID</span><b class="val">Off</b></div>
+    <div class="row urow"><span>Background apps</span><b class="val">Off</b></div>
+    <div class="row urow"><span>Game Mode</span><b class="val">On</b></div>
+  </div>
+  <div style="margin-top:56px;position:relative;height:104px;display:flex;justify-content:center;width:860px">
+    <div class="btn white" id="btnUndo" style="position:absolute"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/></svg>Undo everything</div>
+    <div class="pill" id="restored" style="position:absolute;top:8px;background:rgba(48,209,88,.14);color:var(--green);border:1.5px solid rgba(48,209,88,.4);opacity:0"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Everything is back</div>
+  </div>
+</div></div>
+
+<!-- Promises -->
+<div class="scene" id="sProm"><div class="top">
+  <div class="label">TWEAKPILOT</div>
+  <h1>Yours, not ours.</h1>
+  <div class="card">
+    <div class="row mrow"><span>No ads</span><span class="chk"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#000" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span></div>
+    <div class="row mrow"><span>No tracking</span><span class="chk"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#000" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span></div>
+    <div class="row mrow"><span>Free and open source</span><span class="chk"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#000" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span></div>
+  </div>
+</div></div>
+
+<!-- End -->
+<div class="scene" id="sEnd"><div class="top" style="top:430px">
+  <div class="logoRing" id="endLogo"><svg viewBox="0 0 256 256" width="170" height="170"><rect x="4" y="4" width="248" height="248" rx="55" fill="#0A0A0C"/><rect x="5" y="5" width="246" height="246" rx="54" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="2"/><path d="M202 54 L70 110 L128 128 L146 186 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><path id="endCheck" d="M56 172 L80 196 L118 158" fill="none" stroke="#2997FF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="100" stroke-dashoffset="100"/></svg></div>
+  <div class="label" style="margin-top:56px">TWEAKPILOT</div>
+  <h1 id="endHead" style="margin-top:20px">Tweak anything.</h1>
+  <div class="btn white" id="endLink" style="margin-top:70px;height:96px;font-size:38px;opacity:0">Link in bio</div>
+</div></div>
+
+<div class="caption" id="caption"></div>
+<div class="ripple" id="ripple"></div>
+<svg id="cursor" viewBox="0 0 24 24"><path d="M5 2.5l14 9.2-6.2 1.2 3.6 6.8-2.6 1.4-3.6-6.9L5.6 18.6z" fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round"/></svg>
+
+<script>
+const T = /*T*/;
+const CAPTIONS = /*CAPTIONS*/;
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = p => 1 - Math.pow(1 - clamp(p), 3);
+const inOut = p => { p = clamp(p); return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; };
+const back = p => { p = clamp(p); const c = 1.4; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+const prog = (t, s, d = .4) => clamp((t - s) / d);
+const $ = id => document.getElementById(id);
+const all = s => [...document.querySelectorAll(s)];
+
+// Scene windows; transitions blur in and out like the reference.
+const SCENES = [
+  ['sHook', -1, T.take], ['sIntro', T.take, T.step1], ['s1', T.step1, T.step2], ['s2', T.step2, T.backup],
+  ['sBk', T.backup, T.step3], ['s3', T.step3, T.mind], ['sUndo', T.mind, T.ads], ['sProm', T.ads, T.logo], ['sEnd', T.logo, 99],
+];
+function scene(id, t, tin, tout) {
+  const pin = ease(prog(t, tin - .15, .35)), pout = ease(prog(t, tout - .3, .3));
+  const el = $(id);
+  el.style.opacity = Math.min(pin, 1 - pout);
+  el.style.filter = `blur(${22 * (1 - pin) + 26 * pout}px)`;
+  el.style.transform = `scale(${1.04 - .04 * pin - .03 * pout})`;
+}
+
+function center(id, dx = 0, dy = 0) { const r = $(id).getBoundingClientRect(); return { x: r.left + r.width / 2 + dx, y: r.top + r.height / 2 + dy }; }
+const P = { gaming: center('tGaming', 50, 30), apply: center('btnApply', 50, 14), undo: center('btnUndo', 80, 14) };
+const PATH = [
+  [T.step1 + .3, 980, 1560], [T.gaming - .1, P.gaming.x, P.gaming.y], [T.gaming + .5, P.gaming.x, P.gaming.y], [T.step2 - .2, 940, 1300],
+  [T.step3 + .2, 960, 1500], [T.apply - .1, P.apply.x, P.apply.y], [T.apply + .5, P.apply.x, P.apply.y], [T.mind - .2, 940, 1380],
+  [T.mind + .3, 960, 1500], [T.click - .1, P.undo.x, P.undo.y], [T.click + .6, P.undo.x, P.undo.y], [T.ads - .2, P.undo.x + 160, P.undo.y + 200],
+];
+const CLICKS = [T.gaming, T.apply, T.click];
+function cursorAt(t) {
+  if (t <= PATH[0][0]) return { x: PATH[0][1], y: PATH[0][2] };
+  for (let i = 0; i < PATH.length - 1; i++) {
+    const [t0, x0, y0] = PATH[i], [t1, x1, y1] = PATH[i + 1];
+    if (t <= t1) {
+      const p = inOut((t - t0) / (t1 - t0));
+      const arc = Math.sin(Math.PI * p) * Math.min(110, Math.hypot(x1 - x0, y1 - y0) * .12);
+      const nx = -(y1 - y0), ny = x1 - x0, len = Math.hypot(nx, ny) || 1;
+      return { x: x0 + (x1 - x0) * p + nx / len * arc, y: y0 + (y1 - y0) * p + ny / len * arc };
+    }
+  }
+  const l = PATH[PATH.length - 1]; return { x: l[1], y: l[2] };
+}
+function visibleCursor(t) {
+  const windows = [[T.step1 + .3, T.step2 - .1], [T.step3 + .2, T.mind - .1], [T.mind + .3, T.ads - .1]];
+  return Math.max(...windows.map(([a, b]) => Math.min(ease(prog(t, a, .25)), 1 - ease(prog(t, b - .25, .25)))));
+}
+function press(el, t, c) { const p = prog(t, c - .02, .18); el.style.transform = `scale(${p > 0 && p < 1 ? 1 - .06 * Math.sin(Math.PI * p) : 1})`; }
+function check(el, t, at) {
+  const p = ease(prog(t, at, .22));
+  el.style.background = `rgba(48,209,88,${p})`; el.style.borderColor = p > .5 ? 'transparent' : '';
+  el.style.transform = `scale(${1 + .18 * Math.sin(Math.PI * clamp((t - at) / .3))})`;
+  el.querySelector('svg').style.opacity = p;
+}
+function rowIn(el, t, at) { el.style.opacity = ease(prog(t, at, .3)); el.style.transform = `translateY(${26 * (1 - ease(prog(t, at, .4)))}px)`; }
+
+function setTime(t) {
+  $('barFill').style.width = (clamp(t / (T.end - .6)) * 100) + '%';
+  SCENES.forEach(([id, a, b]) => scene(id, t, a, b));
+
+  // Hook: toggles are already on, rows arrive quickly.
+  all('.hrow').forEach((el, i) => {
+    rowIn(el, t, .15 + i * .32);
+    const tg = el.querySelector('.toggle'), on = ease(prog(t, .35 + i * .32, .25));
+    tg.style.background = `rgba(${59 * on + 255 * (1 - on) * .14},${140 * on + 255 * (1 - on) * .14},${255 * on + 255 * (1 - on) * .14},${.14 + .86 * on})`;
+    tg.querySelector('b').style.transform = `translateX(${40 * on}px)`;
+  });
+
+  // Intro: three dots fill on "three steps".
+  $('introLogo').style.transform = `scale(${.7 + .3 * back(prog(t, T.take, .5))})`;
+  all('.dots i').forEach((d, i) => { const p = ease(prog(t, T.three + i * .14, .2)); d.style.background = `rgba(${59 + 196 * (1 - p)},${140 + 115 * (1 - p)},255,${.18 + .82 * p})`; d.style.transform = `scale(${1 + .3 * Math.sin(Math.PI * clamp((t - T.three - i * .14) / .3))})`; });
+
+  // Step 1: tiles pop in, cursor picks Gaming, Privacy glows on its word.
+  all('#s1 .tile').forEach((el, i) => { el.style.opacity = ease(prog(t, T.step1 + .25 + i * .1, .3)); el.style.transform = `scale(${.85 + .15 * back(prog(t, T.step1 + .25 + i * .1, .45))})`; });
+  const sel = ease(prog(t, T.gaming, .2));
+  $('tGaming').style.borderColor = `rgba(59,140,255,${.08 + .9 * sel})`;
+  $('tGaming').style.background = `rgba(59,140,255,${.04 + .14 * sel})`;
+  const pv = Math.sin(Math.PI * clamp((t - T.privacy) / .7));
+  $('tPrivacy').style.borderColor = pv > 0 ? `rgba(59,140,255,${.08 + .6 * pv})` : '';
+  press($('tGaming'), t, T.gaming);
+
+  // Step 2: rows, then a green check on each spoken word.
+  const checks = [T.every, T.change, T.listed, T.before];
+  all('.prow').forEach((el, i) => { rowIn(el, t, T.check + i * .15); check(el.querySelector('.chk'), t, checks[i]); });
+
+  // Backup first, then step 3: click apply.
+  press($('btnApply'), t, T.apply);
+  const bp = inOut(prog(t, T.backup + .1, T.first + .35 - T.backup));
+  $('prog').style.width = bp * 100 + '%';
+  $('progText').textContent = bp >= 1 ? 'Backup complete' : `Backing up... ${Math.round(bp * 100)}%`;
+  $('bkState').textContent = bp >= 1 ? 'Saved' : 'In progress';
+  $('bkState').style.color = bp >= 1 ? 'var(--green)' : '';
+  const done = T.first + .4;
+  $('btnApply').style.opacity = 1 - ease(prog(t, T.apply + .3, .25));
+  $('applied').style.opacity = ease(prog(t, T.apply + .35, .25));
+  $('applied').style.transform = `scale(${.85 + .15 * back(prog(t, T.apply + .35, .4))})`;
+  $('saved').style.opacity = ease(prog(t, done, .25));
+  $('saved').style.transform = `scale(${.85 + .15 * back(prog(t, done, .4))})`;
+
+  // Undo: click, values flip back one by one.
+  press($('btnUndo'), t, T.click);
+  const orig = ['On', 'On', 'On', 'Off'], applied = ['Off', 'Off', 'Off', 'On'];
+  all('.urow').forEach((el, i) => {
+    rowIn(el, t, T.mind + .05 + i * .08);
+    const flip = T.everything + i * .12, v = el.querySelector('.val');
+    v.textContent = t >= flip ? orig[i] : applied[i];
+    v.style.color = t >= flip ? 'var(--green)' : 'var(--accent)';
+    v.style.transform = `translateY(${-12 * Math.sin(Math.PI * clamp((t - flip + .08) / .22))}px)`;
+  });
+  $('btnUndo').style.opacity = 1 - ease(prog(t, T.back - .05, .2));
+  $('restored').style.opacity = ease(prog(t, T.back, .25));
+  $('restored').style.transform = `scale(${.85 + .15 * back(prog(t, T.back, .4))})`;
+
+  // Promises: each row checks on its word.
+  [T.ads, T.tracking, T.free].forEach((at, i) => { const el = all('.mrow')[i]; rowIn(el, t, at - .25); check(el.querySelector('.chk'), t, at + .05); });
+
+  // End.
+  $('endLogo').style.transform = `scale(${.7 + .3 * back(prog(t, T.logo, .55))})`;
+  $('endCheck').style.strokeDashoffset = 100 - 100 * ease(prog(t, T.logo + .3, .45));
+  $('endHead').style.opacity = ease(prog(t, T.anything - .15, .3));
+  $('endHead').style.filter = `blur(${10 * (1 - ease(prog(t, T.anything - .15, .35)))}px)`;
+  $('endLink').style.opacity = ease(prog(t, T.link - .05, .25));
+  $('endLink').style.transform = `translateY(${30 * (1 - back(prog(t, T.link - .05, .45)))}px)`;
+
+  // Cursor and click ripple.
+  const c = cursorAt(t), cur = $('cursor');
+  cur.style.opacity = visibleCursor(t);
+  let cs = 1; for (const k of CLICKS) { const p = prog(t, k - .03, .16); if (p > 0 && p < 1) cs = 1 - .18 * Math.sin(Math.PI * p); }
+  cur.style.transformOrigin = '14px 8px';
+  cur.style.transform = `translate(${c.x - 14}px, ${c.y - 8}px) scale(${cs})`;
+  let last = null; for (const k of CLICKS) if (t >= k) last = k;
+  const rip = $('ripple');
+  if (last !== null && t - last < .5) { const p = (t - last) / .5, a = cursorAt(last); rip.style.left = a.x + 'px'; rip.style.top = a.y + 'px'; rip.style.opacity = .85 * (1 - p); rip.style.transform = `scale(${1 + 5 * ease(p)})`; }
+  else rip.style.opacity = 0;
+
+  // Captions: each word appears when it is spoken.
+  const cap = $('caption');
+  const g = CAPTIONS.findIndex(c => t >= c.start - .05 && t < c.end);
+  if (g < 0) { cap.style.opacity = 0; return; }
+  if (cap.dataset.g !== String(g)) {
+    cap.innerHTML = CAPTIONS[g].words.map(w => `<span class="${w.k ? 'k' : ''}">${w.t}${w.p} </span>`).join('');
+    cap.dataset.g = String(g);
+  }
+  const grp = CAPTIONS[g], leave = ease(prog(t, grp.end - .18, .18));
+  cap.style.opacity = 1 - leave;
+  [...cap.children].forEach((s, i) => {
+    const p = ease(prog(t, grp.words[i].s - .04, .2));
+    s.style.opacity = .0 + p;
+    s.style.transform = `translateY(${18 * (1 - p)}px)`;
+    s.style.filter = `blur(${6 * (1 - p)}px)`;
+  });
+}
+window.setTime = setTime;
+setTime(0);
+</script>
+</body></html>

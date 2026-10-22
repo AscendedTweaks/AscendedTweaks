@@ -4,7 +4,7 @@ Open-source Windows tuning that previews every change and can undo everything.
 
 ## Download
 
-**[Download the latest version](https://github.com/TweakPilot/AscendedTweaks/releases/latest)** for Windows 10 22H2 (build 19045) or Windows 11, 64-bit.
+**[Download the latest version](https://github.com/AscendedTweaks/AscendedTweaks/releases/latest)** for Windows 10 22H2 (build 19045) or Windows 11, 64-bit.
 
 1. Download `AscendedTweaks-<version>-win-x64.zip` and `SHA256SUMS.txt`.
 2. Unzip it and start `AscendedTweaks.exe`. No administrator rights are needed to start.
@@ -26,7 +26,7 @@ The files are not code-signed yet, so SmartScreen may show "Windows protected yo
 then click "More info" > "Run anyway". You can also verify that the ZIP was built from this repository:
 
 ```
-gh attestation verify AscendedTweaks-<version>-win-x64.zip --repo TweakPilot/AscendedTweaks
+gh attestation verify AscendedTweaks-<version>-win-x64.zip --repo AscendedTweaks/AscendedTweaks
 ```
 
 Do not turn off Microsoft Defender or SmartScreen for this or any other app.

@@ -1,6 +1,6 @@
 // Site configuration: the only place to change owner, repository, version and copyright.
 const CONFIG = {
-  owner: 'TweakPilot',
+  owner: 'AscendedTweaks',
   repo: 'AscendedTweaks',
   version: '1.1',
   copyright: 'Ascended Tweaks',

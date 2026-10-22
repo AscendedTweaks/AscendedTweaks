@@ -1,0 +1,324 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--text:#f5f6f8;--text2:#8b8f99;--blue:#2f8bff;--cyan:#7fd4ff;--green:#34d399;--warm:#ffb46b;--glass:rgba(20,20,24,.9);--border:rgba(255,255,255,.1)}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000;color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif}
+.serif{font-family:"Bitstream Charter",Charter,Georgia,serif}
+canvas{position:absolute;left:0;top:0}
+#grain{opacity:.07;mix-blend-mode:overlay;z-index:50}
+.glass{background:var(--glass);border:1px solid var(--border);border-radius:40px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 40px 120px rgba(0,0,0,.65)}
+#header{position:absolute;left:0;right:0;top:0;height:0;z-index:20}
+#hIcon{position:absolute;width:220px;height:220px;left:430px;top:700px}
+#hWord{position:absolute;left:0;right:0;top:960px;text-align:center;font-size:96px;font-weight:700;letter-spacing:-.03em;white-space:pre}
+#chips{position:absolute;left:0;right:0;top:640px;display:flex;justify-content:center;gap:12px;z-index:15}
+.chip{height:88px;padding:0 24px;border-radius:44px;display:flex;align-items:center;gap:10px;font-size:31px;font-weight:600;white-space:nowrap;opacity:0}
+.chip svg{width:34px;height:34px;color:var(--blue)}
+#win{position:absolute;left:70px;top:470px;width:940px;height:960px;z-index:10;opacity:0;overflow:hidden}
+#search{position:absolute;left:36px;right:36px;top:36px;height:116px;border-radius:30px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:22px;padding:0 34px;font-size:40px}
+#search svg{flex:none;color:var(--text2)}
+#caret{display:inline-block;width:4px;height:48px;background:var(--blue);margin-left:4px;vertical-align:middle}
+#list{position:absolute;left:36px;right:36px;top:184px}
+.row{height:112px;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:38px;border-radius:22px}
+.row .meta{color:var(--text2);font-size:28px}
+.hl{color:var(--blue)}
+#card{position:absolute;z-index:12;border-radius:36px;background:linear-gradient(160deg,rgba(47,139,255,.22),rgba(20,20,24,.95) 55%);border:1.5px solid rgba(47,139,255,.55);overflow:hidden;opacity:0}
+.cpane{position:absolute;inset:0;padding:54px 50px}
+.toggle{width:110px;height:64px;border-radius:32px;position:relative;flex:none}
+.toggle b{position:absolute;top:7px;left:7px;width:50px;height:50px;border-radius:50%;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.trow{display:flex;align-items:center;justify-content:space-between;height:116px;font-size:38px;border-top:1px solid rgba(255,255,255,.08)}
+.badge{display:inline-flex;align-items:center;gap:14px;padding:18px 30px;border-radius:999px;font-size:32px;font-weight:650}
+#cursor{position:absolute;left:0;top:0;width:86px;height:86px;z-index:40;opacity:0;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+#ring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:4px solid var(--cyan);z-index:39;opacity:0;box-shadow:0 0 20px var(--blue)}
+#outro{position:absolute;left:0;right:0;top:560px;display:flex;flex-direction:column;align-items:center;z-index:30;opacity:0}
+#tag span{display:inline-block;white-space:pre}
+</style></head>
+<body>
+<canvas id="liquid" width="1080" height="1920"></canvas>
+
+<div id="header">
+  <svg id="hIcon" viewBox="0 0 256 256"><rect x="4" y="4" width="248" height="248" rx="55" fill="#0A0A0C"/><rect x="5" y="5" width="246" height="246" rx="54" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="2"/><path d="M202 54 L70 110 L128 128 L146 186 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><path id="hCheck" d="M56 172 L80 196 L118 158" fill="none" stroke="#2F8BFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="100" stroke-dashoffset="100"/></svg>
+  <div id="hWord"></div>
+</div>
+
+<div id="chips">
+  <div class="chip glass" id="cGaming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M6 12h4M8 10v4"/></svg>Gaming</div>
+  <div class="chip glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Privacy</div>
+  <div class="chip glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M14 4l6 6-9 9H5v-6z"/></svg>Clean Up</div>
+  <div class="chip glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M3 3l18 18"/></svg>Quiet Office</div>
+</div>
+
+<div id="win" class="glass">
+  <div id="search"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span id="query"></span><i id="caret"></i></div>
+  <div id="list"></div>
+</div>
+
+<div id="card">
+  <div class="cpane" id="cpMouse">
+    <div style="font-size:28px;font-weight:700;letter-spacing:.2em;color:var(--blue)">TWEAK</div>
+    <div style="margin-top:18px;font-size:60px;font-weight:750;letter-spacing:-.02em">Mouse acceleration</div>
+    <div style="margin-top:44px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:64px;font-weight:700"><span style="color:var(--text2)">On</span> <span style="color:var(--text2)">&rarr;</span> <span id="mOff" style="color:var(--blue)">Off</span></div>
+      <div class="toggle" id="mToggle"><b></b></div>
+    </div>
+    <div style="margin-top:54px"><span class="badge" id="mBadge" style="background:rgba(47,139,255,.14);color:var(--cyan);border:1px solid rgba(127,212,255,.4)"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Backup saved</span></div>
+  </div>
+  <div class="cpane" id="cpQuiet" style="opacity:0">
+    <div style="font-size:28px;font-weight:700;letter-spacing:.2em;color:var(--cyan)">PRESET</div>
+    <div style="margin-top:18px;font-size:60px;font-weight:750;letter-spacing:-.02em">Quiet Office</div>
+    <div style="margin-top:30px">
+      <div class="trow"><span>Notification banners</span><div class="toggle qt"><b></b></div></div>
+      <div class="trow"><span>Tips and suggestions</span><div class="toggle qt"><b></b></div></div>
+      <div class="trow"><span>Start menu suggestions</span><div class="toggle qt"><b></b></div></div>
+    </div>
+    <div style="margin-top:40px;position:relative;height:110px">
+      <div id="undo" style="position:absolute;left:0;right:0;height:110px;border-radius:55px;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;gap:16px;font-size:40px;font-weight:700"><svg id="undoIc" viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/></svg>Undo</div>
+      <div id="back" style="position:absolute;left:0;right:0;top:4px;display:flex;justify-content:center;opacity:0"><span class="badge" style="background:rgba(52,211,153,.14);color:var(--green);border:1px solid rgba(52,211,153,.45)"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Everything is back</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="outro">
+  <svg id="oIcon" viewBox="0 0 256 256" width="240" height="240" style="filter:drop-shadow(0 0 70px rgba(47,139,255,.7))"><rect x="4" y="4" width="248" height="248" rx="55" fill="#0A0A0C"/><rect x="5" y="5" width="246" height="246" rx="54" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="2"/><path d="M202 54 L70 110 L128 128 L146 186 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><path id="oCheck" d="M56 172 L80 196 L118 158" fill="none" stroke="#2F8BFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="100" stroke-dashoffset="100"/></svg>
+  <div id="oWord" style="margin-top:56px;font-size:92px;font-weight:700;letter-spacing:-.03em;white-space:pre"></div>
+  <div id="tag" class="serif" style="margin-top:30px;font-size:84px;font-style:italic;color:var(--cyan);height:110px"></div>
+  <div id="bio" style="margin-top:70px;padding:28px 64px;border-radius:999px;background:#fff;color:#000;font-size:40px;font-weight:650">Link in bio</div>
+</div>
+
+<div id="ring"></div>
+<svg id="cursor" viewBox="0 0 24 24"><path d="M5 2.5l14 9.2-6.2 1.2 3.6 6.8-2.6 1.4-3.6-6.9L5.6 18.6z" fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round"/></svg>
+<canvas id="grain" width="540" height="960" style="width:1080px;height:1920px"></canvas>
+
+<script>
+const T = /*T*/;
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = p => 1 - Math.pow(1 - clamp(p), 3);
+const inOut = p => { p = clamp(p); return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; };
+const spring = p => { p = clamp(p); return 1 - Math.exp(-6 * p) * Math.cos(10 * p); };
+const prog = (t, s, d) => clamp((t - s) / d);
+const bell = (t, s, d) => Math.sin(Math.PI * clamp((t - s) / d));
+const lerp = (a, b, p) => a + (b - a) * p;
+const $ = id => document.getElementById(id);
+
+// ---------- static content ----------
+const WORD = 'AscendedTweaks';
+const ROWS = [['Mouse acceleration', 'Input'], ['Mouse pointer trails', 'Input'], ['Game Mode', 'Gaming'], ['Background apps', 'Performance'], ['Advertising ID', 'Privacy'], ['Startup apps', 'Performance']];
+$('list').innerHTML = ROWS.map((r, i) => `<div class="row" id="r${i}"><span class="nm"></span><span class="meta">${r[1]}</span></div>`).join('');
+const Q1 = 'mouse acceleration', Q2 = 'quiet';
+const typeAt = (q, start, step) => [...q].map((_, i) => start + i * step);
+const K1 = typeAt(Q1, T.type1, T.step), K2 = typeAt(Q2, T.type2, T.step);
+function queryAt(t) {
+  if (t < T.del) return Q1.slice(0, K1.filter(k => t >= k).length);
+  if (t < T.type2) { const n = Math.round(Q1.length * (1 - prog(t, T.del, T.type2 - T.del - .1))); return Q1.slice(0, n); }
+  return Q2.slice(0, K2.filter(k => t >= k).length);
+}
+function charTime(t, i) { return t < T.del ? K1[i] : K2[i]; }
+// When each row stops matching the first query.
+const OUT = ROWS.map(([n]) => { for (let i = 0; i < Q1.length; i++) if (!n.toLowerCase().includes(Q1.slice(0, i + 1))) return K1[i]; return null; });
+
+// ---------- measured positions ----------
+const rect = id => { const r = $(id).getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height, cx: r.left + r.width / 2, cy: r.top + r.height / 2 }; };
+const R0 = rect('r0'), WIN = rect('win');
+const CARD = { x: WIN.x + 36, y: WIN.y + 184, w: WIN.w - 72, h: 600 };
+const CARD2 = { x: WIN.x + 36, y: WIN.y + 184, w: WIN.w - 72, h: 740 };
+function placeCard(r) { const c = $('card'); c.style.left = r.x + 'px'; c.style.top = r.y + 'px'; c.style.width = r.w + 'px'; c.style.height = r.h + 'px'; }
+placeCard(CARD2); const UNDO = rect('undo');
+const GAMING = rect('cGaming');
+const P = { gaming: [GAMING.cx + 40, GAMING.cy + 18], row: [R0.cx + 160, R0.cy + 16], undo: [UNDO.cx + 60, UNDO.cy + 16] };
+const PATH = [
+  [T.cursor1, 1000, 1560], [T.clickGaming - .08, ...P.gaming], [T.clickGaming + .35, ...P.gaming], [T.push, 1010, 1400],
+  [T.cursor2, 1000, 1500], [T.clickRow - .08, ...P.row], [T.clickRow + .45, ...P.row], [T.card + .9, 980, 1350],
+  [T.cursor3, 1000, 1520], [T.clickUndo - .08, ...P.undo], [T.clickUndo + .5, ...P.undo], [T.back + .4, P.undo[0] + 140, P.undo[1] + 200],
+];
+const CLICKS = [T.clickGaming, T.clickRow, T.clickUndo];
+function cursorAt(t) {
+  if (t <= PATH[0][0]) return PATH[0].slice(1);
+  for (let i = 0; i < PATH.length - 1; i++) {
+    const [t0, x0, y0] = PATH[i], [t1, x1, y1] = PATH[i + 1];
+    if (t <= t1) { const p = inOut((t - t0) / (t1 - t0)), arc = Math.sin(Math.PI * p) * Math.min(120, Math.hypot(x1 - x0, y1 - y0) * .15); return [lerp(x0, x1, p) - arc * .5, lerp(y0, y1, p) - arc * .3]; }
+  }
+  return PATH[PATH.length - 1].slice(1);
+}
+function cursorVisible(t) {
+  const w = (a, b) => Math.min(ease(prog(t, a, .2)), 1 - ease(prog(t, b - .2, .2)));
+  return Math.max(w(T.cursor1, T.push + .1), w(T.cursor2, T.card + 1.0), w(T.cursor3, T.back + .7));
+}
+
+// ---------- liquid light ----------
+const LQ = $('liquid').getContext('2d');
+const LK = [ // time, cx, cy, scale, intensity
+  [0, 540, 900, 1.7, .9], [T.ignite, 540, 820, .22, 1.5], [T.header + .3, 540, 1560, 1.35, .55],
+  [T.dissolve, 540, 1560, 1.35, .55], [T.outro, 540, 820, .22, 1.6], [T.outro + 1, 540, 1580, 1.5, .65], [99, 540, 1580, 1.5, .65],
+];
+function liquidParams(t) {
+  for (let i = 0; i < LK.length - 1; i++) { const a = LK[i], b = LK[i + 1]; if (t <= b[0]) { const p = inOut((t - a[0]) / (b[0] - a[0])); return a.slice(1).map((v, k) => lerp(v, b[k + 1], p)); } }
+  return LK[LK.length - 1].slice(1);
+}
+function drawLiquid(t) {
+  const [cx, cy, s, I] = liquidParams(t);
+  LQ.globalCompositeOperation = 'source-over'; LQ.filter = 'none'; LQ.fillStyle = '#000'; LQ.fillRect(0, 0, 1080, 1920);
+  LQ.globalCompositeOperation = 'lighter'; LQ.filter = 'blur(26px)';
+  for (let k = 0; k < 7; k++) {
+    LQ.beginPath();
+    for (let j = 0; j <= 90; j++) {
+      const a = j / 90 * Math.PI * 2.2 + k * .9 + t * (.5 + k * .07);
+      const rad = 330 * s * (.55 + .45 * Math.sin(3 * a + t * 1.4 + k));
+      const x = cx + rad * Math.cos(a) * 1.55 + Math.sin(t * .7 + k) * 40 * s;
+      const y = cy + rad * Math.sin(a) * .55 + 70 * s * Math.sin(2 * a + t * 1.1 + k);
+      j ? LQ.lineTo(x, y) : LQ.moveTo(x, y);
+    }
+    const hue = 205 - k * 3;
+    LQ.strokeStyle = `hsla(${hue},100%,${55 + k * 3}%,${.11 * I})`;
+    LQ.lineWidth = 34 * s + 14;
+    LQ.stroke();
+  }
+  const g = LQ.createRadialGradient(cx, cy, 0, cx, cy, 260 * s + 60);
+  g.addColorStop(0, `rgba(190,230,255,${.55 * I})`); g.addColorStop(.4, `rgba(47,139,255,${.28 * I})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+  LQ.filter = 'blur(10px)'; LQ.fillStyle = g; LQ.fillRect(0, 0, 1080, 1920);
+  // one warm highlight that flickers through the silk
+  const wx = cx + Math.cos(t * 1.7) * 220 * s, wy = cy + Math.sin(t * 2.1) * 80 * s;
+  const w = LQ.createRadialGradient(wx, wy, 0, wx, wy, 90 * s + 20);
+  w.addColorStop(0, `rgba(255,180,107,${.22 * I})`); w.addColorStop(1, 'rgba(0,0,0,0)');
+  LQ.fillStyle = w; LQ.fillRect(0, 0, 1080, 1920);
+}
+
+// ---------- grain ----------
+const GR = $('grain').getContext('2d'), NOISE = [];
+for (let n = 0; n < 6; n++) { const img = GR.createImageData(540, 960); for (let i = 0; i < img.data.length; i += 4) { const v = Math.random() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255; } NOISE.push(img); }
+
+// ---------- helpers ----------
+function typed(el, text, t, times) {
+  el.innerHTML = [...text].map((ch, i) => {
+    const age = t - times[i], g = clamp(1 - age / .35);
+    const r = Math.round(lerp(245, 47, g)), gg = Math.round(lerp(246, 139, g)), b = Math.round(lerp(248, 255, g));
+    return `<span style="color:rgb(${r},${gg},${b});text-shadow:0 0 ${18 * g}px rgba(47,139,255,${g})">${ch === ' ' ? '&nbsp;' : ch}</span>`;
+  }).join('');
+}
+function toggle(el, on) {
+  el.style.background = `rgba(${lerp(70, 47, on)},${lerp(72, 139, on)},${lerp(80, 255, on)},${lerp(.5, 1, on)})`;
+  el.querySelector('b').style.transform = `translateX(${46 * on}px)`;
+}
+
+function setTime(t) {
+  drawLiquid(t);
+  GR.putImageData(NOISE[Math.floor(t * 60) % NOISE.length], 0, 0);
+
+  // Icon ignites, wordmark writes itself, then both move up into a header.
+  const ign = spring(prog(t, T.ignite - .1, .7));
+  const hp = inOut(prog(t, T.header, .5));
+  const out = ease(prog(t, T.dissolve, .5));
+  const icon = $('hIcon');
+  icon.style.opacity = ease(prog(t, T.ignite - .15, .25)) * (1 - out);
+  icon.style.transform = `translate(${-310 * hp}px, ${-470 * hp}px) scale(${(.3 + .7 * ign) * (1 - .55 * hp)})`;
+  icon.style.filter = `drop-shadow(0 0 ${60 * bell(t, T.ignite - .1, .9) + 20}px rgba(47,139,255,.8)) blur(${30 * out}px)`;
+  $('hCheck').style.strokeDashoffset = 100 - 100 * ease(prog(t, T.ignite + .15, .35));
+  const wordTimes = [...WORD].map((_, i) => T.word + i * .045);
+  typed($('hWord'), WORD.slice(0, wordTimes.filter(k => t >= k).length), t, wordTimes);
+  $('hWord').style.transform = `translate(${70 * hp}px, ${-730 * hp}px) scale(${1 - .45 * hp})`;
+  $('hWord').style.opacity = 1 - out;
+  $('hWord').style.filter = `blur(${30 * out}px)`;
+
+  // Chips pop in, Gaming gets clicked, then everything flies into the app window.
+  const push = inOut(prog(t, T.push, .55));
+  document.querySelectorAll('.chip').forEach((c, i) => {
+    const p = spring(prog(t, T.chips + i * .14, .5));
+    c.style.opacity = ease(prog(t, T.chips + i * .14, .15)) * (1 - push);
+    c.style.transform = `translateY(${60 * (1 - p) - 120 * push}px) scale(${(.6 + .4 * p) * (1 + .4 * push)})`;
+    c.style.filter = `blur(${22 * push}px)`;
+  });
+  const sel = ease(prog(t, T.clickGaming, .2));
+  $('cGaming').style.background = `rgba(${lerp(20, 47, sel)},${lerp(20, 139, sel)},${lerp(24, 255, sel)},${lerp(.9, .35, sel)})`;
+  $('cGaming').style.borderColor = `rgba(127,212,255,${.1 + .7 * sel})`;
+  if (bell(t, T.clickGaming - .02, .18) > 0) $('cGaming').style.transform += ` scale(${1 - .07 * bell(t, T.clickGaming - .02, .18)})`;
+
+  // App window: camera push-in with a 3D tilt.
+  const win = $('win'), wi = ease(prog(t, T.push + .1, .6));
+  win.style.opacity = wi * (1 - out);
+  win.style.transform = `perspective(1800px) translateY(${260 * (1 - wi)}px) rotateX(${22 * (1 - wi)}deg) scale(${(.72 + .28 * wi) * (1 + .1 * out)})`;
+  win.style.filter = `blur(${24 * (1 - wi) + 34 * out}px)`;
+
+  // Search: typing with a glowing tail, list filters live.
+  const q = queryAt(t);
+  const times = [...q].map((_, i) => charTime(t, i));
+  typed($('query'), q, t, times);
+  $('caret').style.opacity = (Math.floor(t * 3) % 2 === 0 || (t > T.type1 && t < T.type1 + Q1.length * T.step) || (t > T.del && t < T.type2 + Q2.length * T.step)) ? 1 : .15;
+  ROWS.forEach(([name], i) => {
+    const r = $('r' + i), o = OUT[i];
+    const gone = o === null ? 0 : ease(prog(t, o, .28));
+    const listIn = ease(prog(t, T.push + .45 + i * .05, .3));
+    r.style.height = 112 * (1 - gone) + 'px';
+    r.style.opacity = listIn * (1 - gone);
+    r.style.filter = `blur(${12 * gone}px)`;
+    r.style.transform = `translateX(${40 * gone + 40 * (1 - listIn)}px)`;
+    const qq = t < T.del ? q : '';
+    const idx = qq ? name.toLowerCase().indexOf(qq) : -1;
+    r.querySelector('.nm').innerHTML = idx >= 0 ? `${name.slice(0, idx)}<span class="hl">${name.slice(idx, idx + qq.length)}</span>${name.slice(idx + qq.length)}` : name;
+    r.style.background = i === 0 && t > K1[K1.length - 1] ? `rgba(47,139,255,${.1 + .1 * bell(t, T.clickRow - .02, .3)})` : 'transparent';
+  });
+  $('r0').style.opacity = t >= T.card ? 0 : $('r0').style.opacity;
+
+  // Card: the matching row morphs into a detail card, later into the Quiet Office preset.
+  const card = $('card');
+  const m = inOut(prog(t, T.card, .5)), m2 = inOut(prog(t, T.quiet, .55));
+  const r1 = { x: lerp(R0.x, CARD.x, m), y: lerp(R0.y, CARD.y, m), w: lerp(R0.w, CARD.w, m), h: lerp(R0.h, CARD.h, m) };
+  placeCard({ x: r1.x, y: r1.y, w: lerp(r1.w, CARD2.w, m2), h: lerp(r1.h, CARD2.h, m2) });
+  card.style.opacity = t >= T.card ? (1 - out) : 0;
+  const tilt = bell(t, T.card, .6), tilt2 = bell(t, T.quiet, .6);
+  const rew = bell(t, T.rewind, .55);
+  card.style.transform = `perspective(1400px) rotateY(${-14 * tilt + 12 * tilt2 + 8 * Math.sin((t - T.rewind) * 30) * rew}deg) rotateX(${8 * tilt}deg) scale(${1 + .04 * tilt2 - .05 * rew})`;
+  card.style.filter = `blur(${6 * tilt * (1 - m) + 10 * rew + 34 * out}px)`;
+  const hueShift = m2;
+  card.style.borderColor = `rgba(${lerp(47, 127, hueShift)},${lerp(139, 212, hueShift)},255,.55)`;
+  card.style.background = `linear-gradient(160deg,rgba(${lerp(47, 127, hueShift)},${lerp(139, 212, hueShift)},255,.22),rgba(20,20,24,.95) 55%)`;
+  card.style.boxShadow = `0 0 ${80 * bell(t, T.card + .3, .8) + 60 * bell(t, T.quiet + .3, .8)}px rgba(47,139,255,.45)`;
+  $('cpMouse').style.opacity = ease(prog(t, T.card + .25, .25)) * (1 - ease(prog(t, T.quiet, .3)));
+  $('cpMouse').style.filter = `blur(${12 * ease(prog(t, T.quiet, .3))}px)`;
+  $('cpQuiet').style.opacity = ease(prog(t, T.quiet + .2, .3));
+  $('cpQuiet').style.filter = `blur(${12 * (1 - ease(prog(t, T.quiet + .2, .3)))}px)`;
+  toggle($('mToggle'), 1 - spring(prog(t, T.mouseOff, .45)));
+  $('mOff').style.textShadow = `0 0 ${30 * bell(t, T.mouseOff, .5)}px #2f8bff`;
+  $('mBadge').style.opacity = ease(prog(t, T.saved, .25));
+  $('mBadge').style.transform = `scale(${.7 + .3 * spring(prog(t, T.saved, .5))})`;
+  document.querySelectorAll('.qt').forEach((g, i) => {
+    const off = spring(prog(t, T.domino + i * .2, .4));
+    const backOn = spring(prog(t, T.rewind + .1 + (2 - i) * .12, .35));
+    toggle(g, 1 - off + backOn * off);
+    g.style.filter = `blur(${8 * bell(t, T.rewind + .1 + (2 - i) * .12, .3)}px)`;
+  });
+  $('undo').style.opacity = ease(prog(t, T.domino + .7, .3)) * (1 - ease(prog(t, T.back - .1, .2)));
+  $('undo').style.transform = `scale(${1 - .06 * bell(t, T.clickUndo - .02, .18)})`;
+  $('undoIc').style.transform = `rotate(${-360 * inOut(prog(t, T.rewind, .6))}deg)`;
+  $('back').style.opacity = ease(prog(t, T.back, .25));
+  $('back').style.transform = `scale(${.7 + .3 * spring(prog(t, T.back, .5))})`;
+
+  // Outro: icon, wordmark, tagline bending in along a curve, link.
+  const o = $('outro');
+  o.style.opacity = ease(prog(t, T.outro, .25));
+  $('oIcon').style.transform = `scale(${.3 + .7 * spring(prog(t, T.outro, .7))})`;
+  $('oCheck').style.strokeDashoffset = 100 - 100 * ease(prog(t, T.outro + .3, .35));
+  const oTimes = [...WORD].map((_, i) => T.outro + .25 + i * .04);
+  typed($('oWord'), WORD.slice(0, oTimes.filter(k => t >= k).length), t, oTimes);
+  const TAG = 'Tweak anything.';
+  $('tag').innerHTML = [...TAG].map((ch, i) => {
+    const p = inOut(prog(t, T.tag + i * .025, .55)), x = (i - TAG.length / 2) / (TAG.length / 2);
+    const y = (1 - p) * (160 * x * x - 60), rot = (1 - p) * 40 * x;
+    return `<span style="opacity:${ease(prog(t, T.tag + i * .025, .2))};transform:translateY(${y}px) rotate(${rot}deg);filter:blur(${8 * (1 - p)}px)">${ch === ' ' ? '&nbsp;' : ch}</span>`;
+  }).join('');
+  $('bio').style.opacity = ease(prog(t, T.bio, .25));
+  $('bio').style.transform = `translateY(${40 * (1 - spring(prog(t, T.bio, .5)))}px)`;
+
+  // Cursor and click ring.
+  const [cx, cy] = cursorAt(t), cur = $('cursor');
+  let cs = 1; for (const k of CLICKS) { const p = prog(t, k - .03, .16); if (p > 0 && p < 1) cs = 1 - .2 * Math.sin(Math.PI * p); }
+  cur.style.opacity = cursorVisible(t);
+  cur.style.transformOrigin = '14px 8px';
+  cur.style.transform = `translate(${cx - 14}px, ${cy - 8}px) scale(${cs})`;
+  let last = null; for (const k of CLICKS) if (t >= k) last = k;
+  const ring = $('ring');
+  if (last !== null && t - last < .45) { const p = (t - last) / .45, [rx, ry] = cursorAt(last); ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; ring.style.opacity = 1 - p; ring.style.transform = `scale(${1 + 5 * ease(p)})`; }
+  else ring.style.opacity = 0;
+}
+window.setTime = setTime;
+setTime(0);
+</script>
+</body></html>

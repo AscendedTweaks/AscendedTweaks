@@ -1,7 +1,7 @@
 """Builds scene.html from the word timings of the voice (words-stretched.json)."""
 import json
 
-words = json.load(open('../voice2/words-stretched.json'))
+words = json.load(open('../voice2/words-ascended.json'))
 W = [w[1] for w in words]  # start time per word index
 names = [w[0] for w in words]
 
@@ -24,16 +24,16 @@ T = {
     'step3': at('step', 3), 'apply': at('apply'), 'backup': at('your', 1), 'first': at('first'),
     'mind': at('changed'), 'click': at('click'), 'everything': at('everything'), 'back': at('back'),
     'ads': at('ads'), 'tracking': at('tracking'), 'free': at('free'),
-    'logo': at('tweak', 1), 'anything': at('anything'), 'link': at('link'), 'end': at('bio') + 2.0,
+    'logo': at('ascended'), 'anything': at('anything'), 'link': at('link'), 'end': at('bio') + 2.0,
 }
 
 # Caption groups: (first word index, last word index, words to colour blue).
 GROUPS = [
     (0, 8, {'never'}), (9, 16, {'control'}), (17, 25, {'step', 'one'}), (26, 30, {'step', 'two'}),
     (31, 37, {'before'}), (38, 43, {'backed', 'up'}), (44, 47, {'step', 'three'}), (48, 50, set()),
-    (51, 56, {'one', 'click'}), (57, 60, set()), (61, 64, {'free'}), (65, 68, {'tweak', 'pilot'}), (69, 71, set()),
+    (51, 56, {'one', 'click'}), (57, 60, set()), (61, 64, {'free'}), (65, 68, {'ascended', 'tweaks'}), (69, 71, set()),
 ]
-PROPER = {'windows', 'gaming', 'privacy', 'tweak', 'pilot'}
+PROPER = {'windows', 'gaming', 'privacy', 'tweak', 'ascended', 'tweaks'}
 PUNCT = {8: '.', 13: ',', 16: '.', 18: '.', 21: ',', 25: '.', 27: '.', 30: '.', 37: '.', 43: '.', 45: '.', 47: '.',
          50: '?', 52: ',', 56: '.', 58: '.', 60: '.', 64: '.', 66: '.', 68: '.', 71: '.'}
 
@@ -45,8 +45,8 @@ for i, (a, b, keys) in enumerate(GROUPS):
         n = names[k]
         cap = k == a or PUNCT.get(k - 1) in ('.', '?') or n in PROPER
         text = n[:1].upper() + n[1:] if cap else n
-        if n == 'pilot' and k - 1 >= a and names[k - 1] == 'tweak':
-            items[-1]['t'] = 'TweakPilot'
+        if n == 'tweaks' and k - 1 >= a and names[k - 1] == 'ascended':
+            items[-1]['t'] = 'AscendedTweaks'
             items[-1]['p'] = PUNCT.get(k, '')
             continue
         items.append({'t': text, 's': W[k], 'k': n in keys and k != 67, 'p': PUNCT.get(k, '')})

@@ -17,7 +17,7 @@ mix = np.zeros((2, int(SR * T['end'])))
 def put(x, at, db):
     a = int(at * SR); e = min(mix.shape[1], a + x.shape[1]); mix[:, a:e] += x[:, :e - a] * 10 ** (db / 20)
 
-voice = load('../voice2/voice-reordered.wav'); put(voice / np.max(np.abs(voice)), 0, 0)
+voice = load('../voice2/voice-ascended.wav'); put(voice / np.max(np.abs(voice)), 0, 0)
 click, release, ok = sfx('mouseclick1'), sfx('mouserelease1'), sfx('confirmation_002')
 for i in range(5):
     put(release, .35 + i * .32, -16)

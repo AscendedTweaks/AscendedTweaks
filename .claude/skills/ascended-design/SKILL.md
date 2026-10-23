@@ -19,7 +19,8 @@ Never write a hex color in a page, template or control. Use the brushes from `Th
 
 | Brush | Value | Role |
 | --- | --- | --- |
-| `Brush.Background` | #2B2D31 | Window background and navigation (main gray) |
+| `Brush.Sidebar` | #202124 | Frame: title bar and navigation (darker gray) |
+| `Brush.Background` | #2B2D31 | Content panel behind the pages (main gray), rounded top-left corner, black edge to the frame |
 | `Brush.Surface` | #313338 | Cards and tiles (lighter gray) |
 | `Brush.Elevated` | #383A40 | Dialogs, side panel |
 | `Brush.Border` | #1E1F22 | Edges and dividers (black shading) |
@@ -27,7 +28,7 @@ Never write a hex color in a page, template or control. Use the brushes from `Th
 | `Brush.OnAccentFill` | #FFFFFF | Text on primary buttons |
 | `Brush.Accent` | #8AB0FF | Links, focus ring, toggles on, selection bars (light blue) |
 | `Brush.OnAccent` | #1E1F22 | Toggle knob and text on light blue |
-| `Brush.AccentTint` | #212A3F | Selected navigation entry and segment, symbol tiles (navy) |
+| `Brush.AccentTint` | #2A3A5E | Selected navigation entry and segment, symbol tiles (navy) |
 | `Brush.Success` | #BEBEBE | Risk "Safe", success (light gray) |
 | `Brush.Warning` | #F2F2F2 | Risk "Caution", notices (white) |
 | `Brush.Danger` | #F29A9A | Risk "Expert", errors (muted red, the only extra hue) |
@@ -80,7 +81,7 @@ Card descriptions stop after two lines with an ellipsis; the full text is in the
   (bordered, radius 8, caption plus 17 pt value) and the only accent button of the page. The shell hides the page
   title there (`ShowTitle` false). Preset tiles: two columns, padding 24, min height 200, symbol 24 in a 48 x 48 navy tile with
   radius 12 (`PresetTile`, `PresetSymbol` styles), secondary "Review and apply" button.
-- **Navigation**: sits on `Brush.Background` without its own surface; entries at least 40 high; the selected entry
+- **Navigation**: sits on the darker `Brush.Sidebar` frame together with the title bar; entries at least 40 high; the selected entry
   has the accent tint, the accent bar, a filled accent icon and SemiBold text; a 1-point divider above the footer.
 - **Mode switch** (Simple / Expert): one bordered segmented control on Surface; the active segment is `Brush.AccentTint`
   with SemiBold text, never an accent fill.

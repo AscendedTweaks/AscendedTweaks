@@ -18,13 +18,14 @@ Tokens werden ausschließlich über Ressourcen-Schlüssel verwendet, nie als Hex
 
 | Token | Hex | Rolle |
 |---|---|---|
-| `Color.Background` | #2B2D31 | Fensterhintergrund, Navigation (Hauptfarbe Grau) |
+| `Color.Sidebar` | #202124 | Rahmen: Titelleiste und Navigation (dunkleres Grau) |
+| `Color.Background` | #2B2D31 | Inhaltspanel der Seiten (Hauptfarbe Grau), runde Ecke oben links |
 | `Color.Surface` | #313338 | Karten, Kacheln |
 | `Color.Elevated` | #383A40 | Dialoge, Seitenpanel |
 | `Color.Border` | #1E1F22 | Ränder, Trennlinien (schwarze Schattierung) |
 | `Color.AccentFill` | #3D6BE0 | Primärschaltflächen (kräftiges Blau, Schrift weiß) |
 | `Color.Accent` | #8AB0FF | Links, Fokus, Schalter an (helles Blau) |
-| `Color.AccentTint` | #212A3F | Auswahl in Navigation und Segmenten, Symbolkacheln (Marineblau) |
+| `Color.AccentTint` | #2A3A5E | Auswahl in Navigation und Segmenten, Symbolkacheln (Marineblau) |
 | `Color.Success` | #BEBEBE | Risiko "Sicher", Erfolg |
 | `Color.Warning` | #F2F2F2 | Risiko "Vorsicht", Hinweise |
 | `Color.Danger` | #F29A9A | Risiko "Experte", Fehler (gedämpftes Rot) |

@@ -47,7 +47,8 @@ internal static partial class Program
 
     internal static IEnumerable<Check> Checks(IReadOnlyDictionary<string, (double R, double G, double B)> t)
     {
-        foreach (var surface in Surfaces)
+        // The darker frame (title bar and navigation) carries text too.
+        foreach (var surface in t.ContainsKey("Sidebar") ? Surfaces.Append("Sidebar") : Surfaces)
         {
             foreach (var text in TextTokens)
             {

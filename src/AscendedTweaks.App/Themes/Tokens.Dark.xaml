@@ -17,9 +17,12 @@
     <Color x:Key="Color.AccentFill">#3D6BE0</Color>
     <Color x:Key="Color.OnAccentFill">#FFFFFF</Color>
     <!-- Selected navigation entry, segment and symbol tiles: navy. -->
-    <Color x:Key="Color.AccentTint">#212A3F</Color>
+    <Color x:Key="Color.AccentTint">#2A3A5E</Color>
+    <!-- Frame: title bar and navigation, a step darker than the content panel so the two sides read apart. -->
+    <Color x:Key="Color.Sidebar">#202124</Color>
 
     <SolidColorBrush x:Key="Brush.Background" Color="{StaticResource Color.Background}" />
+    <SolidColorBrush x:Key="Brush.Sidebar" Color="{StaticResource Color.Sidebar}" />
     <SolidColorBrush x:Key="Brush.Surface" Color="{StaticResource Color.Surface}" />
     <SolidColorBrush x:Key="Brush.Elevated" Color="{StaticResource Color.Elevated}" />
     <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}" />

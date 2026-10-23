@@ -42,7 +42,8 @@ def main():
                 if any(v not in allowed for v in values):
                     add(m.group(1).lower() + ' off the 8-point grid', m.group(2))
             for m in re.finditer(r'(?<![\w.])CornerRadius="([0-9., ]+)"', stripped):
-                if m.group(1) not in RADII and 'Track' not in stripped:
+                corners = [v.strip() for v in m.group(1).split(',')]
+                if any(c not in RADII for c in corners) and 'Track' not in stripped and 'PresetEdge' not in stripped:
                     add('radius (use Radius.Small or Radius.Large)', m.group(1))
             for m in re.finditer(r'(?<![\w.])(MinHeight|Height)="([0-9.]+)"', stripped):
                 if 'Button' in element and float(m.group(2)) < 32:

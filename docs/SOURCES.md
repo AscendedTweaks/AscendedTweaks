@@ -88,6 +88,7 @@ Eigene Prüfung 2026-10-18, Host-Integrationstest (`tests/vm/report-host-26200-p
 | GAME-010 | Bestanden, wie GAME-009. |
 | GAME-012 | Bestanden im zweiten Lauf. Der erste Lauf war ungültig: Der Live-Zustand war bereits "Kürzel aus", die Registry zeigte noch den Standard. Der Live-Zustand des Nutzers wurde danach exakt wiederhergestellt; das Skript prüft seitdem eine Vorbedingung. |
 | GAME-013 | Wie GAME-012. |
+| GAME-024 | Bestanden (2026-10-23, Host, Build 26200 Home). Startzustand "Mixed": Wiederholrate stand schon auf 31, nur die Verzögerung wurde geändert und danach exakt zurückgesetzt. Das Skript erlaubt seitdem den Startzustand "Mixed" und erwartet ihn nach dem Zurücksetzen wieder. GAME-022 und GAME-023 nicht angewendet: Auf diesem Rechner schon im Zielzustand (180 Hz von 180 Hz, Zeigergeschwindigkeit 10). |
 
 Nicht auf dem Host geprüft: GAME-001, 005 und 011 (bereits im Zielzustand, nicht durch die App; ein Test hätte die Einstellung des Nutzers ändern müssen), alle Machine-Tweaks (UAC), die Pro-Spiel-Tweaks GAME-007, 008 und 016 nur gegen Fakes.
 

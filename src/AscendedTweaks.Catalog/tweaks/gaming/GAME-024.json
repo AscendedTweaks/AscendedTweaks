@@ -53,7 +53,14 @@
     "Microsoft Learn: 'SystemParametersInfoW function', SPI_SETKEYBOARDDELAY (0 = shortest delay, about 250 ms) and SPI_SETKEYBOARDSPEED (31 = fastest, about 30 repeats per second). Same values as the sliders in Control Panel > Keyboard. The app restores both previous values when resetting.",
     "Games that read the keys directly are not affected; the setting applies to held keys in Windows, chats and menus."
   ],
-  "verifiedOn": [],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-23",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM); start state Mixed (repeat speed already 31)"
+    }
+  ],
   "hiddenByDefault": false,
   "impact": "Small",
   "impactNote": "tweak.GAME-024.impact",

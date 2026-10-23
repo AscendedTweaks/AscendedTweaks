@@ -73,6 +73,9 @@ $spiFootprint = @{
     'StickyKeysHotkey'          = @{ hive = 'HKCU'; path = 'Control Panel\Accessibility\StickyKeys'; name = 'Flags' }
     'FilterKeysHotkey'          = @{ hive = 'HKCU'; path = 'Control Panel\Accessibility\Keyboard Response'; name = 'Flags' }
     'ToggleKeysHotkey'          = @{ hive = 'HKCU'; path = 'Control Panel\Accessibility\ToggleKeys'; name = 'Flags' }
+    'MouseSpeed'                = @{ hive = 'HKCU'; path = 'Control Panel\Mouse'; name = 'MouseSensitivity' }
+    'KeyboardDelay'             = @{ hive = 'HKCU'; path = 'Control Panel\Keyboard'; name = 'KeyboardDelay' }
+    'KeyboardSpeed'             = @{ hive = 'HKCU'; path = 'Control Panel\Keyboard'; name = 'KeyboardSpeed' }
 }
 
 # Registry-Aktionen eines Tweaks; SystemParametersInfo wird als Wert-Aenderung an seinem Abdruck gefuehrt.
@@ -150,9 +153,11 @@ try {
         Write-Host "=== $id (Wurzeln: $($r.Roots)) ==="
 
         # Vorbedingung: Der Tweak darf vorher nicht angewendet sein. Sonst aendert der Test nichts, und eine
-        # vermeintliche Ruecksetzung koennte einen echten Zustand des Nutzers ueberschreiben.
+        # vermeintliche Ruecksetzung koennte einen echten Zustand des Nutzers ueberschreiben. "Mixed" (ein Teil schon
+        # gesetzt) ist erlaubt; nach dem Zuruecksetzen muss dann wieder genau "Mixed" gemeldet werden.
         $status0 = Invoke-Cli @('--status', $id)
-        $r.Precondition = $status0.Output -match "${id}: NotApplied"
+        $startState = if ($status0.Output -match "${id}: (NotApplied|Mixed)") { $Matches[1] } else { $null }
+        $r.Precondition = $null -ne $startState
         if (-not $r.Precondition) {
             Write-Host "Vorbedingung nicht erfuellt (Zustand vorher: $($status0.Output.Trim())). Uebersprungen, nichts geaendert." -ForegroundColor Yellow
             $r.Passed = $false
@@ -191,8 +196,8 @@ try {
         $cmpAD.Lines | ForEach-Object { Write-Host "    $_" }
 
         $status2 = Invoke-Cli @('--status', $id)
-        $r.DetectNotApplied = $status2.Output -match "${id}: NotApplied"
-        Write-Host "Schritt 7 Erkennung NotApplied: $($r.DetectNotApplied)"
+        $r.DetectNotApplied = $status2.Output -match "${id}: $startState"
+        Write-Host "Schritt 7 Erkennung ${startState}: $($r.DetectNotApplied)"
 
         $r.Passed = $r.Precondition -and $r.DryRunUnchanged -and $r.ApplyOnlyDeclared -and $r.DetectApplied -and $r.RevertEqualsBaseline -and $r.DetectNotApplied
         $r.Date = (Get-Date -Format 'yyyy-MM-dd')

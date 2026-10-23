@@ -341,10 +341,10 @@ public sealed partial class SimpleStartViewModel : PageViewModel
 
     public ObservableCollection<PresetCardViewModel> Presets { get; } = [];
 
-    /// <summary>All presets except the recommended one, which the start page shows as its hero.</summary>
-    public ObservableCollection<PresetCardViewModel> OtherPresets { get; } = [];
-
     public bool CanCreateOwn => _ownPresets is not null && !_workspace.IsReadOnly;
+
+    /// <summary>The start page has its own hero heading.</summary>
+    public override bool ShowTitle => false;
 
     /// <summary>Main action of the hero: the "Safe and fast" preset, which opens the preview like every preset.</summary>
     public PresetCardViewModel? Recommended => Presets.FirstOrDefault(p => p.Profile.Key == "safe");
@@ -385,12 +385,6 @@ public sealed partial class SimpleStartViewModel : PageViewModel
         foreach (var card in cards)
         {
             Presets.Add(card);
-        }
-
-        OtherPresets.Clear();
-        foreach (var card in cards.Where(c => c != Recommended))
-        {
-            OtherPresets.Add(card);
         }
 
         OnPropertyChanged(nameof(Recommended));

@@ -15,18 +15,17 @@
         </Border>
     </DataTemplate>
 
-    <!-- Simple mode: one row = one switch, a benefit title, one sentence, impact word and risk symbol. Rows share one panel. -->
+    <!-- V2 Einfach-Modus (Abschnitt 2): eine Karte = ein Schalter, Nutzen-Titel, ein Satz, Wirkungswort, ein Risiko-Symbol. -->
     <DataTemplate x:Key="SimpleCard" DataType="{x:Type sv:TweakCardViewModel}">
-        <StackPanel>
-            <!-- Divider above every row except the first (the first item has no previous data). -->
-            <Border Height="1" Background="{DynamicResource Brush.Border}" Margin="20,0"
-                    Visibility="{Binding RelativeSource={RelativeSource PreviousData}, Converter={StaticResource NullToCollapsed}}" />
-            <DockPanel Margin="20,16">
+        <Border Style="{StaticResource Card}" Padding="20,16">
+            <DockPanel>
                 <ToggleButton DockPanel.Dock="Right" Style="{StaticResource Toggle.Switch}" IsChecked="{Binding IsOn, Mode=TwoWay}" IsEnabled="{Binding IsToggleEnabled}"
                               ToolTip="{Binding ToggleToolTip}" ToolTipService.ShowOnDisabled="True" VerticalAlignment="Top" Margin="24,4,0,0"
                               AutomationProperties.Name="{Binding PlainTitle}" AutomationProperties.HelpText="{Binding PlainDescription}" />
                 <StackPanel>
-                    <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding PlainTitle}" TextWrapping="Wrap" />
+                    <DockPanel>
+                        <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding PlainTitle}" TextWrapping="Wrap" />
+                    </DockPanel>
                     <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding PlainDescription}" TextWrapping="Wrap" Margin="0,4,0,0" />
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                         <ui:SymbolIcon Symbol="{Binding RiskPlainSymbol}" FontSize="16" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
@@ -44,12 +43,12 @@
                             <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Description}" TextWrapping="Wrap" Margin="0,4,0,0" />
                             <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding SideEffects}" TextWrapping="Wrap" Margin="0,4,0,0" />
                             <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding ImpactNote}" TextWrapping="Wrap" Margin="0,4,0,0" />
-                            <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc card.details}" Command="{Binding ShowDetailsCommand}" HorizontalAlignment="Left" Margin="-16,4,0,0" MinHeight="40" />
+                            <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc card.details}" Command="{Binding ShowDetailsCommand}" HorizontalAlignment="Left" Margin="0,4,0,0" MinHeight="40" />
                         </StackPanel>
                     </Expander>
                 </StackPanel>
             </DockPanel>
-        </StackPanel>
+        </Border>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:HelpViewModel}">
@@ -78,9 +77,7 @@
             <ContentControl Content="{Binding Help}" Focusable="False" Margin="0,0,0,8" />
             <ui:TextBox Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{s:Loc simple.search}" Icon="{ui:SymbolIcon Search24}"
                         AutomationProperties.Name="{s:Loc simple.search}" MinHeight="40" FontSize="15" Margin="0,0,0,16" />
-            <Border Style="{StaticResource Card}" Padding="0" MinHeight="0" Visibility="{Binding IsEmpty, Converter={StaticResource InverseBoolToVisibility}}">
-                <ItemsControl ItemsSource="{Binding Cards}" ItemTemplate="{StaticResource SimpleCard}" Focusable="False" />
-            </Border>
+            <ItemsControl ItemsSource="{Binding Cards}" ItemTemplate="{StaticResource SimpleCard}" Focusable="False" />
             <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.empty}" Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}" Margin="0,0,0,16" />
             <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{Binding MoreText}" Command="{Binding MoreCommand}" HorizontalAlignment="Left" MinHeight="40"
                             Visibility="{Binding HasMore, Converter={StaticResource BoolToVisibility}}" Margin="0,0,0,16" />
@@ -129,34 +126,7 @@
         </Border>
     </DataTemplate>
 
-    <!-- Preset colors: safe Mint, gaming Sky, competitive Coral, laptop Lime, privacy Lilac, cleanup Rose, office Teal; own presets use the accent.
-         The color marks which preset a tile belongs to (top edge, symbol tile); it never carries risk or state. -->
-    <Style x:Key="PresetEdge" TargetType="Border">
-        <Setter Property="Background" Value="{DynamicResource Brush.Accent}" />
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="safe">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Mint}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="gaming">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Sky}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="competitive">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Coral}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="laptop">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Lime}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="privacy">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Lilac}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="cleanup">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Rose}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="office">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Teal}" />
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
+    <!-- Preset tile colors: safe Mint, gaming Sky, competitive Coral, laptop Sun, privacy Lilac, cleanup Rose, office Teal; own presets use the accent. -->
     <Style x:Key="PresetTile" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource Brush.AccentTint}" />
         <Style.Triggers>
@@ -170,7 +140,7 @@
                 <Setter Property="Background" Value="{DynamicResource Brush.Hue.Coral.Tint}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Profile.Key}" Value="laptop">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Lime.Tint}" />
+                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Sun.Tint}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Profile.Key}" Value="privacy">
                 <Setter Property="Background" Value="{DynamicResource Brush.Hue.Lilac.Tint}" />
@@ -185,80 +155,80 @@
     </Style>
     <Style x:Key="PresetSymbol" TargetType="ui:SymbolIcon">
         <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+        <Setter Property="Effect" Value="{DynamicResource Glow.Accent}" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding Profile.Key}" Value="safe">
                 <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Mint}" />
+                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Mint}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Profile.Key}" Value="gaming">
                 <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Sky}" />
+                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Sky}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Profile.Key}" Value="competitive">
                 <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Coral}" />
+                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Coral}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Profile.Key}" Value="laptop">
-                <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Lime}" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Sun}" />
+                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Sun}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Profile.Key}" Value="privacy">
                 <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Lilac}" />
+                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Lilac}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Profile.Key}" Value="cleanup">
                 <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Rose}" />
+                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Rose}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding Profile.Key}" Value="office">
                 <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Teal}" />
+                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Teal}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
 
-    <!-- Start page. The hero is the recommended preset itself: its name as the one loud element (44 condensed), what it changes,
-         and the only accent button with its glow. Facts about the PC are one quiet line, not stat tiles. -->
+    <!-- Start page: hero with the main action and three facts, then large preset tiles. One accent fill: the hero action. -->
     <DataTemplate DataType="{x:Type vm:SimpleStartViewModel}">
         <StackPanel Margin="0,0,0,24">
-            <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,32" DataContext="{Binding}"
-                    Visibility="{Binding Recommended, Converter={StaticResource NullToCollapsed}}">
+            <Border Style="{StaticResource Card}" Padding="32,24" Margin="0,0,0,24">
                 <StackPanel>
-                    <Border Height="4" CornerRadius="11,11,0,0" DataContext="{Binding Recommended}" Style="{StaticResource PresetEdge}" />
-                    <Grid Margin="32,24,32,24">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" MaxWidth="640" HorizontalAlignment="Left">
-                            <TextBlock Style="{StaticResource Text.Hero}" Text="{Binding Recommended.Name}" />
-                            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Recommended.Description}" TextWrapping="Wrap" Margin="0,8,0,0" />
-                            <ListBox Style="{StaticResource Segment.List}" DataContext="{Binding Recommended}" ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel, Mode=TwoWay}"
-                                     AutomationProperties.Name="{s:Loc level.title}" Margin="0,16,0,0" Visibility="{Binding HasLevels, Converter={StaticResource BoolToVisibility}}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Label}" />
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Recommended.ChangesText}" TextWrapping="Wrap" Margin="0,0,0,0"
-                                       Visibility="{Binding Recommended.ChangesText, Converter={StaticResource NullToCollapsed}}" />
-                            <WrapPanel Margin="0,16,0,0">
-                                <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc simple.start.recommended}" Command="{Binding Recommended.ApplyCommand}"
-                                                MinHeight="40" Padding="24,8" Margin="0,0,16,8" AutomationProperties.HelpText="{Binding Recommended.ChangesText}" />
-                                <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.preview}" Command="{Binding Recommended.PreviewCommand}" MinHeight="40" Margin="0,0,8,8"
-                                                Visibility="{Binding Recommended.CanPreview, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Recommended.Name}" />
-                            </WrapPanel>
-                        </StackPanel>
-                        <Border Grid.Column="1" Width="96" Height="96" CornerRadius="{StaticResource Radius.Large}" VerticalAlignment="Top" Margin="24,4,0,0"
-                                DataContext="{Binding Recommended}" Style="{StaticResource PresetTile}">
-                            <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="48" Style="{StaticResource PresetSymbol}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <TextBlock Style="{StaticResource Text.Title}" Text="{s:Loc simple.start.hello}" />
+                    <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.start.hero}" TextWrapping="Wrap" Margin="0,8,0,0" MaxWidth="640" HorizontalAlignment="Left" />
+                    <UniformGrid Columns="3" Margin="0,24,-12,0" AutomationProperties.Name="{Binding Status}">
+                        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.windows}" />
+                                <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding WindowsText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                            </StackPanel>
                         </Border>
-                    </Grid>
-                    <Border Height="1" Background="{DynamicResource Brush.Border}" Margin="32,0" />
-                    <DockPanel Margin="32,12,24,12">
-                        <ContentControl DockPanel.Dock="Right" Content="{Binding Help}" Focusable="False" VerticalAlignment="Center" />
-                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Status}" TextWrapping="Wrap" VerticalAlignment="Center" />
-                    </DockPanel>
+                        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.ram}" />
+                                <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding RamText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.autostart}" />
+                                <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding AutostartText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                    <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
+                        <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc simple.start.recommended}" Command="{Binding Recommended.ApplyCommand}"
+                                        MinHeight="40" Padding="24,8" Margin="0,0,8,0"
+                                        Visibility="{Binding Recommended, Converter={StaticResource NullToCollapsed}}" AutomationProperties.HelpText="{Binding Recommended.Name}" />
+                        <ContentControl Content="{Binding Help}" Focusable="False" VerticalAlignment="Top" />
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Recommended.ChangesText}" TextWrapping="Wrap" Margin="0,8,0,0"
+                               Visibility="{Binding Recommended.ChangesText, Converter={StaticResource NullToCollapsed}}" />
                 </StackPanel>
             </Border>
 
             <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.start.presets}" Margin="0,0,0,12" />
             <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Message}" TextWrapping="Wrap" Margin="0,0,0,12" Visibility="{Binding Message, Converter={StaticResource NullToCollapsed}}" />
-            <ItemsControl ItemsSource="{Binding OtherPresets}" Focusable="False" Margin="0,0,-16,0">
+            <ItemsControl ItemsSource="{Binding Presets}" Focusable="False" Margin="0,0,-16,0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />
@@ -266,39 +236,36 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,16,16" MinHeight="200">
+                        <Border Style="{StaticResource Card}" Padding="24" Margin="0,0,16,16" MinHeight="200">
                             <DockPanel>
-                                <Border DockPanel.Dock="Top" Height="4" CornerRadius="11,11,0,0" Style="{StaticResource PresetEdge}" />
-                                <DockPanel Margin="24,20,24,24">
-                                    <WrapPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
-                                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{Binding ApplyText}" Command="{Binding ApplyCommand}"
-                                                        MinHeight="40" Margin="0,0,8,0" AutomationProperties.HelpText="{Binding ChangesText}" />
-                                        <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.preview}" Command="{Binding PreviewCommand}" MinHeight="40" Margin="0,0,8,0"
-                                                        Visibility="{Binding CanPreview, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Name}" />
-                                        <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.undo}" Command="{Binding UndoCommand}" MinHeight="40"
-                                                        Visibility="{Binding IsOwned, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Name}" />
-                                    </WrapPanel>
-                                    <ListBox DockPanel.Dock="Bottom" Style="{StaticResource Segment.List}" ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel, Mode=TwoWay}"
-                                             AutomationProperties.Name="{s:Loc level.title}" Margin="0,12,0,0" Visibility="{Binding HasLevels, Converter={StaticResource BoolToVisibility}}">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Label}" />
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                    <DockPanel>
-                                        <Border DockPanel.Dock="Left" Width="48" Height="48" CornerRadius="{StaticResource Radius.Large}" Style="{StaticResource PresetTile}"
-                                                VerticalAlignment="Top" Margin="0,0,16,0">
-                                            <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="24" Style="{StaticResource PresetSymbol}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </Border>
-                                        <StackPanel>
-                                            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{Binding Name}" TextWrapping="Wrap" />
-                                            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Description}" TextWrapping="Wrap" Margin="0,4,0,0" />
-                                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Summary}" TextWrapping="Wrap" Margin="0,8,0,0" />
-                                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ChangesText}" TextWrapping="Wrap" Margin="0,4,0,0"
-                                                       Visibility="{Binding ChangesText, Converter={StaticResource NullToCollapsed}}" />
-                                        </StackPanel>
-                                    </DockPanel>
+                                <WrapPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
+                                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{Binding ApplyText}" Command="{Binding ApplyCommand}"
+                                                    MinHeight="40" Margin="0,0,8,0" AutomationProperties.HelpText="{Binding ChangesText}" />
+                                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.preview}" Command="{Binding PreviewCommand}" MinHeight="40" Margin="0,0,8,0"
+                                                    Visibility="{Binding CanPreview, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Name}" />
+                                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.undo}" Command="{Binding UndoCommand}" MinHeight="40"
+                                                    Visibility="{Binding IsOwned, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Name}" />
+                                </WrapPanel>
+                                <ListBox DockPanel.Dock="Bottom" Style="{StaticResource Segment.List}" ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel, Mode=TwoWay}"
+                                         AutomationProperties.Name="{s:Loc level.title}" Margin="0,12,0,0" Visibility="{Binding HasLevels, Converter={StaticResource BoolToVisibility}}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Label}" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Left" Width="48" Height="48" CornerRadius="{StaticResource Radius.Large}" Style="{StaticResource PresetTile}"
+                                            VerticalAlignment="Top" Margin="0,0,16,0">
+                                        <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="24" Style="{StaticResource PresetSymbol}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding Name}" TextWrapping="Wrap" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Description}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Summary}" TextWrapping="Wrap" Margin="0,8,0,0" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ChangesText}" TextWrapping="Wrap" Margin="0,4,0,0"
+                                                   Visibility="{Binding ChangesText, Converter={StaticResource NullToCollapsed}}" />
+                                    </StackPanel>
                                 </DockPanel>
                             </DockPanel>
                         </Border>
@@ -315,7 +282,7 @@
             <ContentControl Content="{Binding Measurement}" Focusable="False" Visibility="{Binding Measurement, Converter={StaticResource NullToCollapsed}}" />
             <Border Style="{StaticResource Banner}" Margin="0,8,0,0">
                 <StackPanel Orientation="Horizontal">
-                    <ui:SymbolIcon Symbol="Info16" FontSize="16" Foreground="{DynamicResource Brush.TextSecondary}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <ui:SymbolIcon Symbol="Info16" FontSize="16" Foreground="{DynamicResource Brush.Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
                     <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc banner.honesty}" TextWrapping="Wrap" VerticalAlignment="Center" />
                 </StackPanel>
             </Border>

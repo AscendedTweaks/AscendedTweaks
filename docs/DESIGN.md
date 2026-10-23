@@ -14,27 +14,27 @@ Format nach dem Aufbau der DESIGN.md-Dateien aus voltagent/awesome-design-md (ne
 
 Tokens werden ausschließlich über Ressourcen-Schlüssel verwendet, nie als Hex-Wert im XAML.
 
-### Dunkel (einziges Design): Pflaumen-Nacht mit Siegesgold
+### Dunkel (einziges Design)
 
 | Token | Hex | Rolle |
 |---|---|---|
-| `Color.Background` | #18131F | Fensterhintergrund, Navigation |
-| `Color.Surface` | #221B2B | Panels, Kacheln |
-| `Color.Elevated` | #2C2437 | Dialoge, Seitenpanel |
-| `Color.Border` | #40364F | Ränder, Trennlinien |
-| `Color.Accent` | #FFD23F | Primäraktion, Schalter an, Fokus, Links (Gold) |
-| `Color.Success` | #5EE0A0 | Risiko "Sicher", Erfolg |
-| `Color.Warning` | #FF9F43 | Risiko "Vorsicht", Hinweise (Orange, damit es nicht wie der Akzent wirkt) |
-| `Color.Danger` | #FF6B8A | Risiko "Experte", Fehler |
-| `Color.TextPrimary` | #F7F2FC | Fließtext, Überschriften |
-| `Color.TextSecondary` | #BBB0CC | Beschreibungen, Metadaten |
-| `Color.OnAccent` | #18131F | Schrift und Symbole auf Akzentflächen |
+| `Color.Background` | #141414 | Fensterhintergrund, Navigation |
+| `Color.Surface` | #1E1E1F | Karten |
+| `Color.Elevated` | #28282A | Dialoge, Seitenpanel |
+| `Color.Border` | #3A3A3D | Ränder, Trennlinien |
+| `Color.Accent` | #FF7A50 | Primäraktion, Fokusrahmen, Links (Koralle) |
+| `Color.Success` | #5BD47E | Risiko "Sicher", Erfolg |
+| `Color.Warning` | #FFC93C | Risiko "Vorsicht", Hinweise |
+| `Color.Danger` | #FF5F73 | Risiko "Experte", Fehler |
+| `Color.TextPrimary` | #F6F5F3 | Fließtext, Überschriften |
+| `Color.TextSecondary` | #B4B2AE | Beschreibungen, Metadaten |
+| `Color.OnAccent` | #141414 | Schrift und Symbole auf Akzentflächen |
 
-Preset-Farben (nur Oberkante, Symbolkachel und Symbol der Presets): Mint #5EE0A0, Sky #63C2FF, Coral #FF8A65, Lime #B5E655, Lilac #C3A6FF, Rose #FF8CC6, Teal #3FD9CF.
+Preset-Farben (nur Symbole und Kacheln der Presets): Mint #4FD6A4, Sky #5DB9FF, Coral #FF7A50, Sun #FFC93C, Lilac #B9A0FF, Rose #FF7EB8, Teal #35D0C6.
 
 ### Kontrast
 
-`tools/contrast-check` prüft im Build alle Text- und Statusfarben auf Hintergrund, Fläche und Erhöht (4,5:1), OnAccent auf Akzent und getönte Flächen als Alpha-Mischung (Auswahl 14 % Akzent, Hover 10 % TextSecondary, gefüllte Badges 15 % Tonfarbe; Text 4,5:1, Symbole 3:1). Preset-Symbole erreichen auf ihrer 16-%-Kachel mindestens 5,4:1.
+`tools/contrast-check` prüft im Build alle Text- und Statusfarben auf Hintergrund, Fläche und Erhöht (4,5:1), OnAccent auf Akzent und getönte Flächen als Alpha-Mischung (Auswahl 14 % Akzent, Hover 10 % TextSecondary, gefüllte Badges 15 % Tonfarbe; Text 4,5:1, Symbole 3:1). Preset-Symbole erreichen auf ihrer 16-%-Kachel mindestens 5,0:1.
 
 ### Risiko- und Wirkungs-Badges
 
@@ -43,7 +43,15 @@ Preset-Farben (nur Oberkante, Symbolkachel und Symbol der Presets): Mint #5EE0A0
 
 ## 3. Typography Rules
 
-Zwei Familien mit klaren Rollen: Titel in Bahnschrift (mit Windows 10 und 11 ausgeliefert, DIN-artig, schmale Schnitte wie auf einer Anzeige), Lesetext in Segoe UI Variable Text. Die vollständige Skala steht in `.claude/skills/ascended-design/SKILL.md` (Abschnitt 2): 12, 13, 14, 15, 17 (Text), 22 SemiCondensed, 32 Condensed, 44 Bold Condensed nur für den Namen des empfohlenen Presets.
+Schrift ausschließlich "Segoe UI Variable", Fallback "Segoe UI". WPF kennt die Variable-Schrift nur über ihre benannten Ausprägungen: Fließtext nutzt "Segoe UI Variable Text", Subtitle und Title "Segoe UI Variable Display" (Ressourcen `Font.Text` und `Font.Display`).
+
+| Stil | Größe | Gewicht | Verwendung |
+|---|---|---|---|
+| Caption | 12 | Regular | Badges, Metadaten, Chips |
+| Body | 14 | Regular | Fließtext, Kartenbeschreibung |
+| BodyStrong | 14 | SemiBold | Kartentitel, Tabellenkopf |
+| Subtitle | 20 | SemiBold | Abschnittsüberschriften |
+| Title | 28 | SemiBold | Seitentitel |
 
 Kartenbeschreibung höchstens zwei Zeilen, danach Auslassung; der volle Text steht im Seitenpanel.
 
@@ -71,7 +79,7 @@ Kartenbeschreibung höchstens zwei Zeilen, danach Auslassung; der volle Text ste
 ## 6. Depth & Elevation
 
 - Drei Ebenen: Hintergrund, Fläche, Erhöht. Tiefe entsteht vor allem über Flächenfarbe und Rand, nicht über starke Schatten.
-- Schatten nur für Dialoge und Seitenpanel, weich und kurz (Fluent-Standard). Glow nur an Primärschaltflächen und dem aktiven Navigationsstrich.
+- Schatten nur für Dialoge und Seitenpanel, weich und kurz (Fluent-Standard). Glow nur an Primärschaltflächen, dem aktiven Navigationsstrich und Preset-Symbolen.
 - Animationen 200 ms, Ease-Out, nur Opazität und Versatz bis 8 Punkte. Ist in Windows "Animationseffekte" aus, gibt es keine Animation.
 
 ## 7. Do's and Don'ts
@@ -117,7 +125,7 @@ Kontrast: Der Einfach-Modus verwendet nur vorhandene Token-Paare (Text und Text-
 
 ## 9. Agent Prompt Guide
 
-Kurzreferenz: Hintergrund #18131F, Fläche #221B2B, Erhöht #2C2437, Rand #40364F, Akzent #FFD23F (Schrift darauf #18131F), Erfolg #5EE0A0, Warnung #FF9F43, Gefahr #FF6B8A, Text #F7F2FC / #BBB0CC. Titel in Bahnschrift Condensed, Text in Segoe UI Variable. Nur dunkles Design.
+Kurzreferenz: Hintergrund #141414, Fläche #1E1E1F, Erhöht #28282A, Rand #3A3A3D, Akzent #FF7A50 (Schrift darauf #141414), Erfolg #5BD47E, Warnung #FFC93C, Gefahr #FF5F73, Text #F6F5F3 / #B4B2AE. Nur dunkles Design.
 
 Vorlagen für UI-Aufgaben:
 - "Baue die Komponente X nach docs/DESIGN.md Abschnitt 4. Nutze nur Tokens aus Abschnitt 2, Abstände aus Abschnitt 5, alle Zustände aus Abschnitt 4, Texte über Lokalisierungsschlüssel."

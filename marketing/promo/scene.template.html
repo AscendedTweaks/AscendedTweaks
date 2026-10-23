@@ -1,0 +1,158 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--text:#f5f6f8;--text2:#8b8f99;--blue:#2f8bff;--cyan:#7fd4ff;--green:#34d399;--warm:#ffb46b;--glass:rgba(20,20,24,.9);--border:rgba(255,255,255,.1)}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000;color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif}
+.serif{font-family:"Bitstream Charter",Charter,Georgia,serif}
+canvas{position:absolute;left:0;top:0}
+#grain{opacity:.07;mix-blend-mode:overlay;z-index:50}
+.glass{background:var(--glass);border:1px solid var(--border);border-radius:40px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 40px 120px rgba(0,0,0,.65)}
+#header{position:absolute;left:0;right:0;top:0;height:0;z-index:20}
+#hIcon{position:absolute;width:220px;height:220px;left:430px;top:700px}
+#hWord{position:absolute;left:0;right:0;top:960px;text-align:center;font-size:96px;font-weight:700;letter-spacing:-.03em;white-space:pre}
+#chips{position:absolute;left:0;right:0;top:640px;display:flex;justify-content:center;gap:12px;z-index:15}
+.chip{height:88px;padding:0 24px;border-radius:44px;display:flex;align-items:center;gap:10px;font-size:31px;font-weight:600;white-space:nowrap;opacity:0}
+.chip svg{width:34px;height:34px;color:var(--blue)}
+#win{position:absolute;left:70px;top:470px;width:940px;height:960px;z-index:10;opacity:0;overflow:hidden}
+#search{position:absolute;left:36px;right:36px;top:36px;height:116px;border-radius:30px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:22px;padding:0 34px;font-size:40px}
+#search svg{flex:none;color:var(--text2)}
+#caret{display:inline-block;width:4px;height:48px;background:var(--blue);margin-left:4px;vertical-align:middle}
+#list{position:absolute;left:36px;right:36px;top:184px}
+.row{height:112px;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:38px;border-radius:22px}
+.row .meta{color:var(--text2);font-size:28px}
+.hl{color:var(--blue)}
+#card{position:absolute;z-index:12;border-radius:36px;background:linear-gradient(160deg,rgba(47,139,255,.22),rgba(20,20,24,.95) 55%);border:1.5px solid rgba(47,139,255,.55);overflow:hidden;opacity:0}
+.cpane{position:absolute;inset:0;padding:54px 50px}
+.toggle{width:110px;height:64px;border-radius:32px;position:relative;flex:none}
+.toggle b{position:absolute;top:7px;left:7px;width:50px;height:50px;border-radius:50%;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.trow{display:flex;align-items:center;justify-content:space-between;height:116px;font-size:38px;border-top:1px solid rgba(255,255,255,.08)}
+.badge{display:inline-flex;align-items:center;gap:14px;padding:18px 30px;border-radius:999px;font-size:32px;font-weight:650}
+#cursor{position:absolute;left:0;top:0;width:86px;height:86px;z-index:40;opacity:0;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+#ring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:4px solid var(--cyan);z-index:39;opacity:0;box-shadow:0 0 20px var(--blue)}
+#outro{position:absolute;left:0;right:0;top:560px;display:flex;flex-direction:column;align-items:center;z-index:30;opacity:0}
+#tag span{display:inline-block;white-space:pre}
+
+#words{position:absolute;left:0;right:0;top:700px;height:520px;z-index:20}
+.w{position:absolute;left:0;right:0;text-align:center;font-weight:800;letter-spacing:-.04em;line-height:1;opacity:0;white-space:nowrap}
+.w i{font-family:"Bitstream Charter",Charter,Georgia,serif;font-weight:400;font-style:italic;color:var(--cyan);letter-spacing:-.01em}
+.streak{position:absolute;left:-600px;width:600px;height:4px;border-radius:2px;background:linear-gradient(90deg,transparent,#7fd4ff,#fff);box-shadow:0 0 24px #2f8bff;opacity:0;z-index:15}
+#flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,#fff,rgba(150,205,255,.5) 40%,transparent 75%);opacity:0;z-index:45}
+</style></head><body>
+<canvas id="liquid" width="1080" height="1920"></canvas>
+<div id="words"></div>
+<div id="streaks"></div>
+<div id="outro">
+  <svg id="oIcon" viewBox="0 0 256 256" width="240" height="240" style="filter:drop-shadow(0 0 70px rgba(47,139,255,.7))"><rect x="4" y="4" width="248" height="248" rx="55" fill="#0A0A0C"/><rect x="5" y="5" width="246" height="246" rx="54" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="2"/><path d="M202 54 L70 110 L128 128 L146 186 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><path id="oCheck" d="M56 172 L80 196 L118 158" fill="none" stroke="#2F8BFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="100" stroke-dashoffset="100"/></svg>
+  <div id="oWord" style="margin-top:56px;font-size:92px;font-weight:700;letter-spacing:-.03em;white-space:pre"></div>
+  <div id="tag" class="serif" style="margin-top:30px;font-size:84px;font-style:italic;color:var(--cyan);height:110px"></div>
+  <div id="bio" style="margin-top:70px;padding:28px 64px;border-radius:999px;background:#fff;color:#000;font-size:40px;font-weight:650">Link in bio</div>
+</div>
+
+
+<div id="flash"></div>
+<canvas id="grain" width="540" height="960" style="width:1080px;height:1920px"></canvas>
+<script>
+const T = /*T*/;
+const LINES = /*LINES*/;
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = p => 1 - Math.pow(1 - clamp(p), 3);
+const inOut = p => { p = clamp(p); return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; };
+const spring = p => { p = clamp(p); return 1 - Math.exp(-6 * p) * Math.cos(10 * p); };
+const prog = (t, s, d) => clamp((t - s) / d);
+const bell = (t, s, d) => Math.sin(Math.PI * clamp((t - s) / d));
+const lerp = (a, b, p) => a + (b - a) * p;
+const $ = id => document.getElementById(id);
+const WORD = 'AscendedTweaks';
+$('words').innerHTML = LINES.map((l, i) => `<div class="w" id="w${i}" style="top:${l.y}px;font-size:${l.size}px">${l.html}</div>`).join('');
+for (let i = 0; i < 6; i++) { const s = document.createElement('div'); s.className = 'streak'; s.id = 's' + i; $('streaks').appendChild(s); }
+// ---------- liquid light ----------
+const LQ = $('liquid').getContext('2d');
+const LK = [ // time, cx, cy, scale, intensity
+  [0, 540, 1500, .6, .5], [1.0, 540, 1300, 1.3, .9], [T.collapse - .4, 540, 1350, 1.5, 1.0], [T.collapse, 540, 820, .2, 1.8], [T.outro + 1, 540, 1580, 1.5, .7], [99, 540, 1580, 1.5, .7],
+];
+function liquidParams(t) {
+  for (let i = 0; i < LK.length - 1; i++) { const a = LK[i], b = LK[i + 1]; if (t <= b[0]) { const p = inOut((t - a[0]) / (b[0] - a[0])); return a.slice(1).map((v, k) => lerp(v, b[k + 1], p)); } }
+  return LK[LK.length - 1].slice(1);
+}
+function drawLiquid(t) {
+  const [cx, cy, s, I] = liquidParams(t);
+  LQ.globalCompositeOperation = 'source-over'; LQ.filter = 'none'; LQ.fillStyle = '#000'; LQ.fillRect(0, 0, 1080, 1920);
+  LQ.globalCompositeOperation = 'lighter'; LQ.filter = 'blur(26px)';
+  for (let k = 0; k < 7; k++) {
+    LQ.beginPath();
+    for (let j = 0; j <= 90; j++) {
+      const a = j / 90 * Math.PI * 2.2 + k * .9 + t * (.5 + k * .07);
+      const rad = 330 * s * (.55 + .45 * Math.sin(3 * a + t * 1.4 + k));
+      const x = cx + rad * Math.cos(a) * 1.55 + Math.sin(t * .7 + k) * 40 * s;
+      const y = cy + rad * Math.sin(a) * .55 + 70 * s * Math.sin(2 * a + t * 1.1 + k);
+      j ? LQ.lineTo(x, y) : LQ.moveTo(x, y);
+    }
+    const hue = 205 - k * 3;
+    LQ.strokeStyle = `hsla(${hue},100%,${55 + k * 3}%,${.11 * I})`;
+    LQ.lineWidth = 34 * s + 14;
+    LQ.stroke();
+  }
+  const g = LQ.createRadialGradient(cx, cy, 0, cx, cy, 260 * s + 60);
+  g.addColorStop(0, `rgba(190,230,255,${.55 * I})`); g.addColorStop(.4, `rgba(47,139,255,${.28 * I})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+  LQ.filter = 'blur(10px)'; LQ.fillStyle = g; LQ.fillRect(0, 0, 1080, 1920);
+  // one warm highlight that flickers through the silk
+  const wx = cx + Math.cos(t * 1.7) * 220 * s, wy = cy + Math.sin(t * 2.1) * 80 * s;
+  const w = LQ.createRadialGradient(wx, wy, 0, wx, wy, 90 * s + 20);
+  w.addColorStop(0, `rgba(255,180,107,${.22 * I})`); w.addColorStop(1, 'rgba(0,0,0,0)');
+  LQ.fillStyle = w; LQ.fillRect(0, 0, 1080, 1920);
+}
+
+// ---------- grain ----------
+const GR = $('grain').getContext('2d'), NOISE = [];
+for (let n = 0; n < 6; n++) { const img = GR.createImageData(540, 960); for (let i = 0; i < img.data.length; i += 4) { const v = Math.random() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255; } NOISE.push(img); }
+
+
+function typed(el, text, t, times) {
+  el.innerHTML = [...text].map((ch, i) => {
+    const age = t - times[i], g = clamp(1 - age / .35);
+    const r = Math.round(lerp(245, 47, g)), gg = Math.round(lerp(246, 139, g)), b = Math.round(lerp(248, 255, g));
+    return `<span style="color:rgb(${r},${gg},${b});text-shadow:0 0 ${18 * g}px rgba(47,139,255,${g})">${ch === ' ' ? '&nbsp;' : ch}</span>`;
+  }).join('');
+}
+
+function setTime(t) {
+  // The light pulses on every hit.
+  const pulse = Math.max(0, ...LINES.map(l => bell(t, l.t, .35)));
+  drawLiquid(t);
+  $('liquid').style.filter = `brightness(${1 + .6 * pulse})`;
+  GR.putImageData(NOISE[Math.floor(t * 60) % NOISE.length], 0, 0);
+  LINES.forEach((l, i) => {
+    const el = $('w' + i), pin = spring(prog(t, l.t, .45)), a = ease(prog(t, l.t, .12)), out = ease(prog(t, l.out, .22));
+    el.style.opacity = a * (1 - out);
+    el.style.transform = `translateY(${-60 * out}px) scale(${(1.35 - .35 * pin) * (1 - .08 * out)})`;
+    el.style.filter = `blur(${18 * (1 - ease(prog(t, l.t, .2))) + 20 * out}px)`;
+    el.style.textShadow = `0 0 ${50 * bell(t, l.t, .5)}px rgba(47,139,255,.9)`;
+  });
+  for (let i = 0; i < 6; i++) {
+    const h = LINES[(i * 2) % LINES.length].t - .05, p = prog(t, h, .35), s = $('s' + i);
+    s.style.top = (520 + i * 180) + 'px';
+    s.style.opacity = p > 0 && p < 1 ? 1 - p : 0;
+    s.style.transform = `translateX(${2200 * ease(p)}px)`;
+  }
+  $('flash').style.opacity = .9 * bell(t, T.collapse - .05, .55);
+  // Outro: icon, wordmark, tagline bending in along a curve, link.
+  const o = $('outro');
+  o.style.opacity = ease(prog(t, T.outro, .25));
+  $('oIcon').style.transform = `scale(${.3 + .7 * spring(prog(t, T.outro, .7))})`;
+  $('oCheck').style.strokeDashoffset = 100 - 100 * ease(prog(t, T.outro + .3, .35));
+  const oTimes = [...WORD].map((_, i) => T.outro + .25 + i * .04);
+  typed($('oWord'), WORD.slice(0, oTimes.filter(k => t >= k).length), t, oTimes);
+  const TAG = 'Tweak anything.';
+  $('tag').innerHTML = [...TAG].map((ch, i) => {
+    const p = inOut(prog(t, T.tag + i * .025, .55)), x = (i - TAG.length / 2) / (TAG.length / 2);
+    const y = (1 - p) * (160 * x * x - 60), rot = (1 - p) * 40 * x;
+    return `<span style="opacity:${ease(prog(t, T.tag + i * .025, .2))};transform:translateY(${y}px) rotate(${rot}deg);filter:blur(${8 * (1 - p)}px)">${ch === ' ' ? '&nbsp;' : ch}</span>`;
+  }).join('');
+  $('bio').style.opacity = ease(prog(t, T.bio, .25));
+  $('bio').style.transform = `translateY(${40 * (1 - spring(prog(t, T.bio, .5)))}px)`;
+
+}
+window.setTime = setTime;
+setTime(0);
+</script></body></html>

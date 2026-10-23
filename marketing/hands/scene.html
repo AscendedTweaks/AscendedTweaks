@@ -1,0 +1,92 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000}
+#bg{position:absolute;inset:0;background:#000}
+.arm{position:absolute;width:500px;height:auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
+#glow{position:absolute;left:290px;top:710px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,160,.16),transparent 65%)}
+#end{position:absolute;left:0;right:0;top:960px;text-align:center;color:#fff;font-family:Inter,"Segoe UI",Arial,sans-serif}
+#eWord{font-size:92px;font-weight:700;letter-spacing:-.03em}
+#eTag{margin-top:24px;font-family:"Bitstream Charter",Charter,Georgia,serif;font-style:italic;font-size:84px;color:#4da8ff}
+#eBio{display:inline-block;margin-top:60px;padding:28px 64px;border-radius:999px;background:#fff;color:#000;font-size:40px;font-weight:650}
+#end>*{opacity:0}
+#fade{position:absolute;inset:0;background:#000}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 45%,rgba(0,0,0,.6))}
+#gl{position:absolute;left:0;top:0}
+</style></head><body>
+<div id="bg"></div>
+<img class="arm" id="left" src="left.png"><img class="arm" id="right" src="right.png">
+<canvas id="gl" width="1080" height="1920"></canvas><div id="end"><div id="eWord">AscendedTweaks</div><div id="eTag">Tweak anything.</div><div id="eBio">Link in bio</div></div><div id="fade"></div>
+<script type="module">
+import * as THREE from './three.js';
+import { RoomEnvironment } from './room.js';
+const r = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, alpha: true, preserveDrawingBuffer: true });
+r.setSize(1080, 1920, false); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene();
+scene.environment = new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(), .04).texture;
+scene.environmentIntensity = .12;
+const cam = new THREE.PerspectiveCamera(28, 1080 / 1920, 1, 5000); cam.position.set(0, 0, 1500);
+// Warm key from upper left, cool rim from the right, soft fill.
+scene.add(new THREE.HemisphereLight(0xfff1dd, 0x20160e, .35));
+const key = new THREE.DirectionalLight(0xffe2b8, 3.2); key.position.set(-600, 500, 800); scene.add(key);
+const rim = new THREE.DirectionalLight(0xffe8d0, .5); rim.position.set(700, 100, -500); scene.add(rim);
+
+// Logo in SVG units (256 box), centered and flipped so y points up.
+const P = (x, y) => new THREE.Vector2(x - 128, 128 - y);
+const body = new THREE.MeshPhysicalMaterial({ color: 0x050506, roughness: .3, metalness: .1, clearcoat: .6, clearcoatRoughness: .45 });
+const white = new THREE.MeshStandardMaterial({ color: 0xf4f4f4, roughness: .3 });
+const blue = new THREE.MeshStandardMaterial({ color: 0x2997ff, roughness: .3, emissive: 0x0b3a80, emissiveIntensity: .6 });
+const D = 26; // tile thickness
+function rounded(x, y, w, h, rad) {
+  const s = new THREE.Shape(), a = P(x, y), b = P(x + w, y + h);
+  s.moveTo(a.x + rad, a.y); s.lineTo(b.x - rad, a.y); s.quadraticCurveTo(b.x, a.y, b.x, a.y - rad);
+  s.lineTo(b.x, b.y + rad); s.quadraticCurveTo(b.x, b.y, b.x - rad, b.y); s.lineTo(a.x + rad, b.y);
+  s.quadraticCurveTo(a.x, b.y, a.x, b.y + rad); s.lineTo(a.x, a.y - rad); s.quadraticCurveTo(a.x, a.y, a.x + rad, a.y); return s;
+}
+const logo = new THREE.Group();
+const tile = new THREE.Mesh(new THREE.ExtrudeGeometry(rounded(8, 8, 240, 240, 51), { depth: D - 8, bevelEnabled: true, bevelThickness: 4, bevelSize: 4, bevelSegments: 4, curveSegments: 32 }), body);
+tile.position.z = -D / 2 + 4; logo.add(tile);
+function face(side) {
+  const g = new THREE.Group();
+  const arrow = new THREE.Shape([P(202, 54), P(70, 110), P(128, 128), P(146, 186)]);
+  g.add(new THREE.Mesh(new THREE.ExtrudeGeometry(arrow, { depth: 4, bevelEnabled: true, bevelThickness: 3, bevelSize: 5, bevelSegments: 4 }), white));
+  const pts = [P(56, 172), P(80, 196), P(118, 158)], w = 8;
+  for (let i = 0; i < 2; i++) {
+    const a = pts[i], b = pts[i + 1], d = b.clone().sub(a).normalize(), n = new THREE.Vector2(-d.y, d.x).multiplyScalar(w);
+    const s = new THREE.Shape([a.clone().add(n), b.clone().add(n), b.clone().sub(n), a.clone().sub(n)]);
+    g.add(new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 6, bevelEnabled: true, bevelThickness: 2, bevelSize: 1, bevelSegments: 2 }), blue));
+  }
+  for (const p of pts) { const c = new THREE.Mesh(new THREE.CylinderGeometry(w + 1, w + 1, 8, 32), blue); c.rotation.x = Math.PI / 2; c.position.set(p.x, p.y, 4); g.add(c); }
+  g.position.z = D / 2 + 1; if (side) { g.rotation.y = Math.PI; g.position.z = -D / 2 - 1; } return g;
+}
+logo.add(face(0), face(1));
+const S = .3; logo.scale.setScalar(S); scene.add(logo);
+const L = document.getElementById('left'), R = document.getElementById('right');
+const ease = p => p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+window.setTime = t => {
+  // One slow full turn over 10 s, a gentle float and a short fade-in.
+  logo.rotation.y = -Math.PI / 5 + 2 * Math.PI * (t / 10);
+  logo.rotation.x = .12 * Math.sin(t * .6);
+  logo.position.y = 4 * Math.sin(t * .8);
+  const k = Math.min(1, t / 1.2); logo.scale.setScalar(S * (.9 + .1 * ease(k)));
+  // Fingertips at 355/365 px in the 1000 px wide crops (scale .62); the arms breathe slightly toward the logo.
+  const sc = .5, drift = 6 * Math.sin(t * .7);
+  L.style.left = (424 + drift - 865 * sc) + 'px'; L.style.top = (960 - 355 * sc + 3 * Math.sin(t * .5)) + 'px';
+  R.style.left = (679 - drift - 182 * sc) + 'px'; R.style.top = (960 - 365 * sc - 3 * Math.sin(t * .5 + 1)) + 'px';
+  // End card after 10 s, timed to the spoken line (word starts at 10.5, 12.07, 13.0).
+  const o = ease(Math.min(1, Math.max(0, (t - 10) / .9)));
+  if (t > 10) {
+    const a0 = -Math.PI / 5 + 2 * Math.PI; logo.rotation.y = a0 + (2 * Math.PI - a0) * o; logo.rotation.x *= 1 - o;
+    logo.position.y = 4 * Math.sin(t * .8) * (1 - o) + 125 * o; logo.scale.setScalar(S * (1 + .58 * o));
+    L.style.left = (parseFloat(L.style.left) - 160 * o) + 'px'; R.style.left = (parseFloat(R.style.left) + 160 * o) + 'px';
+  }
+  L.style.opacity = R.style.opacity = 1 - o;
+  [['eWord', 10.45], ['eTag', 12.0], ['eBio', 12.95]].forEach(([id, s0]) => {
+    const p = ease(Math.min(1, Math.max(0, (t - s0) / .45))), el = document.getElementById(id);
+    el.style.opacity = p; el.style.transform = `translateY(${30 * (1 - p)}px)`; el.style.filter = `blur(${10 * (1 - p)}px)`;
+  });
+  document.getElementById('fade').style.opacity = 1 - ease(Math.min(1, t / 1.0));
+  r.render(scene, cam);
+};
+Promise.all([...document.images].map(i => i.decode())).then(() => { window.setTime(0); window.ready = true; });
+</script></body></html>

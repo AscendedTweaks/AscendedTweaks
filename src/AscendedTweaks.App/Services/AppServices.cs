@@ -86,9 +86,12 @@ public sealed class ThemeService : IThemeService
 {
     private const int TokenDictionaryIndex = 2;
 
+    /// <summary>Token file in Themes; the design preview uses its own colors.</summary>
+    public static string TokenFile { get; set; } = "Tokens.Dark.xaml";
+
     public static ResourceDictionary LoadTokens()
     {
-        return new ResourceDictionary { Source = new Uri("pack://application:,,,/AscendedTweaks.App;component/Themes/Tokens.Dark.xaml") };
+        return new ResourceDictionary { Source = new Uri($"pack://application:,,,/AscendedTweaks.App;component/Themes/{TokenFile}") };
     }
 
     /// <summary>Nur fuer Screenshots: Hochkontrast erzwingen, ohne die Windows-Einstellung zu aendern.</summary>

@@ -218,6 +218,12 @@ public sealed partial class TweakWorkspace : ObservableObject
     /// </summary>
     public bool OneClick { get; set; }
 
+    /// <summary>Design preview: every apply or reset only explains that this copy shows the design and changes nothing.</summary>
+    public bool DesignPreview { get; set; }
+
+    private Task ShowPreviewNotice() =>
+        _dialogs.ShowAsync(new ResultDialogViewModel(_localizer["preview.title"], _localizer["preview.body"], [], false));
+
     [RelayCommand]
     private Task Preview() => RunAsync(previewOnly: true);
 
@@ -285,6 +291,12 @@ public sealed partial class TweakWorkspace : ObservableObject
             return;
         }
 
+        if (DesignPreview)
+        {
+            await ShowPreviewNotice().ConfigureAwait(true);
+            return;
+        }
+
         IsBusy = true;
         try
         {
@@ -308,6 +320,12 @@ public sealed partial class TweakWorkspace : ObservableObject
     {
         if (IsBusy)
         {
+            return;
+        }
+
+        if (DesignPreview)
+        {
+            await ShowPreviewNotice().ConfigureAwait(true);
             return;
         }
 
@@ -377,6 +395,12 @@ public sealed partial class TweakWorkspace : ObservableObject
     /// <summary>Gemeinsamer Ablauf; liefert true, wenn angewendet wurde (nicht bei Abbruch oder reiner Vorschau).</summary>
     private async Task<bool> RunBatchAsync(IReadOnlyList<string> applies, IReadOnlyList<string> reverts, bool previewOnly)
     {
+        if (DesignPreview && !previewOnly)
+        {
+            await ShowPreviewNotice().ConfigureAwait(true);
+            return false;
+        }
+
         // Without one click the preview is the first step and nothing is applied without its confirmation.
         var direct = OneClick && !previewOnly;
         BatchPlan plan;

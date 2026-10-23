@@ -108,6 +108,14 @@ public partial class App : Application
     /// <summary>Applies a tweak from a gaming check ("Fix now"); set together with the navigator.</summary>
     internal static TweakWorkspace? GamingWorkspace { get; set; }
 
+    /// <summary>
+    /// Design preview: a second copy that only shows the design. Sample data everywhere, state, settings and logs in %TEMP%,
+    /// no installation question, no helper; applying and resetting only show a notice. Debug builds only (sample data).
+    /// </summary>
+    internal static bool DesignPreview { get; private set; }
+
+    internal const string DesignPreviewMarker = ".ascendedtweaks-design-preview";
+
     private static GamingChecksViewModel GamingChecks(Localizer localizer)
     {
         var commands = new ProcessCommandRunner();
@@ -194,7 +202,9 @@ public partial class App : Application
                 () => new AppsViewModel(AppManagerFor(workspace), dialogs, localizer, Environment.OSVersion.Version.Build, workspace.IsReadOnly),
                 () => new OneDriveViewModel(
                     OneDriveCheckSource ?? new OneDriveCheck(new WindowsOneDriveEnvironment(new WindowsSignatureVerifier())).Check,
-                    () => new OneDriveUninstaller(new OneDriveCheck(new WindowsOneDriveEnvironment(new WindowsSignatureVerifier())), new ProcessCommandRunner()).Uninstall(),
+                    () => DesignPreview && OneDriveCheckSource is { } sample
+                        ? sample()
+                        : new OneDriveUninstaller(new OneDriveCheck(new WindowsOneDriveEnvironment(new WindowsSignatureVerifier())), new ProcessCommandRunner()).Uninstall(),
                     dialogs,
                     localizer,
                     workspace.IsReadOnly))),
@@ -399,17 +409,30 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        _log = new JsonLinesLog(JsonLinesLog.DefaultUserDirectory, "app", TimeProvider.System);
+#if DEBUG
+        DesignPreview = e.Args.Contains("--design-preview") || File.Exists(Path.Combine(AppContext.BaseDirectory, DesignPreviewMarker));
+#endif
+        var previewRoot = Path.Combine(Path.GetTempPath(), "AscendedTweaks.DesignPreview");
+        _log = new JsonLinesLog(DesignPreview ? Path.Combine(previewRoot, "Logs") : JsonLinesLog.DefaultUserDirectory, "app", TimeProvider.System);
         DispatcherUnhandledException += OnUnhandledException;
 
-        var store = new SettingsStore(SettingsStore.DefaultPath);
+        var store = new SettingsStore(DesignPreview ? Path.Combine(previewRoot, "settings.json") : SettingsStore.DefaultPath);
         var settings = store.Load();
+        if (DesignPreview)
+        {
+            // Same language as the real app, but its own settings: nothing of the real app is touched.
+            settings.Language = new SettingsStore(SettingsStore.DefaultPath).Load().Language;
+            settings.FirstStepsCompleted = true;
+            settings.PortableChosen = true;
+            ThemeService.TokenFile = "Tokens.Preview.xaml";
+        }
+
         Localizer.Current = new Localizer(settings.Language);
         var theme = new ThemeService();
         theme.Apply();
         theme.WatchHighContrast();
 
-        if (!e.Args.Contains("--snapshot"))
+        if (!e.Args.Contains("--snapshot") && !DesignPreview)
         {
             // Waehrend der Installationsfrage darf das Schliessen des kleinen Fensters die App nicht beenden.
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -428,9 +451,9 @@ public partial class App : Application
         var catalog = new CompositeCatalog(embedded);
         _service = new TweakService(
             catalog,
-            EngineFactory.CreateForWindows(catalog, StateStore.DefaultUserRoot, environment, _log),
-            EngineFactory.CreateForWindows(catalog, StateStore.DefaultMachineRoot, environment, _log),
-            EngineFactory.CreateForWindows(catalog, StateStore.UserPolicyRoot(System.Security.Principal.WindowsIdentity.GetCurrent().User!.Value), environment, _log),
+            EngineFactory.CreateForWindows(catalog, DesignPreview ? Path.Combine(previewRoot, "State", "User") : StateStore.DefaultUserRoot, environment, _log),
+            EngineFactory.CreateForWindows(catalog, DesignPreview ? Path.Combine(previewRoot, "State", "Machine") : StateStore.DefaultMachineRoot, environment, _log),
+            EngineFactory.CreateForWindows(catalog, DesignPreview ? Path.Combine(previewRoot, "State", "Policy") : StateStore.UserPolicyRoot(System.Security.Principal.WindowsIdentity.GetCurrent().User!.Value), environment, _log),
             () => new HelperClient(new ElevatedHelperLauncher()),
             TimeProvider.System);
         _service.AttachCleanup(AscendedTweaks.Engine.Cleanup.CleanupFactory.User(environment), AscendedTweaks.Engine.Cleanup.CleanupFactory.MachineEstimator(environment));
@@ -438,8 +461,9 @@ public partial class App : Application
         var readOnly = SupportPolicy.Classify(environment.Build) == BuildSupport.Unsupported;
         var workspace = new TweakWorkspace(embedded, _service, Localizer.Current, settings, dialogs, new WpfUiInvoker(), new ExplorerRestarter(), readOnly);
         workspace.OneClick = true;
+        workspace.DesignPreview = DesignPreview;
 #if DEBUG
-        if (e.Args.Contains("--snapshot"))
+        if (e.Args.Contains("--snapshot") || DesignPreview)
         {
             PermissionSource = SnapshotRenderer.SamplePermissions;
             AutostartSource = SnapshotRenderer.SampleAutostart;
@@ -504,6 +528,11 @@ public partial class App : Application
 
         window.Show();
         await workspace.RefreshAsync().ConfigureAwait(true);
+        if (DesignPreview)
+        {
+            await dialogs.ShowAsync(new ResultDialogViewModel(Localizer.Current["preview.title"], Localizer.Current["preview.body"], [], false)).ConfigureAwait(true);
+            return;
+        }
 
         if (!settings.FirstStepsCompleted)
         {

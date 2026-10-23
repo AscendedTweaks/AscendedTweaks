@@ -221,6 +221,24 @@ public sealed class WorkspaceTests : IDisposable
     }
 
     [Fact]
+    public async Task Design_preview_applies_and_resets_nothing()
+    {
+        _workspace.OneClick = true;
+        _workspace.DesignPreview = true;
+        await _workspace.RefreshAsync();
+
+        _workspace.Card("PRIV-901").IsOn = true;
+        await _workspace.ApplyCommand.ExecutionTask!;
+        await _workspace.ApplyIdsAsync(["PRIV-903"]);
+        await _workspace.RevertAsync("PRIV-901");
+
+        _dialogs.Shown.Should().OnlyContain(d => d is ResultDialogViewModel).And.HaveCount(3, "every attempt explains that this copy changes nothing");
+        _h.Registry.GetValue(RegHive.HKCU, P, "A").Should().Be(RegistryData.DWord(1));
+        _h.Registry.GetValue(RegHive.HKCU, P, "C").Should().Be(RegistryData.DWord(0));
+        _workspace.Card("PRIV-901").IsOn.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Show_changes_opens_the_preview_only_and_applies_nothing()
     {
         _workspace.OneClick = true;

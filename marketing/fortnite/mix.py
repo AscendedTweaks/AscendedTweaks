@@ -57,6 +57,7 @@ put(sfx('cardSlide6'), T['dissolve'] - .05, -10)
 put(thump, T['outro'] - .02, -4)
 type_ticks(T['outro'] + .25, 14, .04, -26)
 put(release, T['bio'], -14)
+put(load('../voice2/outro-name.wav'), T['outro'] + .2, 0)
 mix = np.tanh(mix * 1.05); mix = mix / np.max(np.abs(mix)) * .89
 with wave.open('mix.wav','wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes((mix.T*32767).astype('<i2').tobytes())

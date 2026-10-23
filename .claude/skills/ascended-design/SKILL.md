@@ -5,10 +5,11 @@ description: Design rules for the Ascended Tweaks WPF app (colors, type scale, s
 
 # Ascended Tweaks design rules
 
-A friendly, lively Windows 11 tool that explains instead of pushing. Factual, high quality, tidy, trustworthy.
+A friendly, lively tuning tool for PC gamers that explains instead of pushing. Factual, high quality, trustworthy.
 There is only one design: dark. No light mode, no "follow Windows" option; Windows high contrast still uses system colors.
-Palette: clean neutral dark, one coral accent, cheerful preset colors and a soft glow on a few elements.
-Never the generic "AI app" look: no navy plus electric blue, no blue-violet gradients, no neon outlines, no glass effects.
+Direction: plum night with victory gold. The loud element is type (Bahnschrift Condensed), not decoration.
+Never the generic "AI app" look: no navy plus electric blue, no near-black with one vermilion or acid accent, no coral or
+terracotta, no blue-violet gradients, no neon outlines, no glass effects, no stat-tile rows, no card per list item.
 If the UI and these rules disagree, fix the UI.
 
 ## 1. Colors: tokens only
@@ -18,25 +19,26 @@ Never write a hex color in a page, template or control. Use the brushes from `Th
 
 | Brush | Value | Role |
 | --- | --- | --- |
-| `Brush.Background` | #141414 | Window background, navigation |
-| `Brush.Surface` | #1E1E1F | Cards |
-| `Brush.Elevated` | #28282A | Dialogs, side panel |
-| `Brush.Border` | #3A3A3D | Borders, dividers |
-| `Brush.Accent` | #FF7A50 | Primary action, focus, links (coral) |
+| `Brush.Background` | #18131F | Window background, navigation (plum night) |
+| `Brush.Surface` | #221B2B | Panels and tiles |
+| `Brush.Elevated` | #2C2437 | Dialogs, side panel |
+| `Brush.Border` | #40364F | Borders, row dividers |
+| `Brush.Accent` | #FFD23F | Primary action, toggles on, focus, links (victory gold) |
 | `Brush.AccentTint` | 14 % accent | Selected segment and navigation entry |
-| `Brush.OnAccent` | #141414 | Text and icons on accent fills |
-| `Brush.Success` | #5BD47E | Risk "Safe", success |
-| `Brush.Warning` | #FFC93C | Risk "Caution", notices |
-| `Brush.Danger` | #FF5F73 | Risk "Expert", errors |
-| `Brush.TextPrimary` | #F6F5F3 | Body text, headings |
-| `Brush.TextSecondary` | #B4B2AE | Descriptions, metadata |
+| `Brush.OnAccent` | #18131F | Text and icons on accent fills |
+| `Brush.Success` | #5EE0A0 | Risk "Safe", success |
+| `Brush.Warning` | #FF9F43 | Risk "Caution", notices (orange, so it never reads as the gold accent) |
+| `Brush.Danger` | #FF6B8A | Risk "Expert", errors |
+| `Brush.TextPrimary` | #F7F2FC | Body text, headings |
+| `Brush.TextSecondary` | #BBB0CC | Descriptions, metadata |
 
-Preset colors (`Brush.Hue.X`, tile `Brush.Hue.X.Tint` at 16 %, glow `Glow.Hue.X`): Mint #4FD6A4 (safe), Sky #5DB9FF (gaming),
-Coral #FF7A50 (competitive), Sun #FFC93C (laptop), Lilac #B9A0FF (privacy), Rose #FF7EB8 (cleanup), Teal #35D0C6 (office).
-They color only preset symbols and their tiles, never text, and never carry meaning on their own.
+Preset colors (`Brush.Hue.X`, tile `Brush.Hue.X.Tint` at 16 %): Mint #5EE0A0 (safe), Sky #63C2FF (gaming),
+Coral #FF8A65 (competitive), Lime #B5E655 (laptop), Lilac #C3A6FF (privacy), Rose #FF8CC6 (cleanup), Teal #3FD9CF (office).
+They mark which preset a tile belongs to (4-point top edge `PresetEdge`, symbol tile `PresetTile`, symbol `PresetSymbol`)
+and never carry risk or state.
 
-Glow (`Glow.Accent`, `Glow.Hue.X`, soft drop shadow without offset) only on: primary buttons (not when disabled), the
-selected navigation bar and preset symbols. Never on text, cards, borders or several competing elements in one area.
+Glow (`Glow.Accent`, soft gold drop shadow without offset) only on primary buttons (not when disabled) and the selected
+navigation bar. Nowhere else: not on text, tiles, symbols or borders.
 
 - One accent fill per screen: the main action. Everything else is outline, text or neutral.
 - Color is never the only signal: risk badges always have text and a symbol.
@@ -45,28 +47,31 @@ selected navigation bar and preset symbols. Never on text, cards, borders or sev
 
 ## 2. Type scale
 
-Font only through `Font.Text` (Segoe UI Variable Text) and `Font.Display` (Segoe UI Variable Display). Use the text styles,
-never a bare `FontSize` on text:
+Two families with clear roles: `Font.Display` is Bahnschrift (ships with Windows 10 and 11; DIN-like, used in condensed
+widths like a gauge or HUD label) for titles; `Font.Text` is Segoe UI Variable Text for everything people read.
+Use the text styles, never a bare `FontSize` on text. Sentence case everywhere, no all-caps labels, no eyebrow labels.
 
-| Style | Size | Weight | Use |
-| --- | --- | --- | --- |
-| `Text.Caption` | 12 | Regular | Badges, metadata, chips |
-| `Text.Simple.Caption` | 13 | Regular | Hints in simple mode |
-| `Text.Body` / `Text.Secondary` | 14 | Regular | Body text, card description |
-| `Text.BodyStrong` | 14 | SemiBold | Card titles, table headers |
-| `Text.Simple.Body` | 15 | Regular | Body text in simple mode |
-| `Text.Simple.Title` | 17 | SemiBold | Card titles in simple mode, large choice buttons |
-| `Text.Subtitle` | 20 | SemiBold | Section headings |
-| `Text.Title` | 28 | SemiBold | Page titles |
+| Style | Family | Size | Weight / width | Use |
+| --- | --- | --- | --- | --- |
+| `Text.Caption` | Text | 12 | Regular | Badges, metadata, chips |
+| `Text.Simple.Caption` | Text | 13 | Regular | Hints in simple mode |
+| `Text.Body` / `Text.Secondary` | Text | 14 | Regular | Body text, card description |
+| `Text.BodyStrong` | Text | 14 | SemiBold | Row titles in expert mode, table headers |
+| `Text.Simple.Body` | Text | 15 | Regular | Body text in simple mode |
+| `Text.Simple.Title` | Text | 17 | SemiBold | Row titles in simple mode, large choice buttons |
+| `Text.Subtitle` | Display | 22 | SemiBold, SemiCondensed | Section headings, preset tile names |
+| `Text.Title` | Display | 32 | SemiBold, Condensed | Page titles |
+| `Text.Hero` | Display | 44 | Bold, Condensed | Only the recommended preset's name on the start page |
 
-Icons (`ui:SymbolIcon`) use 12, 16, 20 or 24. The gap between an icon and its text is 8.
+Icons (`ui:SymbolIcon`) use 12, 16, 20 or 24, and 48 only in the hero symbol tile. The gap between an icon and its text is 8.
 Card descriptions stop after two lines with an ellipsis; the full text is in the side panel.
 
 ## 3. Spacing, radius, size
 
 - Spacing on the 8-point grid: 4, 8, 12, 16, 24, 32, 48 (20 only for simple-mode card padding 20 x 16).
   Padding of 6 or 10 is allowed only inside 1-point bordered controls, where it puts the content on the grid.
-- Radius 8 (`Radius.Small`) for buttons, inputs, badges; 12 (`Radius.Large`) for cards and dialogs; a toggle track is a pill.
+- Radius 8 (`Radius.Small`) for buttons, inputs, badges; 12 (`Radius.Large`) for panels, tiles and dialogs; a toggle track is a
+  pill; a preset edge inside a panel uses 11,11,0,0 so it meets the 1-point border.
 - Click targets at least 32 x 32, in simple mode at least 40 high; toggles 40 x 20.
 - Window 1280 x 800 by default, minimum 800 x 480; content scrolls vertically. Navigation 240 wide, collapses to 56 below 1000.
 - Card gap 16. Simple-mode pages have 24 bottom spacing.
@@ -76,10 +81,13 @@ Card descriptions stop after two lines with an ellipsis; the full text is in the
 - **Tweak card**: min height 96, padding 16, radius 12, Surface with Border. Text on the left (name, short description,
   risk and impact badges, chips "Restart required" / "Admin required", then "More details" as a text button),
   toggle on the right with 24 gap, like Windows 11 Settings. Simple-mode cards follow the same layout.
-- **Start page**: a hero card (padding 32 x 24) with the 28 pt welcome title, one sentence, three fact tiles
-  (bordered, radius 8, caption plus 17 pt value) and the only accent button of the page. The shell hides the page
-  title there (`ShowTitle` false). Preset tiles: two columns, padding 24, min height 200, symbol 24 in a 48 x 48 tile with radius 12 in
-  the preset color (`PresetTile`, `PresetSymbol` styles), secondary "Review and apply" button.
+- **Lists of tweaks** (simple mode): one Surface panel, one row per tweak with a 1-point divider above every row but the first;
+  text left, toggle right. No card per item.
+- **Start page**: the hero is the recommended preset itself, not a welcome text: 4-point edge in its color, its name in
+  `Text.Hero`, its sentence, its level segments, "Changes: ...", the only primary button "Apply recommended settings" and
+  "Show changes"; a divider, then one quiet line with the PC facts and the help link. A 96 x 96 symbol tile sits on the right.
+  The other presets follow in two columns (the recommended one is not repeated): edge in the preset color, 48 x 48 symbol
+  tile, name in `Text.Subtitle`, sentence, summary, "Changes: ...", levels, secondary "Apply" and "Show changes".
 - **Navigation**: sits on `Brush.Background` without its own surface; entries at least 40 high; the selected entry
   has the accent tint, the accent bar, a filled accent icon and SemiBold text; a 1-point divider above the footer.
 - **Mode switch** (Simple / Expert): one bordered segmented control on Surface; the active segment is `Brush.AccentTint`

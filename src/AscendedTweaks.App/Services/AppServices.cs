@@ -126,12 +126,11 @@ public sealed class ThemeService : IThemeService
         tokens["Brush.Scrim"] = new System.Windows.Media.SolidColorBrush(SystemColors.WindowColor) { Opacity = 0.8 };
         tokens["Brush.AccentTint"] = new System.Windows.Media.SolidColorBrush(SystemColors.HighlightColor) { Opacity = 0.3 };
 
-        // Preset colors and glow follow the contrast theme: symbols in the text color, plain tiles, no glow.
-        foreach (var hue in new[] { "Mint", "Sky", "Coral", "Sun", "Lilac", "Rose", "Teal" })
+        // Preset colors and glow follow the contrast theme: symbols and edges in the text color, plain tiles, no glow.
+        foreach (var hue in new[] { "Mint", "Sky", "Coral", "Lime", "Lilac", "Rose", "Teal" })
         {
             tokens[$"Brush.Hue.{hue}"] = new System.Windows.Media.SolidColorBrush(SystemColors.WindowTextColor);
             tokens[$"Brush.Hue.{hue}.Tint"] = System.Windows.Media.Brushes.Transparent;
-            tokens[$"Glow.Hue.{hue}"] = null;
         }
 
         tokens["Glow.Accent"] = null;

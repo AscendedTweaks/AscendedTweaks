@@ -5,8 +5,8 @@ import re
 import sys
 
 APP = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'src', 'AscendedTweaks.App')
-TEXT_SIZES = {'12', '13', '14', '15', '17', '20', '28'}
-ICON_SIZES = {'12', '16', '20', '24'}
+TEXT_SIZES = {'12', '13', '14', '15', '17', '22', '32', '44'}
+ICON_SIZES = {'12', '16', '20', '24', '48'}
 SPACING = {0, 1, 2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 56}
 BORDERED_PADDING = {6, 10}
 RADII = {'0', '8', '12'}
@@ -42,7 +42,8 @@ def main():
                 if any(v not in allowed for v in values):
                     add(m.group(1).lower() + ' off the 8-point grid', m.group(2))
             for m in re.finditer(r'(?<![\w.])CornerRadius="([0-9., ]+)"', stripped):
-                if m.group(1) not in RADII and 'Track' not in stripped:
+                # Toggle tracks are pills; a preset edge sits inside a 12-radius card with a 1-point border, so it uses 11.
+                if m.group(1) not in RADII and 'Track' not in stripped and 'PresetEdge' not in stripped:
                     add('radius (use Radius.Small or Radius.Large)', m.group(1))
             for m in re.finditer(r'(?<![\w.])(MinHeight|Height)="([0-9.]+)"', stripped):
                 if 'Button' in element and float(m.group(2)) < 32:

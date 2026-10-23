@@ -61,6 +61,16 @@ public static class CatalogLinter
 
         LintTexts(t, texts, Add);
 
+        if (t.Tags.Count is < 1 or > 3 || t.Tags.Distinct(StringComparer.Ordinal).Count() != t.Tags.Count)
+        {
+            Add("tags", "One to three different tags are required.");
+        }
+
+        foreach (var tag in t.Tags.Where(tag => !TweakTags.All.Contains(tag)))
+        {
+            Add("tags", $"Unknown tag {tag}; allowed are {string.Join(", ", TweakTags.All)}.");
+        }
+
         if (t.Sources.Count == 0 || t.Sources.Any(string.IsNullOrWhiteSpace))
         {
             Add("sources", "At least one non-empty source is required.");

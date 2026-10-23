@@ -49,5 +49,8 @@
   "impactNote": "tweak.PERF-008.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.PERF-008.plain.title",
-  "plainDescKey": "tweak.PERF-008.plain.desc"
+  "plainDescKey": "tweak.PERF-008.plain.desc",
+  "tags": [
+    "background"
+  ]
 }

@@ -59,5 +59,9 @@
   "impactNote": "tweak.GAME-009.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.GAME-009.plain.title",
-  "plainDescKey": "tweak.GAME-009.plain.desc"
+  "plainDescKey": "tweak.GAME-009.plain.desc",
+  "tags": [
+    "delay",
+    "smooth"
+  ]
 }

@@ -49,5 +49,9 @@
   "impactNote": "tweak.GAME-001.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.GAME-001.plain.title",
-  "plainDescKey": "tweak.GAME-001.plain.desc"
+  "plainDescKey": "tweak.GAME-001.plain.desc",
+  "tags": [
+    "fps",
+    "background"
+  ]
 }

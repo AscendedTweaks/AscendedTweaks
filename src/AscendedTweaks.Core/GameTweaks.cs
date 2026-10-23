@@ -133,6 +133,7 @@ public static partial class GameTweaks
         {
             Id = id,
             Category = category,
+            Tags = ["fps"],
             NameKey = $"tweak.{baseId}.name",
             DescriptionKey = $"tweak.{baseId}.desc",
             SideEffectsKey = $"tweak.{baseId}.side",

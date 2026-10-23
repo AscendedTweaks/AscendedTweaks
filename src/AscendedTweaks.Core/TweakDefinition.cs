@@ -63,6 +63,12 @@ public sealed class TweakDefinition
     /// <summary>Nutzen-Satz fuer den Einfach-Modus, hoechstens 90 Zeichen (tweak.ID.plain.desc).</summary>
     public string? PlainDescKey { get; init; }
 
+    /// <summary>
+    /// One to three tags from <see cref="TweakTags.All"/>, shown as chips on the card ("fps", "delay"). They name the area a
+    /// tweak touches, never a measured gain; the evidence badge and the impact line say how well the effect is proven.
+    /// </summary>
+    public IReadOnlyList<string> Tags { get; init; } = [];
+
     [JsonIgnore]
     public string Module => Id[..Id.IndexOf('-', StringComparison.Ordinal)];
 
@@ -102,4 +108,28 @@ public sealed class RevertSpec
     public IReadOnlyList<TweakAction>? Actions { get; }
 
     public bool IsRestoreFromBackup => Actions is null;
+}
+
+/// <summary>Allowed tags; the texts are "tag.&lt;tag&gt;" in the app language.</summary>
+public static class TweakTags
+{
+    public static readonly IReadOnlyList<string> All =
+    [
+        "fps",
+        "delay",
+        "input",
+        "ping",
+        "network",
+        "smooth",
+        "audio",
+        "quiet",
+        "background",
+        "startup",
+        "storage",
+        "privacy",
+        "power",
+        "security",
+        "look",
+        "updates",
+    ];
 }

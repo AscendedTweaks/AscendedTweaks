@@ -68,5 +68,9 @@
     "Microsoft Learn: SystemParametersInfo SPI_SETKEYBOARDDELAY and SPI_SETKEYBOARDSPEED (value ranges and meaning); effect limited to held keys outside games that read keys directly"
   ],
   "plainTitleKey": "tweak.GAME-024.plain.title",
-  "plainDescKey": "tweak.GAME-024.plain.desc"
+  "plainDescKey": "tweak.GAME-024.plain.desc",
+  "tags": [
+    "input",
+    "delay"
+  ]
 }

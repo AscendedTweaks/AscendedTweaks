@@ -112,6 +112,7 @@ public static class AutostartTweaks
         {
             Id = id,
             Category = "Performance.Autostart",
+            Tags = ["startup", "background"],
             Impact = ImpactLevel.Small,
             ImpactNoteKey = $"tweak.{BaseId}.impact",
             PlainTitleKey = $"tweak.{BaseId}.plain.title",

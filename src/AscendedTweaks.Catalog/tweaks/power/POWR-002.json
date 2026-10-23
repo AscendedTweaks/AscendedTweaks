@@ -48,5 +48,9 @@
   "measuredOn": [],
   "plainTitleKey": "tweak.POWR-002.plain.title",
   "plainDescKey": "tweak.POWR-002.plain.desc",
-  "desktopOnly": true
+  "desktopOnly": true,
+  "tags": [
+    "delay",
+    "power"
+  ]
 }

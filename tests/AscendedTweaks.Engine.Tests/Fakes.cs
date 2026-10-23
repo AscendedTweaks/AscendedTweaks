@@ -279,6 +279,7 @@ internal sealed class FakeParameters : ISystemParametersAccess
         ["StickyKeysHotkey"] = 1,
         ["FilterKeysHotkey"] = 1,
         ["ToggleKeysHotkey"] = 1,
+        ["MouseKeysHotkey"] = 1,
         ["MouseSpeed"] = 14,
         ["KeyboardDelay"] = 1,
         ["KeyboardSpeed"] = 20,

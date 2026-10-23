@@ -50,5 +50,9 @@
   "impactNote": "tweak.GAME-012.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.GAME-012.plain.title",
-  "plainDescKey": "tweak.GAME-012.plain.desc"
+  "plainDescKey": "tweak.GAME-012.plain.desc",
+  "tags": [
+    "quiet",
+    "input"
+  ]
 }

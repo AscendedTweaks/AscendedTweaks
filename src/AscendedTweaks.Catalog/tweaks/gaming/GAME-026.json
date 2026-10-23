@@ -1,0 +1,59 @@
+{
+  "id": "GAME-026",
+  "category": "Gaming.Input",
+  "nameKey": "tweak.GAME-026.name",
+  "descriptionKey": "tweak.GAME-026.desc",
+  "sideEffectsKey": "tweak.GAME-026.side",
+  "risk": "Safe",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "SystemParameterEquals",
+    "parameter": "MouseKeysHotkey",
+    "value": 0
+  },
+  "apply": [
+    {
+      "type": "SystemParametersInfo",
+      "parameter": "MouseKeysHotkey",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'SystemParametersInfoW function', SPI_GETMOUSEKEYS/SPI_SETMOUSEKEYS, and 'MOUSEKEYS structure', flag MKF_HOTKEYACTIVE (Left Alt + Left Shift + Num Lock). Only this bit is changed; Mouse Keys itself stays as it is.",
+    "Same mechanism as GAME-012 and GAME-013."
+  ],
+  "verifiedOn": [
+    {
+      "build": 26200,
+      "edition": "Home",
+      "date": "2026-10-23",
+      "method": "Host integration test tests/vm/Invoke-TweakIntegrationTest.ps1, steps 3 to 7 (not a VM)"
+    }
+  ],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.GAME-026.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.GAME-026.plain.title",
+  "plainDescKey": "tweak.GAME-026.plain.desc",
+  "tags": [
+    "quiet",
+    "input"
+  ]
+}

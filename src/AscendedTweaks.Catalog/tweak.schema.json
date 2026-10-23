@@ -8,7 +8,7 @@
     "id", "category", "nameKey", "descriptionKey", "sideEffectsKey", "risk", "evidence",
     "builds", "editions", "scope", "requiresAdmin", "requiresReboot", "detect", "apply",
     "revert", "sources", "verifiedOn", "hiddenByDefault",
-    "impact", "impactNote", "measuredOn", "plainTitleKey", "plainDescKey"
+    "impact", "impactNote", "measuredOn", "plainTitleKey", "plainDescKey", "tags"
   ],
   "properties": {
     "id": { "type": "string", "pattern": "^(PRIV|PERF|GAME|CLEAN|DEB|UI|NET|DISK|UPD|BROW|POWR|DEFN)-[0-9]{3}$" },
@@ -70,7 +70,8 @@
     "impactNote": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.impact$" },
     "measuredOn": { "type": "array", "items": { "type": "string", "minLength": 10 } },
     "plainTitleKey": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.plain\\.title$" },
-    "plainDescKey": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.plain\\.desc$" }
+    "plainDescKey": { "type": "string", "pattern": "^tweak\\.[A-Z]+-[0-9]{3}\\.plain\\.desc$" },
+    "tags": { "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true, "items": { "enum": ["fps", "delay", "input", "ping", "network", "smooth", "audio", "quiet", "background", "startup", "storage", "privacy", "power", "security", "look", "updates"] } }
   },
   "$defs": {
     "hive": { "enum": ["HKCU", "HKLM"] },
@@ -90,7 +91,7 @@
     "taskPath": { "type": "string", "minLength": 20, "maxLength": 260, "pattern": "^\\\\Microsoft\\\\Windows\\\\" },
     "listFormat": { "enum": ["KeyValueSemicolon", "CompatLayers"] },
     "listKey": { "type": "string", "pattern": "^[A-Za-z0-9_]{1,64}$" },
-    "spiParameter": { "enum": ["ClientAreaAnimation", "MinimizeMaximizeAnimation", "MenuShowDelay", "MouseAcceleration", "StickyKeysHotkey", "FilterKeysHotkey", "ToggleKeysHotkey", "MouseSpeed", "KeyboardDelay", "KeyboardSpeed"] },
+    "spiParameter": { "enum": ["ClientAreaAnimation", "MinimizeMaximizeAnimation", "MenuShowDelay", "MouseAcceleration", "StickyKeysHotkey", "FilterKeysHotkey", "ToggleKeysHotkey", "MouseSpeed", "KeyboardDelay", "KeyboardSpeed", "MouseKeysHotkey"] },
     "state": { "enum": ["Applied", "NotApplied", "Mixed", "Unavailable"] },
     "condition": {
       "oneOf": [

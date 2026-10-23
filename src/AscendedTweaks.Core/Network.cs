@@ -202,6 +202,7 @@ public static class CustomDnsTweaks
         {
             Id = id,
             Category = "Network.Dns",
+            Tags = ["network"],
             Impact = ImpactLevel.Small,
             ImpactNoteKey = $"tweak.{BaseId}.impact",
             PlainTitleKey = $"tweak.{BaseId}.plain.title",

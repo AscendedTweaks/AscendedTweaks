@@ -27,7 +27,21 @@
                         <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding PlainTitle}" TextWrapping="Wrap" />
                     </DockPanel>
                     <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding PlainDescription}" TextWrapping="Wrap" Margin="0,4,0,0" />
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <ItemsControl ItemsSource="{Binding TagTexts}" Focusable="False" AutomationProperties.Name="{s:Loc card.tags}" Margin="0,8,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource TagChip}">
+                                    <TextBlock Text="{Binding}" FontSize="12" Foreground="{DynamicResource Brush.Accent}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                         <ui:SymbolIcon Symbol="{Binding RiskPlainSymbol}" FontSize="16" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
                         <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding RiskPlainText}" Margin="8,0,16,0" VerticalAlignment="Center" />
                         <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ImpactText}" VerticalAlignment="Center" ToolTip="{Binding ImpactNote}" />
@@ -494,6 +508,20 @@
                         <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Info16" FontSize="16" Foreground="{DynamicResource Brush.TextSecondary}" Margin="0,0,8,0" VerticalAlignment="Top" />
                         <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding ToggleToolTip}" />
                     </DockPanel>
+                    <ItemsControl ItemsSource="{Binding TagTexts}" Focusable="False" AutomationProperties.Name="{s:Loc card.tags}" Margin="0,0,0,4">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource TagChip}">
+                                    <TextBlock Text="{Binding}" FontSize="12" Foreground="{DynamicResource Brush.Accent}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                     <WrapPanel>
                         <c:Badge Tone="{Binding RiskTone}" Symbol="{Binding RiskSymbol}" Text="{Binding RiskText}" Filled="True" Margin="0,0,8,4" />
                         <c:Badge Tone="{Binding EvidenceTone}" Symbol="{Binding EvidenceSymbol}" Text="{Binding EvidenceText}" Margin="0,0,8,4" />

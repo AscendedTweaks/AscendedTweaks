@@ -49,5 +49,8 @@
   "impactNote": "tweak.DEB-027.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.DEB-027.plain.title",
-  "plainDescKey": "tweak.DEB-027.plain.desc"
+  "plainDescKey": "tweak.DEB-027.plain.desc",
+  "tags": [
+    "background"
+  ]
 }

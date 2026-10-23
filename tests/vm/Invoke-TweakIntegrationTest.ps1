@@ -73,6 +73,7 @@ $spiFootprint = @{
     'StickyKeysHotkey'          = @{ hive = 'HKCU'; path = 'Control Panel\Accessibility\StickyKeys'; name = 'Flags' }
     'FilterKeysHotkey'          = @{ hive = 'HKCU'; path = 'Control Panel\Accessibility\Keyboard Response'; name = 'Flags' }
     'ToggleKeysHotkey'          = @{ hive = 'HKCU'; path = 'Control Panel\Accessibility\ToggleKeys'; name = 'Flags' }
+    'MouseKeysHotkey'           = @{ hive = 'HKCU'; path = 'Control Panel\Accessibility\MouseKeys'; name = 'Flags' }
     'MouseSpeed'                = @{ hive = 'HKCU'; path = 'Control Panel\Mouse'; name = 'MouseSensitivity' }
     'KeyboardDelay'             = @{ hive = 'HKCU'; path = 'Control Panel\Keyboard'; name = 'KeyboardDelay' }
     'KeyboardSpeed'             = @{ hive = 'HKCU'; path = 'Control Panel\Keyboard'; name = 'KeyboardSpeed' }

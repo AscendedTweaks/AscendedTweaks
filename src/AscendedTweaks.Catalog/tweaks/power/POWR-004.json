@@ -48,5 +48,8 @@
   "measuredOn": [],
   "plainTitleKey": "tweak.POWR-004.plain.title",
   "plainDescKey": "tweak.POWR-004.plain.desc",
-  "desktopOnly": true
+  "desktopOnly": true,
+  "tags": [
+    "power"
+  ]
 }

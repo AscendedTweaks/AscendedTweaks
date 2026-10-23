@@ -68,5 +68,9 @@
   "impactNote": "tweak.UPD-005.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.UPD-005.plain.title",
-  "plainDescKey": "tweak.UPD-005.plain.desc"
+  "plainDescKey": "tweak.UPD-005.plain.desc",
+  "tags": [
+    "updates",
+    "quiet"
+  ]
 }

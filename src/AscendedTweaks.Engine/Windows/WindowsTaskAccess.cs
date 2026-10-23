@@ -131,10 +131,10 @@ public sealed class WindowsSystemParametersAccess : ISystemParametersAccess
 
     private const uint HotkeyActive = 0x4;
 
-    /// <summary>STICKYKEYS und TOGGLEKEYS sind 8 Byte gross, FILTERKEYS 24 Byte; die ersten beiden Felder sind gleich.</summary>
+    /// <summary>STICKYKEYS und TOGGLEKEYS sind 8 Byte gross, FILTERKEYS 24 Byte, MOUSEKEYS 28 Byte; die ersten beiden Felder sind gleich.</summary>
     private static AccessibilityKeys ReadAccessibility(SystemParameterDefinition definition)
     {
-        var keys = new AccessibilityKeys { Size = definition.Id == "FilterKeysHotkey" ? 24u : 8u };
+        var keys = new AccessibilityKeys { Size = definition.Id switch { "FilterKeysHotkey" => 24u, "MouseKeysHotkey" => 28u, _ => 8u } };
         Check(Native.SystemParametersInfoW(definition.GetAction, keys.Size, ref keys, 0), definition.Id);
         return keys;
     }
@@ -163,6 +163,9 @@ public sealed class WindowsSystemParametersAccess : ISystemParametersAccess
         public uint Delay;
         public uint Repeat;
         public uint Bounce;
+
+        /// <summary>Only used by MOUSEKEYS (dwReserved2); the other structures end before it.</summary>
+        public uint Extra;
     }
 
     private static class Native

@@ -91,5 +91,9 @@
   "impactNote": "tweak.GAME-006.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.GAME-006.plain.title",
-  "plainDescKey": "tweak.GAME-006.plain.desc"
+  "plainDescKey": "tweak.GAME-006.plain.desc",
+  "tags": [
+    "fps",
+    "delay"
+  ]
 }

@@ -1,0 +1,77 @@
+{
+  "id": "GAME-027",
+  "category": "Gaming.Capture",
+  "nameKey": "tweak.GAME-027.name",
+  "descriptionKey": "tweak.GAME-027.desc",
+  "sideEffectsKey": "tweak.GAME-027.side",
+  "risk": "Safe",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKCU",
+        "path": "Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR",
+        "name": "AppCaptureEnabled",
+        "value": 0
+      },
+      {
+        "type": "RegistryValueEquals",
+        "hive": "HKCU",
+        "path": "System\\GameConfigStore",
+        "name": "GameDVR_Enabled",
+        "value": 0
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR",
+      "name": "AppCaptureEnabled",
+      "kind": "DWord",
+      "value": 0
+    },
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKCU",
+      "path": "System\\GameConfigStore",
+      "name": "GameDVR_Enabled",
+      "kind": "DWord",
+      "value": 0
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "The documented way is the policy AllowGameDVR (ApplicationManagement Policy CSP, GAME-004), which Windows applies only on Pro, Enterprise and Education.",
+    "AppCaptureEnabled and GameDVR_Enabled are the per-user values of Game Bar captures; they are not on Microsoft Learn, so the tweak stays 'Disputed' and in expert mode. No FPS effect is promised."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.GAME-027.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.GAME-027.plain.title",
+  "plainDescKey": "tweak.GAME-027.plain.desc",
+  "tags": [
+    "fps",
+    "background"
+  ]
+}

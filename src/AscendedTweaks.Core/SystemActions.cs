@@ -91,7 +91,7 @@ public enum SystemParameterKind
     /// <summary>INT; Lesen ueber pvParam (Zeiger), Schreiben ueber pvParam (Wert selbst), zum Beispiel SPI_SETMOUSESPEED.</summary>
     UIntInPvParam,
 
-    /// <summary>Nur das Bit "Tastenkuerzel aktiv" (0x4) in STICKYKEYS/TOGGLEKEYS (8 Byte) oder FILTERKEYS (24 Byte); Wert 0 oder 1.</summary>
+    /// <summary>Nur das Bit "Tastenkuerzel aktiv" (0x4) in STICKYKEYS/TOGGLEKEYS (8 Byte), FILTERKEYS (24 Byte) oder MOUSEKEYS (28 Byte); Wert 0 oder 1.</summary>
     AccessibilityHotkey,
 }
 
@@ -178,6 +178,16 @@ public static class SystemParameterWhitelist
             Min = 0,
             Max = 1,
             RegistryFootprint = @"HKCU\Control Panel\Accessibility\ToggleKeys\Flags",
+        },
+        new SystemParameterDefinition
+        {
+            Id = "MouseKeysHotkey",
+            GetAction = 0x0036,
+            SetAction = 0x0037,
+            Kind = SystemParameterKind.AccessibilityHotkey,
+            Min = 0,
+            Max = 1,
+            RegistryFootprint = @"HKCU\Control Panel\Accessibility\MouseKeys\Flags",
         },
         new SystemParameterDefinition
         {

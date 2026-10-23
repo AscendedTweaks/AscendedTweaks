@@ -44,5 +44,9 @@
   "impactNote": "tweak.NET-012.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.NET-012.plain.title",
-  "plainDescKey": "tweak.NET-012.plain.desc"
+  "plainDescKey": "tweak.NET-012.plain.desc",
+  "tags": [
+    "ping",
+    "network"
+  ]
 }

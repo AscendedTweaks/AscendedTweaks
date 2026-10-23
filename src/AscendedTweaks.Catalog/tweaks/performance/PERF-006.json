@@ -53,5 +53,8 @@
     "Microsoft Learn: SystemParametersInfo SPI_SETMENUSHOWDELAY (delay in milliseconds); host test 26200: Windows default 400 ms, afterwards 100 ms"
   ],
   "plainTitleKey": "tweak.PERF-006.plain.title",
-  "plainDescKey": "tweak.PERF-006.plain.desc"
+  "plainDescKey": "tweak.PERF-006.plain.desc",
+  "tags": [
+    "delay"
+  ]
 }

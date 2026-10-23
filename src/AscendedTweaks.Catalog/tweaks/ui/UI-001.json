@@ -52,5 +52,8 @@
   "impactNote": "tweak.UI-001.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.UI-001.plain.title",
-  "plainDescKey": "tweak.UI-001.plain.desc"
+  "plainDescKey": "tweak.UI-001.plain.desc",
+  "tags": [
+    "look"
+  ]
 }

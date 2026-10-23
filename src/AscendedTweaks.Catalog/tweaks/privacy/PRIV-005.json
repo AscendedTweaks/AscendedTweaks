@@ -84,5 +84,8 @@
   "impactNote": "tweak.PRIV-005.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.PRIV-005.plain.title",
-  "plainDescKey": "tweak.PRIV-005.plain.desc"
+  "plainDescKey": "tweak.PRIV-005.plain.desc",
+  "tags": [
+    "privacy"
+  ]
 }

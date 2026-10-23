@@ -9,6 +9,14 @@
     <CornerRadius x:Key="Radius.Small">8</CornerRadius>
     <CornerRadius x:Key="Radius.Large">12</CornerRadius>
 
+    <!-- Tag chip on tweak cards ("FPS", "Delay"): navy tint, light blue text. -->
+    <Style x:Key="TagChip" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource Brush.AccentTint}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="8,2" />
+        <Setter Property="Margin" Value="0,0,6,4" />
+    </Style>
+
     <!-- Fokusrahmen: 2 Punkte Akzent, 2 Punkte Abstand, bei Tastaturbedienung immer sichtbar. -->
     <Style x:Key="FocusRing">
         <Setter Property="Control.Template">

@@ -5,8 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using Path = System.Windows.Shapes.Path;
 using System.Windows.Threading;
+using Path = System.Windows.Shapes.Path;
 
 namespace AscendedTweaks.App;
 

@@ -33,6 +33,10 @@ Ergebnis: 4 Spürbar, 43 Klein, 54 Unklar (Katalog plus Basis der erzeugten Twea
 | GAME-022 | Höchste Bildwiederholrate | Caution | Proven | Spürbar | Deutlich flüssigere Bewegung, wenn der Bildschirm unter seinem Maximum lief. |
 | GAME-023 | Zeigergeschwindigkeit auf Standard (1:1) | Caution | Proven | Klein | Ändert nur etwas, wenn die Zeigergeschwindigkeit nicht in der Mitte stand. |
 | GAME-024 | Schnellere Tastenwiederholung | Caution | Proven | Klein | Nur gehaltene Tasten außerhalb von Spielen, die Tasten direkt lesen. |
+| GAME-025 | Spiel bleibt bei Anrufen laut (Experte) | Safe | Disputed | Unklar | Registry-Wert nicht dokumentiert; nur wichtig bei Sprachanrufen. |
+| GAME-026 | Tastenkürzel für Maustasten aus | Safe | Proven | Klein | Verhindert nur die Abfrage nach linker Alt + linker Umschalt + Num. |
+| GAME-027 | Game-Bar-Aufnahmen aus, auch bei Home (Experte) | Safe | Disputed | Unklar | Werte nicht dokumentiert; keine belegte Wirkung ohne Aufnahme. |
+| NET-013 | Hintergrund-Updates höchstens 25 % Bandbreite | Caution | Proven | Klein | Hilft nur, während Windows im Hintergrund Updates lädt. |
 | NET-001 | DNS: Cloudflare | Safe | Proven | Klein | Andere Namensauflösung; Geschwindigkeit hängt vom Anschluss ab. |
 | NET-002 | DNS: Google | Safe | Proven | Klein | Andere Namensauflösung; Geschwindigkeit hängt vom Anschluss ab. |
 | NET-003 | DNS: Quad9 | Safe | Proven | Klein | Andere Namensauflösung mit Schutz vor Schadseiten. |

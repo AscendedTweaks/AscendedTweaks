@@ -68,5 +68,9 @@
     "Microsoft Learn: SystemParametersInfo SPI_SETCLIENTAREAANIMATION and SPI_SETANIMATION (window animations off); host test 26200"
   ],
   "plainTitleKey": "tweak.PERF-005.plain.title",
-  "plainDescKey": "tweak.PERF-005.plain.desc"
+  "plainDescKey": "tweak.PERF-005.plain.desc",
+  "tags": [
+    "look",
+    "delay"
+  ]
 }

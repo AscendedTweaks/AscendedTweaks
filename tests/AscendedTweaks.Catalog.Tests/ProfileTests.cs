@@ -63,9 +63,9 @@ public sealed class ProfileTests
         }
     }
     [Theory]
-    [InlineData("safe", 3, 8, 8)]
-    [InlineData("gaming", 2, 6, 9)]
-    [InlineData("competitive", 3, 7, 15)]
+    [InlineData("safe", 3, 9, 9)]
+    [InlineData("gaming", 2, 7, 10)]
+    [InlineData("competitive", 3, 8, 16)]
     [InlineData("privacy", 0, 12, 17)]
     [InlineData("office", 2, 6, 8)]
     public void Levels_pick_a_growing_number_of_entries_from_the_real_catalog(string key, int gentle, int standard, int strong)

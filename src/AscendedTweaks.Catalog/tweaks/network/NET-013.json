@@ -1,0 +1,57 @@
+{
+  "id": "NET-013",
+  "category": "Network.Bandwidth",
+  "nameKey": "tweak.NET-013.name",
+  "descriptionKey": "tweak.NET-013.desc",
+  "sideEffectsKey": "tweak.NET-013.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": false,
+  "detect": {
+    "type": "RegistryValueEquals",
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization",
+    "name": "DOPercentageMaxBackgroundBandwidth",
+    "value": 25
+  },
+  "apply": [
+    {
+      "type": "RegistrySetValue",
+      "hive": "HKLM",
+      "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization",
+      "name": "DOPercentageMaxBackgroundBandwidth",
+      "kind": "DWord",
+      "value": 25
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'Delivery Optimization reference', 'Maximum background download bandwidth (percentage)': policy DOPercentageMaxBackgroundBandwidth, percentage of the available download bandwidth for background downloads (Windows Update, Microsoft Store). 0 = Windows decides.",
+    "Only background downloads are limited; downloads started by the user use the separate foreground setting, which stays unchanged. Updates still arrive, only more slowly (no change to Windows Update itself)."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.NET-013.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.NET-013.plain.title",
+  "plainDescKey": "tweak.NET-013.plain.desc",
+  "tags": [
+    "ping",
+    "updates"
+  ]
+}

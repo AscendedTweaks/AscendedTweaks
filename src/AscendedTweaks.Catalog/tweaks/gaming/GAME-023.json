@@ -46,5 +46,8 @@
     "Microsoft Learn: SystemParametersInfo SPI_SETMOUSESPEED (10 = Windows default, pointer speed slider in the middle); changes something only if the speed was moved away from the middle"
   ],
   "plainTitleKey": "tweak.GAME-023.plain.title",
-  "plainDescKey": "tweak.GAME-023.plain.desc"
+  "plainDescKey": "tweak.GAME-023.plain.desc",
+  "tags": [
+    "input"
+  ]
 }

@@ -48,5 +48,9 @@
   "measuredOn": [],
   "plainTitleKey": "tweak.POWR-003.plain.title",
   "plainDescKey": "tweak.POWR-003.plain.desc",
-  "desktopOnly": true
+  "desktopOnly": true,
+  "tags": [
+    "fps",
+    "power"
+  ]
 }

@@ -42,5 +42,9 @@
     "Microsoft Support: 'Change the refresh rate on your monitor in Windows' (higher rate = smoother motion). Changes something only when the display runs below its highest rate; the gaming check 'Refresh rate' shows both values."
   ],
   "plainTitleKey": "tweak.GAME-022.plain.title",
-  "plainDescKey": "tweak.GAME-022.plain.desc"
+  "plainDescKey": "tweak.GAME-022.plain.desc",
+  "tags": [
+    "smooth",
+    "delay"
+  ]
 }

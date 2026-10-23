@@ -48,5 +48,8 @@
   "impactNote": "tweak.DISK-004.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.DISK-004.plain.title",
-  "plainDescKey": "tweak.DISK-004.plain.desc"
+  "plainDescKey": "tweak.DISK-004.plain.desc",
+  "tags": [
+    "storage"
+  ]
 }

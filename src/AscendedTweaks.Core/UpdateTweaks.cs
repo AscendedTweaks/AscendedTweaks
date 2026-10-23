@@ -88,6 +88,7 @@ public static partial class UpdateTweaks
         {
             Id = id,
             Category = "Updates.Pause",
+            Tags = ["updates"],
             Impact = ImpactLevel.Unclear,
             ImpactNoteKey = $"tweak.{PauseId}.impact",
             PlainTitleKey = $"tweak.{PauseId}.plain.title",
@@ -121,6 +122,7 @@ public static partial class UpdateTweaks
         {
             Id = id,
             Category = "Updates.TargetVersion",
+            Tags = ["updates"],
             Impact = ImpactLevel.Unclear,
             ImpactNoteKey = $"tweak.{TargetId}.impact",
             PlainTitleKey = $"tweak.{TargetId}.plain.title",

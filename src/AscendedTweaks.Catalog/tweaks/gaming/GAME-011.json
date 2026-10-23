@@ -46,5 +46,8 @@
     "Microsoft Learn: SystemParametersInfo SPI_SETMOUSE (acceleration thresholds and factor 0 = pointer follows the mouse without acceleration); host test 26200: values checked before and after"
   ],
   "plainTitleKey": "tweak.GAME-011.plain.title",
-  "plainDescKey": "tweak.GAME-011.plain.desc"
+  "plainDescKey": "tweak.GAME-011.plain.desc",
+  "tags": [
+    "input"
+  ]
 }

@@ -44,5 +44,9 @@
   "impactNote": "tweak.DEFN-001.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.DEFN-001.plain.title",
-  "plainDescKey": "tweak.DEFN-001.plain.desc"
+  "plainDescKey": "tweak.DEFN-001.plain.desc",
+  "tags": [
+    "background",
+    "fps"
+  ]
 }

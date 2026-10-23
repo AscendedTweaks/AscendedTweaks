@@ -49,5 +49,8 @@
   "impactNote": "tweak.PERF-020.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.PERF-020.plain.title",
-  "plainDescKey": "tweak.PERF-020.plain.desc"
+  "plainDescKey": "tweak.PERF-020.plain.desc",
+  "tags": [
+    "fps"
+  ]
 }

@@ -31,7 +31,8 @@ public sealed class CatalogTests
           "impactNote": "tweak.PRIV-900.impact",
           "measuredOn": [],
           "plainTitleKey": "tweak.PRIV-900.plain.title",
-          "plainDescKey": "tweak.PRIV-900.plain.desc"
+          "plainDescKey": "tweak.PRIV-900.plain.desc",
+          "tags": [ "privacy" ]
         }
         """;
 

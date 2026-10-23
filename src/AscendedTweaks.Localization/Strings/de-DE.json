@@ -1061,5 +1061,22 @@
   "simple.start.stat.autostart.one": "1 Programm",
   "simple.start.stat.autostart.hint": "Öffnen sich von selbst, wenn Windows startet. Weniger heißt schnellerer Start.",
   "simple.start.stat.autostart.show": "Liste zeigen",
-  "splash.loading": "Wird geladen…"
+  "splash.loading": "Wird geladen…",
+  "tag.fps": "FPS",
+  "tag.delay": "Verzögerung",
+  "tag.input": "Maus & Tastatur",
+  "tag.ping": "Ping",
+  "tag.network": "Netzwerk",
+  "tag.smooth": "Flüssiges Bild",
+  "tag.audio": "Ton",
+  "tag.quiet": "Weniger Pop-ups",
+  "tag.background": "Hintergrund",
+  "tag.startup": "Startzeit",
+  "tag.storage": "Speicherplatz",
+  "tag.privacy": "Datenschutz",
+  "tag.power": "Energie",
+  "tag.security": "Sicherheit",
+  "tag.look": "Aussehen",
+  "tag.updates": "Updates",
+  "card.tags": "Schlagwörter"
 }

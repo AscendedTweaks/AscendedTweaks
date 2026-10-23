@@ -45,5 +45,9 @@
   "impactNote": "tweak.NET-003.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.NET-003.plain.title",
-  "plainDescKey": "tweak.NET-003.plain.desc"
+  "plainDescKey": "tweak.NET-003.plain.desc",
+  "tags": [
+    "network",
+    "security"
+  ]
 }

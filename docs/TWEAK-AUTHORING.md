@@ -17,6 +17,7 @@ Tweaks sind Daten. Ein neuer Tweak braucht keine Code-Änderung, solange er eine
 - ID-Format `MODUL-NNN`, eindeutig, Kategorie passt zum Modul.
 - Textschlüssel heißen `tweak.<ID>.name|desc|side` und existieren in beiden Sprachen.
 - Mindestens eine Quelle.
+- `tags`: ein bis drei verschiedene Schlagwörter aus `TweakTags.All` (fps, delay, input, ping, network, smooth, audio, quiet, background, startup, storage, privacy, power, security, look, updates). Sie nennen den Bereich, den der Tweak berührt, nie einen gemessenen Gewinn.
 - "Umstritten" ist immer `hiddenByDefault: true`. "Placebo" wird nie ausgeliefert.
 - Ab V2 Pflicht: `impact` (`Noticeable`, `Small`, `Unclear`), `impactNote` (`tweak.ID.impact`, eine Zeile Begründung), `measuredOn` (Liste), `plainTitleKey` (`tweak.ID.plain.title`, höchstens 5 Wörter) und `plainDescKey` (`tweak.ID.plain.desc`, höchstens 90 Zeichen), Texte in beiden Sprachen. `Noticeable` nur mit Messbeleg in `measuredOn`; "Umstritten" ist immer `Unclear`, `Unclear` immer `hiddenByDefault: true`. Die Einstufung steht mit Begründung in `docs/IMPACT-AUDIT.md`.
 - HKCU-Aktionen nur mit `scope: User` und ohne Admin; HKLM, Dienste, Energiepläne und Befehle nur mit `scope: Machine` und Admin.

@@ -658,6 +658,9 @@ public sealed partial class TweakCardViewModel : ObservableObject
         Tweak = tweak;
     }
 
+    /// <summary>Tag chips in the app language ("FPS", "Delay").</summary>
+    public IReadOnlyList<string> TagTexts => Tweak.Tags.Select(t => _workspace.Localizer[$"tag.{t}"]).ToList();
+
     public TweakDefinition Tweak { get; }
 
     public string Name => _workspace.Text(Tweak.NameKey);

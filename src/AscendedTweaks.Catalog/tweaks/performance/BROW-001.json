@@ -49,5 +49,9 @@
   "impactNote": "tweak.BROW-001.impact",
   "measuredOn": [],
   "plainTitleKey": "tweak.BROW-001.plain.title",
-  "plainDescKey": "tweak.BROW-001.plain.desc"
+  "plainDescKey": "tweak.BROW-001.plain.desc",
+  "tags": [
+    "startup",
+    "background"
+  ]
 }

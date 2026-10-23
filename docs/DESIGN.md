@@ -87,7 +87,7 @@ Kartenbeschreibung höchstens zwei Zeilen, danach Auslassung; der volle Text ste
 Do:
 - Ehrliche Badges: Wirkung nur so stark angeben, wie sie belegt ist.
 - Nebenwirkungen immer zeigen ("Was funktioniert danach nicht mehr?" ist nie leer).
-- Vor jeder Änderung die Vorschau anbieten.
+- Ein Klick, wo es sicher geht: Vor dem Klick steht auf Karte oder Kachel, was sich ändert; "Änderungen ansehen" zeigt die volle Vorschau. Löschen (Bereinigung, große Dateien, Apps) immer mit Vorschau und Bestätigung.
 - Alle Texte aus den Sprachdateien laden, nie hartkodieren.
 
 Don't:

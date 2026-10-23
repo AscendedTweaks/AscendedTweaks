@@ -221,6 +221,8 @@
                                         Visibility="{Binding Recommended, Converter={StaticResource NullToCollapsed}}" AutomationProperties.HelpText="{Binding Recommended.Name}" />
                         <ContentControl Content="{Binding Help}" Focusable="False" VerticalAlignment="Top" />
                     </StackPanel>
+                    <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Recommended.ChangesText}" TextWrapping="Wrap" Margin="0,8,0,0"
+                               Visibility="{Binding Recommended.ChangesText, Converter={StaticResource NullToCollapsed}}" />
                 </StackPanel>
             </Border>
 
@@ -236,12 +238,14 @@
                     <DataTemplate>
                         <Border Style="{StaticResource Card}" Padding="24" Margin="0,0,16,16" MinHeight="200">
                             <DockPanel>
-                                <DockPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
-                                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.undo}" Command="{Binding UndoCommand}" MinHeight="40"
+                                <WrapPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
+                                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{Binding ApplyText}" Command="{Binding ApplyCommand}"
+                                                    MinHeight="40" Margin="0,0,8,0" AutomationProperties.HelpText="{Binding ChangesText}" />
+                                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.preview}" Command="{Binding PreviewCommand}" MinHeight="40" Margin="0,0,8,0"
+                                                    Visibility="{Binding CanPreview, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Name}" />
+                                    <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.undo}" Command="{Binding UndoCommand}" MinHeight="40"
                                                     Visibility="{Binding IsOwned, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Name}" />
-                                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc simple.preset.apply}" Command="{Binding ApplyCommand}"
-                                                    HorizontalAlignment="Left" MinHeight="40" AutomationProperties.HelpText="{Binding Name}" />
-                                </DockPanel>
+                                </WrapPanel>
                                 <ListBox DockPanel.Dock="Bottom" Style="{StaticResource Segment.List}" ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel, Mode=TwoWay}"
                                          AutomationProperties.Name="{s:Loc level.title}" Margin="0,12,0,0" Visibility="{Binding HasLevels, Converter={StaticResource BoolToVisibility}}">
                                     <ListBox.ItemTemplate>
@@ -259,6 +263,8 @@
                                         <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding Name}" TextWrapping="Wrap" />
                                         <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Description}" TextWrapping="Wrap" Margin="0,4,0,0" />
                                         <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Summary}" TextWrapping="Wrap" Margin="0,8,0,0" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ChangesText}" TextWrapping="Wrap" Margin="0,4,0,0"
+                                                   Visibility="{Binding ChangesText, Converter={StaticResource NullToCollapsed}}" />
                                     </StackPanel>
                                 </DockPanel>
                             </DockPanel>
@@ -1155,7 +1161,12 @@
                                 </WrapPanel>
                                 <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Text}" TextWrapping="Wrap" />
                                 <TextBlock Style="{StaticResource Text.Caption}" TextWrapping="Wrap" Margin="0,4,0,0" Visibility="{Binding HowTo, Converter={StaticResource NullToCollapsed}}"><Run Text="{s:Loc check.howto}" FontWeight="SemiBold" /><Run Text=" " /><Run Text="{Binding HowTo, Mode=OneWay}" /></TextBlock>
+                                <TextBlock Style="{StaticResource Text.Caption}" Text="{Binding FixText}" TextWrapping="Wrap" Margin="0,8,0,0"
+                                           Visibility="{Binding FixText, Converter={StaticResource NullToCollapsed}}" />
                                 <WrapPanel Margin="0,4,0,0">
+                                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc check.fix}" MinHeight="40" Margin="0,0,8,0"
+                                                    Command="{Binding DataContext.FixCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                    AutomationProperties.HelpText="{Binding FixText}" Visibility="{Binding FixId, Converter={StaticResource NullToCollapsed}}" />
                                     <c:ActionButton Style="{StaticResource Button.Text}" Content="{Binding LinkText}" MinHeight="40" Margin="0,0,8,0"
                                                     Command="{Binding DataContext.OpenLinkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
                                                     AutomationProperties.HelpText="{Binding Title}" Visibility="{Binding Link, Converter={StaticResource NullToCollapsed}}" />

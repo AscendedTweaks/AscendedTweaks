@@ -96,6 +96,7 @@ public sealed partial class PresetCardViewModel : ObservableObject
     private readonly Localizer _localizer;
     private readonly Func<PresetCardViewModel, Task> _apply;
     private readonly Func<PresetCardViewModel, Task> _undo;
+    private readonly Func<PresetCardViewModel, Task>? _preview;
     private Dictionary<PresetLevel, IReadOnlyList<ProfilePlanRow>> _plans = [];
     private Dictionary<PresetLevel, int> _cleanupCounts = [];
 
@@ -105,7 +106,7 @@ public sealed partial class PresetCardViewModel : ObservableObject
     [ObservableProperty]
     private bool _isOwned;
 
-    public PresetCardViewModel(TweakProfile profile, string name, string description, bool hasLevels, Localizer localizer, Func<PresetCardViewModel, Task> apply, Func<PresetCardViewModel, Task> undo)
+    public PresetCardViewModel(TweakProfile profile, string name, string description, bool hasLevels, Localizer localizer, Func<PresetCardViewModel, Task> apply, Func<PresetCardViewModel, Task> undo, Func<PresetCardViewModel, Task>? preview = null)
     {
         Profile = profile;
         Name = name;
@@ -114,6 +115,7 @@ public sealed partial class PresetCardViewModel : ObservableObject
         _localizer = localizer;
         _apply = apply;
         _undo = undo;
+        _preview = preview;
         Symbol = Enum.TryParse<SymbolRegular>(profile.Symbol, out var symbol) ? symbol : SymbolRegular.Star24;
     }
 
@@ -160,6 +162,29 @@ public sealed partial class PresetCardViewModel : ObservableObject
         }
     }
 
+    /// <summary>One click for settings; cleanup deletes files and therefore keeps its preview with sizes.</summary>
+    public string ApplyText => _localizer[IsCleanup ? "simple.preset.review" : "simple.preset.apply"];
+
+    public bool CanPreview => !IsCleanup && _preview is not null && Plan.Any(r => r.Action is ProfileAction.Apply or ProfileAction.Revert);
+
+    /// <summary>What a click changes, written before the click: "Changes: A, B, C and 2 more".</summary>
+    public string? ChangesText
+    {
+        get
+        {
+            var names = Plan.Where(r => r.Action is ProfileAction.Apply or ProfileAction.Revert).Select(r => r.Name).ToList();
+            if (IsCleanup || names.Count == 0)
+            {
+                return null;
+            }
+
+            var list = names.Count <= 3
+                ? string.Join(", ", names)
+                : _localizer.Format("simple.preset.changes.more", ("list", string.Join(", ", names.Take(3))), ("n", names.Count - 3));
+            return _localizer.Format("simple.preset.changes", ("list", list));
+        }
+    }
+
     public void SetPlans(Dictionary<PresetLevel, IReadOnlyList<ProfilePlanRow>> plans, Dictionary<PresetLevel, int> cleanupCounts)
     {
         _plans = plans;
@@ -174,16 +199,23 @@ public sealed partial class PresetCardViewModel : ObservableObject
 
         SelectedLevel = Levels.FirstOrDefault(l => l.Level == selected) ?? Levels.FirstOrDefault();
         OnPropertyChanged(nameof(Summary));
+        OnPropertyChanged(nameof(ChangesText));
+        OnPropertyChanged(nameof(CanPreview));
     }
 
     partial void OnSelectedLevelChanged(LevelOption? value)
     {
         OnPropertyChanged(nameof(Plan));
         OnPropertyChanged(nameof(Summary));
+        OnPropertyChanged(nameof(ChangesText));
+        OnPropertyChanged(nameof(CanPreview));
     }
 
     [RelayCommand]
     private Task Apply() => _apply(this);
+
+    [RelayCommand]
+    private Task Preview() => _preview?.Invoke(this) ?? Task.CompletedTask;
 
     [RelayCommand]
     private Task Undo() => _undo(this);
@@ -244,7 +276,8 @@ public sealed partial class CustomPresetItem : ObservableObject
 
 /// <summary>
 /// Start-Seite (V2, Abschnitte 2.5 und 4): ein Satz Status mit echten Messwerten, sieben Presets mit Stufen und eigene Presets.
-/// Anwenden laeuft immer ueber die Vorschau "Das wird geaendert"; danach "Alles wieder rueckgaengig" oder spaeter "Preset rueckgaengig".
+/// One click applies a preset (the tile lists what changes); "Show changes" opens the full preview. Afterwards "Undo everything"
+/// in the result or later "Undo preset". Cleanup keeps its preview with sizes because it deletes files.
 /// </summary>
 public sealed partial class SimpleStartViewModel : PageViewModel
 {
@@ -334,11 +367,11 @@ public sealed partial class SimpleStartViewModel : PageViewModel
     public async Task LoadPresetsAsync()
     {
         var cards = _presets
-            .Select(p => new PresetCardViewModel(p, _localizer[$"preset.{p.Key}.name"], _localizer[$"preset.{p.Key}.desc"], hasLevels: true, _localizer, ApplyAsync, UndoAsync))
+            .Select(p => new PresetCardViewModel(p, _localizer[$"preset.{p.Key}.name"], _localizer[$"preset.{p.Key}.desc"], hasLevels: true, _localizer, ApplyAsync, UndoAsync, PreviewAsync))
             .ToList();
         if (_ownPresets is not null)
         {
-            cards.AddRange(_ownPresets.List().Select(s => new PresetCardViewModel(s.Profile with { Symbol = "Person24" }, s.Profile.Name, s.Profile.Description ?? _localizer["simple.preset.own.desc"], hasLevels: false, _localizer, ApplyAsync, UndoAsync)));
+            cards.AddRange(_ownPresets.List().Select(s => new PresetCardViewModel(s.Profile with { Symbol = "Person24" }, s.Profile.Name, s.Profile.Description ?? _localizer["simple.preset.own.desc"], hasLevels: false, _localizer, ApplyAsync, UndoAsync, PreviewAsync)));
         }
 
         var ownership = _ownership.Load();
@@ -427,6 +460,14 @@ public sealed partial class SimpleStartViewModel : PageViewModel
         }
 
         await LoadPresetsAsync().ConfigureAwait(true);
+    }
+
+    /// <summary>"Show changes": the full preview of the selected level, nothing is applied.</summary>
+    private Task PreviewAsync(PresetCardViewModel card)
+    {
+        var applies = card.Plan.Where(r => r.Action == ProfileAction.Apply).Select(r => r.Id).ToList();
+        var reverts = card.Plan.Where(r => r.Action == ProfileAction.Revert).Select(r => r.Id).ToList();
+        return _workspace.PreviewIdsAsync(applies, reverts, new BatchOptions(ids => PresetGroups.For(_workspace, ids, id => ConflictNote(id, card.OwnerKey)), null));
     }
 
     private void Claim(string ownerKey, IEnumerable<string> applied, IReadOnlyList<string> reverted)

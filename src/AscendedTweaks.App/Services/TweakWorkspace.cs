@@ -211,6 +211,13 @@ public sealed partial class TweakWorkspace : ObservableObject
         PendingChanged();
     }
 
+    /// <summary>
+    /// One click: a toggle or preset applies right away without the preview window; the card or tile says beforehand what
+    /// changes. Backup, expert warning, administrator prompt and the result window on errors or a needed restart stay.
+    /// The app turns it on; tests of the preview flow leave it off.
+    /// </summary>
+    public bool OneClick { get; set; }
+
     [RelayCommand]
     private Task Preview() => RunAsync(previewOnly: true);
 
@@ -247,6 +254,28 @@ public sealed partial class TweakWorkspace : ObservableObject
 
     private BatchOptions? _batchOptions;
     private BatchSummary _lastSummary = BatchSummary.Empty;
+
+    /// <summary>"Show changes": the full preview of a set of tweaks, without applying anything.</summary>
+    public async Task PreviewIdsAsync(IReadOnlyList<string> tweakIds, IReadOnlyList<string>? revertIds = null, BatchOptions? options = null)
+    {
+        revertIds ??= [];
+        if (IsBusy || (tweakIds.Count == 0 && revertIds.Count == 0))
+        {
+            return;
+        }
+
+        IsBusy = true;
+        try
+        {
+            _batchOptions = options;
+            await RunBatchAsync(tweakIds, revertIds, previewOnly: true).ConfigureAwait(true);
+        }
+        finally
+        {
+            _batchOptions = null;
+            IsBusy = false;
+        }
+    }
 
     /// <summary>Setzt mehrere Tweaks zurueck ("Preset rueckgaengig", "Alles wieder rueckgaengig"), mit einem Ergebnisfenster.</summary>
     public async Task RevertManyAsync(IReadOnlyList<string> tweakIds)
@@ -327,7 +356,8 @@ public sealed partial class TweakWorkspace : ObservableObject
         {
             var applies = _cards.Values.Where(c => c.IsPending && c.Desired == true).Select(c => c.Tweak.Id).ToList();
             var reverts = _cards.Values.Where(c => c.IsPending && c.Desired == false).Select(c => c.Tweak.Id).ToList();
-            if (await RunBatchAsync(applies, reverts, previewOnly).ConfigureAwait(true))
+            // One click: a declined expert warning leaves nothing pending either, the toggle snaps back.
+            if (await RunBatchAsync(applies, reverts, previewOnly).ConfigureAwait(true) || (OneClick && !previewOnly))
             {
                 foreach (var card in _cards.Values)
                 {
@@ -347,7 +377,8 @@ public sealed partial class TweakWorkspace : ObservableObject
     /// <summary>Gemeinsamer Ablauf; liefert true, wenn angewendet wurde (nicht bei Abbruch oder reiner Vorschau).</summary>
     private async Task<bool> RunBatchAsync(IReadOnlyList<string> applies, IReadOnlyList<string> reverts, bool previewOnly)
     {
-        // Vorschau ist immer der erste Schritt; ohne Bestaetigung wird nichts angewendet.
+        // Without one click the preview is the first step and nothing is applied without its confirmation.
+        var direct = OneClick && !previewOnly;
         BatchPlan plan;
         try
         {
@@ -361,20 +392,24 @@ public sealed partial class TweakWorkspace : ObservableObject
             return false;
         }
 
-        var preview = new PreviewDialogViewModel(
-            plan.Items.Select(i => new PreviewRow(NameOf(i.TweakId), i.ValueName is null ? i.Target : $"{i.Target} : {i.ValueName}", i.Current, i.New)).ToList(),
-            plan.Excluded.Select(e => new NoteRow(NameOf(e.TweakId), e.Reason)).ToList(),
-            reverts.Select(NameOf).ToList(),
-            plan.RequiresReboot,
-            plan.Ready.Any(t => t.RequiresAdmin),
-            previewOnly,
-            userOnly: plan.Ready.Count > 0 && plan.Ready.All(t => t.Scope == TweakScope.User))
+        var userOnly = plan.Ready.Count > 0 && plan.Ready.All(t => t.Scope == TweakScope.User);
+        if (!direct)
         {
-            Groups = _batchOptions?.Groups?.Invoke(plan.Ready.Select(t => t.Id).Concat(reverts).ToList()) ?? [],
-        };
-        if (!await _dialogs.ShowAsync(preview).ConfigureAwait(true) || previewOnly)
-        {
-            return false;
+            var preview = new PreviewDialogViewModel(
+                plan.Items.Select(i => new PreviewRow(NameOf(i.TweakId), i.ValueName is null ? i.Target : $"{i.Target} : {i.ValueName}", i.Current, i.New)).ToList(),
+                plan.Excluded.Select(e => new NoteRow(NameOf(e.TweakId), e.Reason)).ToList(),
+                reverts.Select(NameOf).ToList(),
+                plan.RequiresReboot,
+                plan.Ready.Any(t => t.RequiresAdmin),
+                previewOnly,
+                userOnly)
+            {
+                Groups = _batchOptions?.Groups?.Invoke(plan.Ready.Select(t => t.Id).Concat(reverts).ToList()) ?? [],
+            };
+            if (!await _dialogs.ShowAsync(preview).ConfigureAwait(true) || previewOnly)
+            {
+                return false;
+            }
         }
 
         var expert = plan.Ready.Where(t => t.Risk == RiskLevel.Expert).Select(t => NameOf(t.Id)).ToList();
@@ -398,7 +433,7 @@ public sealed partial class TweakWorkspace : ObservableObject
                 {
                     // Reine Benutzer-Tweaks: Der Hinweis stand in der Vorschau, deren Bestaetigung ist die Zustimmung.
                     // Ist ein Wiederherstellungspunkt dagegen fehlgeschlagen, wird ausdruecklich nachgefragt (Regel S1).
-                    ConfirmWithoutRestorePoint = rp => (rp.Status == RestorePointStatus.NotAttempted && preview.UserOnly) || ConfirmWithoutRestorePoint(rp),
+                    ConfirmWithoutRestorePoint = rp => (rp.Status == RestorePointStatus.NotAttempted && userOnly) || ConfirmWithoutRestorePoint(rp),
                     Progress = reporter,
                     Cancellation = progress.Token,
                 })).ConfigureAwait(true);
@@ -434,17 +469,23 @@ public sealed partial class TweakWorkspace : ObservableObject
         }
 
         _lastSummary = _lastSummary with { Reverted = reverted };
-        var resultDialog = new ResultDialogViewModel(_localizer["result.title"], Summary(rows), rows, reboot)
+
+        // One click on a single toggle: the switch itself shows success; the result window only appears for errors or a restart.
+        var quiet = direct && _batchOptions is null && rows.All(r => r.Ok) && !reboot;
+        if (!quiet)
         {
-            UndoText = _batchOptions?.Undo is not null && (_lastSummary.Applied.Count > 0 || reverted.Count > 0) ? _localizer["result.undo"] : null,
-        };
-        await _dialogs.ShowAsync(resultDialog).ConfigureAwait(true);
-        if (resultDialog.UndoRequested && _batchOptions?.Undo is { } undo)
-        {
-            _lastSummary = _lastSummary with { UndoRequested = true };
-            IsBusy = false;
-            await undo(_lastSummary).ConfigureAwait(true);
-            return true;
+            var resultDialog = new ResultDialogViewModel(_localizer["result.title"], Summary(rows), rows, reboot)
+            {
+                UndoText = _batchOptions?.Undo is not null && (_lastSummary.Applied.Count > 0 || reverted.Count > 0) ? _localizer["result.undo"] : null,
+            };
+            await _dialogs.ShowAsync(resultDialog).ConfigureAwait(true);
+            if (resultDialog.UndoRequested && _batchOptions?.Undo is { } undo)
+            {
+                _lastSummary = _lastSummary with { UndoRequested = true };
+                IsBusy = false;
+                await undo(_lastSummary).ConfigureAwait(true);
+                return true;
+            }
         }
 
         // Explorer-Neustart nur nach Rueckfrage (Beispiel UI-001).
@@ -636,6 +677,10 @@ public sealed partial class TweakCardViewModel : ObservableObject
             OnPropertyChanged(nameof(IsOn));
             OnPropertyChanged(nameof(IsPending));
             _workspace.PendingChanged();
+            if (_workspace.OneClick && IsPending)
+            {
+                _ = _workspace.ApplyCommand.ExecuteAsync(null);
+            }
         }
     }
 

@@ -83,9 +83,13 @@ public sealed class GamingFactsReader
     }
 }
 
-public sealed record CheckRow(string Title, BadgeTone Tone, string StateText, string Text, string? HowTo, string? Link, GamingJump Jump, bool CanJump, string? LinkText);
+public sealed record CheckRow(string Title, BadgeTone Tone, string StateText, string Text, string? HowTo, string? Link, GamingJump Jump, bool CanJump, string? LinkText,
+    string? FixId = null, string? FixText = null);
 
-/// <summary>Gaming-Checks (V2 Abschnitt 5.3): nur Anzeige, ein Satz Ergebnis, "Behoben?"-Anleitung, Link oder Sprung. Keine stillen Aenderungen.</summary>
+/// <summary>
+/// Gaming-Checks (V2 Abschnitt 5.3): ein Satz Ergebnis, "Behoben?"-Anleitung, Link oder Sprung, und "Fix now", wo ein Katalog-Tweak
+/// den Befund behebt (mit dem Namen der Aenderung vor dem Klick). Keine stillen Aenderungen.
+/// </summary>
 public sealed partial class GamingChecksViewModel : ObservableObject
 {
     private readonly Func<GamingFacts> _read;
@@ -109,6 +113,12 @@ public sealed partial class GamingChecksViewModel : ObservableObject
 
     /// <summary>Ziele, die von hier aus erreichbar sind (im Einfach-Modus zum Beispiel kein Anti-Cheat-Bereich).</summary>
     public IReadOnlySet<GamingJump> Targets { get; set; } = new HashSet<GamingJump> { GamingJump.Cleanup, GamingJump.Autostart };
+
+    /// <summary>Applies the fixing tweak (backup, administrator prompt and result as usual); without it no "Fix now" button.</summary>
+    public Func<string, Task>? Fix { get; set; }
+
+    /// <summary>Name of a tweak for "Changes: ..." before the click.</summary>
+    public Func<string, string>? NameOf { get; set; }
 
     [RelayCommand]
     public async Task LoadAsync()
@@ -136,7 +146,9 @@ public sealed partial class GamingChecksViewModel : ObservableObject
                     check.Link,
                     check.Jump,
                     check.Jump != GamingJump.None && Navigate is not null && Targets.Contains(check.Jump),
-                    check.Link is null ? null : _localizer[check.Link.StartsWith("ms-settings:", StringComparison.Ordinal) ? "check.link.settings" : "check.link.vendor"]));
+                    check.Link is null ? null : _localizer[check.Link.StartsWith("ms-settings:", StringComparison.Ordinal) ? "check.link.settings" : "check.link.vendor"],
+                    Fix is null ? null : check.FixTweakId,
+                    Fix is null || check.FixTweakId is not { } fix ? null : _localizer.Format("check.fix.what", ("name", NameOf?.Invoke(fix) ?? fix))));
             }
         }
         finally
@@ -151,6 +163,16 @@ public sealed partial class GamingChecksViewModel : ObservableObject
         if (row?.Link is { } link && (link.StartsWith("ms-settings:", StringComparison.Ordinal) || link.StartsWith("https://", StringComparison.Ordinal)))
         {
             _open(link);
+        }
+    }
+
+    [RelayCommand]
+    private async Task FixAsync(CheckRow row)
+    {
+        if (row?.FixId is { } id && Fix is { } fix)
+        {
+            await fix(id).ConfigureAwait(true);
+            await LoadAsync().ConfigureAwait(true);
         }
     }
 

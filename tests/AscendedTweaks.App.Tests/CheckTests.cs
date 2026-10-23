@@ -58,6 +58,47 @@ public sealed class CheckTests : IDisposable
     }
 
     [Fact]
+    public async Task Checks_a_tweak_can_fix_offer_fix_now_and_say_what_changes()
+    {
+        var fixedIds = new List<string>();
+        var vm = new GamingChecksViewModel(() => new GamingFacts
+        {
+            GameMode = false,
+            ActivePowerPlan = GamingChecks.PowerSaverPlan,
+            Today = new DateOnly(2026, 10, 23),
+        }, _localizer, _ => { })
+        {
+            Fix = id =>
+            {
+                fixedIds.Add(id);
+                return Task.CompletedTask;
+            },
+            NameOf = id => "Name " + id,
+        };
+
+        await vm.LoadAsync();
+
+        var gameMode = vm.Rows.Single(r => r.FixId == "GAME-001");
+        gameMode.FixText.Should().Be("Ändert: Name GAME-001");
+        gameMode.HowTo.Should().NotBeNullOrEmpty("the written guide stays next to the button");
+        vm.Rows.Should().Contain(r => r.FixId == "PERF-001");
+        vm.Rows.Where(r => r.FixId is null).Should().OnlyContain(r => r.FixText == null);
+
+        await vm.FixCommand.ExecuteAsync(gameMode);
+        fixedIds.Should().Equal("GAME-001");
+    }
+
+    [Fact]
+    public async Task Without_a_fix_action_no_check_offers_fix_now()
+    {
+        var vm = new GamingChecksViewModel(() => new GamingFacts { GameMode = false, Today = new DateOnly(2026, 10, 23) }, _localizer, _ => { });
+
+        await vm.LoadAsync();
+
+        vm.Rows.Should().OnlyContain(r => r.FixId == null);
+    }
+
+    [Fact]
     public async Task Measurement_offers_after_only_after_a_restart_and_shows_the_difference()
     {
         var metrics = new QueueMetrics(

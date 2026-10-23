@@ -183,6 +183,56 @@ public sealed class WorkspaceTests : IDisposable
     }
 
     [Fact]
+    public async Task One_click_toggle_applies_right_away_without_preview_or_result_window()
+    {
+        _workspace.OneClick = true;
+        await _workspace.RefreshAsync();
+
+        _workspace.Card("PRIV-901").IsOn = true;
+        await _workspace.ApplyCommand.ExecutionTask!;
+
+        _dialogs.Shown.Should().NotContain(d => d is PreviewDialogViewModel || d is ResultDialogViewModel, "the card said what changes; success needs no window");
+        _h.Registry.GetValue(RegHive.HKCU, P, "A").Should().Be(RegistryData.DWord(0));
+        _workspace.HasPending.Should().BeFalse();
+        _workspace.Card("PRIV-901").State.Should().Be(TweakState.Applied);
+        _workspace.Card("PRIV-901").Tracked.Should().BeTrue("one click still backs up first");
+
+        _workspace.Card("PRIV-901").IsOn = false;
+        await _workspace.ApplyCommand.ExecutionTask!;
+        _h.Registry.GetValue(RegHive.HKCU, P, "A").Should().Be(RegistryData.DWord(1), "switching off resets from the backup");
+    }
+
+    [Fact]
+    public async Task One_click_keeps_the_expert_warning_and_a_declined_warning_changes_nothing()
+    {
+        _dialogs = Answering(expert: false);
+        _workspace = CreateWorkspace();
+        _workspace.OneClick = true;
+        await _workspace.RefreshAsync();
+
+        _workspace.Card("PRIV-902").IsOn = true;
+        await _workspace.ApplyCommand.ExecutionTask!;
+
+        _dialogs.Shown.Should().ContainSingle(d => d is ExpertWarningViewModel);
+        _dialogs.Shown.Should().NotContain(d => d is PreviewDialogViewModel);
+        _h.Registry.GetValue(RegHive.HKCU, P, "B").Should().Be(RegistryData.DWord(1));
+        _workspace.HasPending.Should().BeFalse("the switch snaps back");
+        _workspace.Card("PRIV-902").IsOn.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Show_changes_opens_the_preview_only_and_applies_nothing()
+    {
+        _workspace.OneClick = true;
+        await _workspace.RefreshAsync();
+
+        await _workspace.PreviewIdsAsync(["PRIV-901"]);
+
+        ((PreviewDialogViewModel)_dialogs.Shown.Single()).PreviewOnly.Should().BeTrue();
+        _h.Registry.GetValue(RegHive.HKCU, P, "A").Should().Be(RegistryData.DWord(1));
+    }
+
+    [Fact]
     public async Task Preview_only_and_declined_preview_change_nothing()
     {
         await _workspace.RefreshAsync();

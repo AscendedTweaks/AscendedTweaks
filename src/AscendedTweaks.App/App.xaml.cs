@@ -105,6 +105,9 @@ public partial class App : Application
     /// <summary>Springt aus einem Gaming-Check zur passenden Seite des aktuellen Modus; gesetzt, sobald das Fenster steht.</summary>
     internal static Action<GamingJump>? GamingNavigator { get; set; }
 
+    /// <summary>Applies a tweak from a gaming check ("Fix now"); set together with the navigator.</summary>
+    internal static TweakWorkspace? GamingWorkspace { get; set; }
+
     private static GamingChecksViewModel GamingChecks(Localizer localizer)
     {
         var commands = new ProcessCommandRunner();
@@ -117,7 +120,12 @@ public partial class App : Application
             ProcessSampler ?? new WindowsProcessSampler(),
             SecuritySource ?? new WindowsSecurityFacts(),
             TimeProvider.System);
-        return new GamingChecksViewModel(reader.Read, localizer, OpenUri) { Navigate = jump => GamingNavigator?.Invoke(jump) };
+        return new GamingChecksViewModel(reader.Read, localizer, OpenUri)
+        {
+            Navigate = jump => GamingNavigator?.Invoke(jump),
+            Fix = id => GamingWorkspace?.ApplyIdsAsync([id]) ?? Task.CompletedTask,
+            NameOf = id => GamingWorkspace?.NameOf(id) ?? id,
+        };
     }
 
     internal static IDiskTools? DiskToolsSource { get; set; }
@@ -429,6 +437,7 @@ public partial class App : Application
         var dialogs = new OverlayDialogService();
         var readOnly = SupportPolicy.Classify(environment.Build) == BuildSupport.Unsupported;
         var workspace = new TweakWorkspace(embedded, _service, Localizer.Current, settings, dialogs, new WpfUiInvoker(), new ExplorerRestarter(), readOnly);
+        workspace.OneClick = true;
 #if DEBUG
         if (e.Args.Contains("--snapshot"))
         {
@@ -460,6 +469,7 @@ public partial class App : Application
         var (simpleItems, footerItems) = CreateSimpleNavItems(Localizer.Current, workspace, dialogs, expertItems);
         var shell = new ShellViewModel(Localizer.Current, environment.Build, expertItems, workspace, dialogs, simpleItems, footerItems, settings.ExpertMode);
         GamingNavigator = jump => NavigateTo(shell, jump);
+        GamingWorkspace = workspace;
 
         // Ein Modus fuer alles: Kopf-Schalter und Einstellung stehen immer gleich, versteckte Tweaks folgen dem Modus.
         shell.ModeChanged = expert =>

@@ -44,7 +44,8 @@ public enum GamingJump
 
 /// <summary>
 /// Ein Check: Ergebnis in einem Satz (Textschluessel mit Platzhaltern), Zustand, "Behoben?"-Anleitung, optional ein Link
-/// auf eine ms-settings-Seite oder eine Herstellerseite und ein Sprung in der App. Checks aendern nie etwas.
+/// auf eine ms-settings-Seite oder eine Herstellerseite, ein Sprung in der App und der Katalog-Tweak, der den Befund behebt.
+/// Checks selbst aendern nie etwas; "Fix now" wendet den Tweak im normalen Ablauf mit Sicherung an.
 /// </summary>
 public sealed record GamingCheck(
     string Id,
@@ -53,7 +54,8 @@ public sealed record GamingCheck(
     IReadOnlyList<(string Name, object Value)> Args,
     string? HowToKey = null,
     string? Link = null,
-    GamingJump Jump = GamingJump.None);
+    GamingJump Jump = GamingJump.None,
+    string? FixTweakId = null);
 
 public static class GamingChecks
 {
@@ -99,7 +101,7 @@ public static class GamingChecks
     private static GamingCheck Power(Guid? plan) => plan switch
     {
         null => Unknown("power"),
-        { } p when p == PowerSaverPlan => new("power", CheckState.Attention, "check.power.saver", [], "check.power.howto", "ms-settings:powersleep"),
+        { } p when p == PowerSaverPlan => new("power", CheckState.Attention, "check.power.saver", [], "check.power.howto", "ms-settings:powersleep", FixTweakId: "PERF-001"),
         _ => new("power", CheckState.Good, "check.power.ok", []),
     };
 
@@ -146,7 +148,7 @@ public static class GamingChecks
     {
         null => Unknown("gamemode"),
         true => new("gamemode", CheckState.Good, "check.gamemode.on", [], null, "ms-settings:gaming-gamemode"),
-        false => new("gamemode", CheckState.Info, "check.gamemode.off", [], "check.gamemode.howto", "ms-settings:gaming-gamemode"),
+        false => new("gamemode", CheckState.Info, "check.gamemode.off", [], "check.gamemode.howto", "ms-settings:gaming-gamemode", FixTweakId: "GAME-001"),
     };
 
     /// <summary>Aeltester Treiber einer Grafikkarte von AMD, NVIDIA oder Intel; Link nur zur Herstellerseite, kein Download durch die App.</summary>

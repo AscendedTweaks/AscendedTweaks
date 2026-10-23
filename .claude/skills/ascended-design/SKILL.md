@@ -102,7 +102,12 @@ Card descriptions stop after two lines with an ellipsis; the full text is in the
 - English: plain, natural ("Restart", not "Reboot"), no umlauts. German: "du", short sentences.
 - No fear wording ("Your PC is at risk"), no percentage promises, no superlatives without proof, no overall health score.
 - No emojis, no fake progress bars, no artificial waiting.
-- Side effects are never empty; every change offers a preview first; impact badges only as strong as the evidence.
+- Side effects are never empty; impact badges only as strong as the evidence.
+- One click: everything that can be applied safely applies with one click (toggle, preset tile, "Apply recommended
+  settings", "Fix now" in gaming checks). Before the click the card or tile says what changes ("Changes: ..."), and
+  a "Show changes" link keeps the full preview available. Every change is backed up first and can be undone.
+- Never one click for deleting: cleanup, large files and app removal keep their preview and confirmation, and
+  "Show in File Explorer" stays so people see which file goes. Expert tweaks keep their three-step warning.
 
 ## 6. Accessibility
 

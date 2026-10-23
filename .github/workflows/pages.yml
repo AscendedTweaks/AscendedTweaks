@@ -17,6 +17,8 @@ concurrency:
 
 jobs:
   deploy:
+    # GitHub Pages on the free plan needs a public repository; while it is private the job is skipped instead of failing.
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

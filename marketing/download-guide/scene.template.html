@@ -1,0 +1,298 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--text:#f4f4f6;--text2:#8d8f98;--accent:#2f8bff;--soft:#8ec2ff;--green:#34d399;--line:rgba(255,255,255,.08)}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000;color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif}
+.serif{font-family:"Bitstream Charter",Charter,Georgia,serif;font-weight:400}
+#aura{position:absolute;left:-200px;right:-200px;bottom:-380px;height:1100px;filter:blur(70px)}
+#aura i{position:absolute;border-radius:50%}
+#flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,#fff 0%,#dbeaff 35%,rgba(150,195,255,0) 75%);opacity:0;z-index:25}
+.layer{position:absolute;inset:0;opacity:0}
+#big{position:absolute;left:80px;right:80px;top:700px;text-align:center;font-size:112px;line-height:1.1;letter-spacing:-.015em;z-index:10}
+#big span{display:inline-block;white-space:pre}
+#cap{position:absolute;left:80px;right:80px;top:1440px;text-align:center;font-size:50px;font-weight:650;letter-spacing:-.015em;line-height:1.25;z-index:12}
+#cap span{display:inline-block;white-space:pre}
+#cap .k{color:var(--accent)}
+#step{position:absolute;left:0;right:0;top:300px;display:flex;flex-direction:column;align-items:center;gap:22px;z-index:6;opacity:0}
+#stepLbl{font-size:30px;font-weight:700;letter-spacing:.22em;color:var(--soft)}
+#dots{display:flex;gap:14px}
+#dots i{width:64px;height:8px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden;position:relative}
+#dots i b{position:absolute;inset:0;background:var(--accent);transform-origin:0 50%;transform:scaleX(0)}
+#cam{position:absolute;left:70px;width:940px;top:430px;height:900px;transform-origin:50% 60%;z-index:5;opacity:0}
+.win{position:absolute;inset:0;border-radius:44px;background:linear-gradient(180deg,rgba(26,28,36,.92),rgba(12,13,18,.94));border:1.5px solid rgba(255,255,255,.1);box-shadow:0 60px 160px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+.bar{height:96px;display:flex;align-items:center;gap:18px;padding:0 40px;border-bottom:1.5px solid var(--line);font-size:34px;font-weight:600;position:relative}
+.bar .dots{margin-left:auto;display:flex;gap:12px}
+.bar .dots i{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.18)}
+.pane{position:absolute;left:0;right:0;top:96px;bottom:0;padding:56px;opacity:0}
+.pane h2{margin:0 0 36px;font-size:80px;letter-spacing:-.01em;line-height:1.05}
+.btn{display:flex;align-items:center;justify-content:center;gap:16px;height:116px;border-radius:58px;font-size:42px;font-weight:700}
+.ghost{border:1.5px solid rgba(255,255,255,.16);color:var(--text)}
+.pill{display:inline-flex;align-items:center;gap:14px;padding:22px 36px;border-radius:999px;font-size:36px;font-weight:650}
+.okpill{background:rgba(52,211,153,.12);color:var(--green);border:1.5px solid rgba(52,211,153,.4)}
+.file{display:flex;align-items:center;gap:28px;height:124px;padding:0 28px;border-radius:24px;font-size:40px;font-weight:600;position:relative}
+.file small{margin-left:auto;font-size:30px;font-weight:500;color:var(--text2)}
+.fic{width:72px;height:72px;border-radius:16px;display:grid;place-items:center;flex:none}
+.colhead{display:flex;justify-content:space-between;font-size:28px;color:var(--text2);padding:0 28px 18px;border-bottom:1.5px solid var(--line);margin-bottom:16px}
+#ctx{position:absolute;width:470px;border-radius:24px;background:rgba(34,36,46,.98);border:1.5px solid rgba(255,255,255,.12);padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);transform-origin:0 0;opacity:0;z-index:5}
+#ctx div{height:84px;border-radius:16px;display:flex;align-items:center;padding:0 26px;font-size:34px;font-weight:550}
+#ss{position:absolute;inset:96px 0 0 0;background:linear-gradient(180deg,#0f5bb0,#0b4a93);padding:60px 56px;opacity:0;z-index:6}
+#ss h3{margin:0 0 30px;font-size:58px;font-weight:600;letter-spacing:-.01em;line-height:1.1}
+#ss p{margin:0;font-size:34px;line-height:1.4;color:rgba(255,255,255,.88)}
+#ssMore{display:inline-block;margin-top:26px;font-size:34px;text-decoration:underline;font-weight:600}
+#ssInfo{margin-top:34px;font-size:32px;line-height:1.6;color:rgba(255,255,255,.88);opacity:0}
+#ssBtns{position:absolute;left:56px;right:56px;bottom:56px;display:flex;gap:24px;justify-content:flex-end}
+#ssBtns div{height:96px;padding:0 44px;border-radius:14px;display:flex;align-items:center;font-size:34px;font-weight:600;border:2px solid rgba(255,255,255,.7)}
+.chip{padding:22px 34px;border-radius:999px;font-size:34px;font-weight:650;border:1.5px solid rgba(255,255,255,.16)}
+.row{display:flex;align-items:center;justify-content:space-between;height:104px;font-size:36px;border-top:1.5px solid var(--line)}
+.row:first-of-type{border-top:0}
+.chk{width:46px;height:46px;border-radius:50%;border:3px solid rgba(255,255,255,.2);display:grid;place-items:center}
+.chk svg{opacity:0}
+#cur{position:absolute;left:0;top:0;width:64px;height:64px;z-index:40;opacity:0;filter:drop-shadow(0 6px 14px rgba(0,0,0,.6))}
+#ring{position:absolute;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;border:5px solid rgba(255,255,255,.85);z-index:39;opacity:0}
+</style></head>
+<body>
+<div id="aura"><i id="a1"></i><i id="a2"></i><i id="a3"></i></div>
+<div id="big" class="serif"></div>
+
+<div id="step"><div id="stepLbl">STEP 1 OF 3</div><div id="dots"><i><b id="d1"></b></i><i><b id="d2"></b></i><i><b id="d3"></b></i></div></div>
+
+<div id="cam"><div class="win">
+  <div class="bar"><span id="barTitle">linktr.ee/ascendedtweaks</span><span class="dots"><i></i><i></i><i></i></span></div>
+
+  <!-- Step 1: the link page -->
+  <div class="pane" id="pLink" style="display:flex;flex-direction:column;align-items:center">
+    <svg viewBox="0 0 256 256" width="170" height="170" style="margin-top:10px;filter:drop-shadow(0 0 40px rgba(47,139,255,.45))"><rect x="4" y="4" width="248" height="248" rx="55" fill="#0A0A0C"/><rect x="5" y="5" width="246" height="246" rx="54" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="2"/><path d="M202 54 L70 110 L128 128 L146 186 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><path d="M56 172 L80 196 L118 158" fill="none" stroke="#2F8BFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div style="margin-top:30px;font-size:44px;font-weight:700">@ascendedtweaks</div>
+    <div class="serif" style="margin-top:10px;font-size:40px;font-style:italic;color:var(--soft)">Tweak anything.</div>
+    <div style="align-self:stretch;margin-top:56px;display:flex;flex-direction:column;gap:26px">
+      <div class="btn" id="bDl" style="background:#fff;color:#000">Download AscendedTweaks</div>
+      <div class="btn ghost">YouTube</div>
+      <div class="btn ghost">TikTok</div>
+    </div>
+    <div id="dlToast" style="position:absolute;left:56px;right:56px;bottom:50px;height:120px;border-radius:28px;background:rgba(40,42,54,.98);border:1.5px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:26px;padding:0 30px;opacity:0;box-shadow:0 30px 80px rgba(0,0,0,.6)">
+      <div class="fic" style="background:rgba(47,139,255,.16)"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#8ec2ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></div>
+      <div style="flex:1"><div style="font-size:34px;font-weight:650">AscendedTweaks.zip</div><div style="margin-top:14px;height:8px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden"><div id="dlBar" style="height:100%;width:0;background:var(--accent)"></div></div></div>
+      <svg id="dlOk" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+  </div>
+
+  <!-- Step 2: Downloads folder -->
+  <div class="pane" id="pFiles">
+    <div class="colhead"><span>Name</span><span>Type</span></div>
+    <div class="file" id="rZip"><div class="fic" style="background:rgba(250,204,21,.16)"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#facc15" stroke-width="2" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M10 6h2M10 9h2M10 12h2"/></svg></div>AscendedTweaks.zip<small>ZIP</small></div>
+    <div class="file" id="rFolder" style="opacity:0"><div class="fic" style="background:rgba(47,139,255,.16)"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#8ec2ff" stroke-width="2" stroke-linejoin="round"><path d="M3 6h7l2 2h9v11H3z"/></svg></div>AscendedTweaks<small>Folder</small></div>
+    <div id="ctx"><div>Open</div><div id="ctxEx">Extract All...</div><div>Copy</div><div>Delete</div></div>
+  </div>
+
+  <!-- Step 3: open the app -->
+  <div class="pane" id="pOpen">
+    <div class="colhead"><span>Name</span><span>Type</span></div>
+    <div class="file" id="rExe"><div class="fic" style="background:#0A0A0C;border:1.5px solid rgba(255,255,255,.14)"><svg viewBox="0 0 256 256" width="52" height="52"><path d="M202 54 L70 110 L128 128 L146 186 Z" fill="#fff"/><path d="M56 172 L80 196 L118 158" fill="none" stroke="#2F8BFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/></svg></div>AscendedTweaks.exe<small>App</small></div>
+    <div id="runPill" style="position:absolute;left:0;right:0;top:330px;display:flex;justify-content:center;opacity:0"><div class="pill okpill"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Starting AscendedTweaks</div></div>
+  </div>
+  <div id="ss">
+    <h3>Windows protected your PC</h3>
+    <p>Windows stopped an app it doesn't recognize yet from starting.</p>
+    <div id="ssMore">More info</div>
+    <div id="ssInfo">App: AscendedTweaks.exe<br>Publisher: Unknown publisher</div>
+    <div id="ssBtns"><div id="ssRun" style="opacity:0">Run anyway</div><div>Don't run</div></div>
+  </div>
+
+  <!-- Step 4: the app -->
+  <div class="pane" id="pApp">
+    <h2 class="serif">Pick a <i style="color:var(--soft)">preset.</i></h2>
+    <div style="display:flex;gap:18px;flex-wrap:nowrap"><div class="chip" id="chipG">Gaming</div><div class="chip">Privacy</div><div class="chip">Clean Up</div></div>
+    <div style="margin-top:44px">
+      <div class="row prow"><span>Mouse acceleration off</span><div class="chk"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div></div>
+      <div class="row prow"><span>Game Mode on</span><div class="chk"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div></div>
+      <div class="row prow"><span>Background apps off</span><div class="chk"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div></div>
+    </div>
+    <div style="position:absolute;left:56px;right:56px;bottom:56px;height:116px">
+      <div class="btn" id="btnApply" style="position:absolute;inset:0;background:#fff;color:#000">Apply</div>
+      <div id="applied" style="position:absolute;inset:0;display:flex;justify-content:center;align-items:center;opacity:0"><div class="pill okpill"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Applied · Backup saved</div></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- End card -->
+<div class="layer" id="sEnd" style="z-index:9">
+  <div style="position:absolute;left:0;right:0;top:600px;display:flex;flex-direction:column;align-items:center">
+    <svg id="endIcon" viewBox="0 0 256 256" width="240" height="240" style="filter:drop-shadow(0 0 70px rgba(47,139,255,.6))"><rect x="4" y="4" width="248" height="248" rx="55" fill="#0A0A0C"/><rect x="5" y="5" width="246" height="246" rx="54" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="2"/><path d="M202 54 L70 110 L128 128 L146 186 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><path id="endCheck" d="M56 172 L80 196 L118 158" fill="none" stroke="#2F8BFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="100" stroke-dashoffset="100"/></svg>
+    <div id="endWord" style="margin-top:56px;font-size:92px;font-weight:700;letter-spacing:-.03em">AscendedTweaks</div>
+    <div id="endTag" class="serif" style="margin-top:22px;font-size:76px;font-style:italic;color:var(--soft)">Tweak anything.</div>
+    <div id="endLink" class="pill" style="margin-top:80px;background:#fff;color:#000;font-size:40px;padding:28px 60px">Link in bio</div>
+  </div>
+</div>
+
+<div id="cap"></div>
+<div id="ring"></div>
+<svg id="cur" viewBox="0 0 24 24"><path d="M5 2.5l14 9.2-6.2 1.2 3.6 6.8-2.6 1.4-3.6-6.9L5.6 18.6z" fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round"/></svg>
+<div id="flash"></div>
+
+<script>
+const T = /*T*/;
+const GROUPS = /*GROUPS*/;
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = p => 1 - Math.pow(1 - clamp(p), 3);
+const inOut = p => { p = clamp(p); return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; };
+const back = p => { p = clamp(p); const c = 1.3; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+const prog = (t, s, d = .4) => clamp((t - s) / d);
+const bell = (t, s, d) => Math.sin(Math.PI * clamp((t - s) / d));
+const $ = id => document.getElementById(id);
+const all = s => [...document.querySelectorAll(s)];
+const win = (t, a, b, fi = .35, fo = .3) => Math.min(ease(prog(t, a - .1, fi)), 1 - ease(prog(t, b - fo, fo)));
+
+// Glowing horizon, as in the cinematic promo.
+const A = [[$('a1'), 900, 520, 'rgba(23,92,255,.95)'], [$('a2'), 700, 420, 'rgba(47,160,255,.75)'], [$('a3'), 520, 300, 'rgba(160,210,255,.55)']];
+A.forEach(([el, w, h, c]) => { el.style.width = w + 'px'; el.style.height = h + 'px'; el.style.background = c; });
+
+// Pane schedule: [id, from, to, bar title].
+const PANES = [['pLink', T.step1 - .35, T.step2 - .1, 'linktr.ee/ascendedtweaks'], ['pFiles', T.step2 - .1, T.step3 - .1, 'Downloads'],
+               ['pOpen', T.step3 - .1, T.thats - .1, 'AscendedTweaks'], ['pApp', T.thats - .1, T.logo, 'AscendedTweaks']];
+
+// Cursor targets are measured once, with every pane laid out in place.
+const center = (id, dx = 0, dy = 0) => { const r = $(id).getBoundingClientRect(); return [r.left + r.width / 2 + dx, r.top + r.height / 2 + dy]; };
+let CUR = [], CLICKS = [];
+function measure() {
+  const zip = center('rZip', -120, 0), ctxAt = [zip[0] + 40, zip[1] + 20];
+  $('ctx').style.left = (ctxAt[0] - $('pFiles').getBoundingClientRect().left) + 'px';
+  $('ctx').style.top = (ctxAt[1] - $('pFiles').getBoundingClientRect().top) + 'px';
+  const ex = center('ctxEx', -60, 0);
+  CUR = [
+    [T.step1 - .1, 860, 1300], [T.download - .3, ...center('bDl', 120, 10)], [T.download + .6, ...center('bDl', 200, 160)],
+    [T.step2 + .05, 780, 1200], [T.right - .2, ...zip], [T.extract - .15, ...ex], [T.all + .4, ex[0] + 60, ex[1] + 120],
+    [T.step3 + .05, 760, 1150], [T.open - .3, ...center('rExe', -60, 0)], [T.open + .5, 700, 1100],
+    [T.more - .2, ...center('ssMore', 10, 4)], [T.run - .2, ...center('ssRun', 0, 0)], [T.run + .5, 820, 1250],
+    [T.pick - .25, ...center('chipG', 20, 4)], [T.apply - .3, ...center('btnApply', 60, 6)], [T.apply + .5, 800, 1300],
+  ];
+  CLICKS = [T.download, T.right, T.all, T.open, T.open + .14, T.more, T.run, T.pick, T.apply];
+}
+function curAt(t) {
+  if (t <= CUR[0][0]) return CUR[0].slice(1);
+  for (let i = 0; i < CUR.length - 1; i++) {
+    const [t0, x0, y0] = CUR[i], [t1, x1, y1] = CUR[i + 1];
+    if (t <= t1) { const p = inOut((t - t0) / (t1 - t0)), arc = Math.sin(Math.PI * p) * Math.min(120, Math.hypot(x1 - x0, y1 - y0) * .25); return [x0 + (x1 - x0) * p + arc * .4, y0 + (y1 - y0) * p - arc]; }
+  }
+  return CUR[CUR.length - 1].slice(1);
+}
+
+function renderWords(el, g, t, rise, blur) {
+  if (el.dataset.g !== String(g)) {
+    el.innerHTML = GROUPS[g].words.map(w => `<span class="${w.k ? 'k' : ''}">${w.t}${w.p} </span>`).join('');
+    el.dataset.g = String(g);
+  }
+  const grp = GROUPS[g], leave = ease(prog(t, grp.end - .2, .2));
+  [...el.children].forEach((s, i) => {
+    const p = ease(prog(t, grp.words[i].s - .05, .28));
+    s.style.opacity = p * (1 - leave);
+    s.style.transform = `translateY(${rise * (1 - p) - 30 * leave}px)`;
+    s.style.filter = `blur(${blur * (1 - p) + 14 * leave}px)`;
+  });
+}
+
+function setTime(t) {
+  const glow = .75 + .25 * Math.max(win(t, 0, T.step1), win(t, T.logo - .5, 99));
+  A.forEach(([el, w, h], i) => {
+    const x = 1240 / 2 - w / 2 + Math.sin(t * (.35 + i * .17) + i) * 130, y = 1100 - h + Math.sin(t * (.5 + i * .11)) * 40;
+    el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.opacity = glow;
+  });
+
+  // Window: rises in for step one, leaves into the end card.
+  const cin = ease(prog(t, T.step1 - .45, .55)), cout = ease(prog(t, T.logo - .25, .35));
+  $('cam').style.opacity = cin * (1 - cout);
+  $('cam').style.transform = `translateY(${80 * (1 - cin)}px) scale(${(.94 + .06 * cin) * (1 - .08 * cout)})`;
+  $('cam').style.filter = `blur(${14 * (1 - cin) + 16 * cout}px)`;
+  let title = PANES[0][3];
+  PANES.forEach(([id, a, b, name]) => {
+    const v = id === 'pLink' ? 1 - ease(prog(t, b - .15, .3)) : win(t, a + .15, b, .3, .3);
+    $(id).style.opacity = v; $(id).style.transform = `translateY(${30 * (1 - v)}px)`;
+    if (t >= a) title = name;
+  });
+  $('barTitle').textContent = title;
+
+  // Step label and progress dots.
+  const step = t < T.step2 ? 1 : t < T.step3 ? 2 : 3;
+  $('step').style.opacity = win(t, T.step1, T.thats, .4, .3);
+  $('stepLbl').textContent = `STEP ${step} OF 3`;
+  [['d1', T.step1], ['d2', T.step2], ['d3', T.step3]].forEach(([id, s]) => $(id).style.transform = `scaleX(${ease(prog(t, s, .5))})`);
+
+  // Step 1: tap download, the file comes in.
+  $('bDl').style.transform = `scale(${1 - .05 * bell(t, T.download - .02, .2)})`;
+  $('bDl').style.boxShadow = `0 0 ${80 * bell(t, T.download, .5)}px rgba(255,255,255,${.5 * bell(t, T.download, .5)})`;
+  const toast = ease(prog(t, T.download + .1, .35));
+  $('dlToast').style.opacity = toast; $('dlToast').style.transform = `translateY(${40 * (1 - toast)}px)`;
+  $('dlBar').style.width = (100 * inOut(prog(t, T.download + .2, .9))) + '%';
+  $('dlOk').style.opacity = ease(prog(t, T.download + 1.1, .2));
+
+  // Step 2: right-click, Extract All, the folder appears.
+  const menu = ease(prog(t, T.right + .05, .2)) * (1 - ease(prog(t, T.all + .1, .2)));
+  $('ctx').style.opacity = menu; $('ctx').style.transform = `scale(${.92 + .08 * menu})`;
+  $('ctxEx').style.background = `rgba(47,139,255,${.35 * ease(prog(t, T.extract - .15, .15))})`;
+  $('rZip').style.background = `rgba(255,255,255,${.06 * clamp(prog(t, T.right - .1, .1) * (1 - prog(t, T.all + .2, .2)))})`;
+  const fold = ease(prog(t, T.all + .25, .35));
+  $('rFolder').style.opacity = fold; $('rFolder').style.transform = `translateY(${-30 * (1 - fold)}px)`;
+  $('rFolder').style.background = `rgba(47,139,255,${.14 * bell(t, T.all + .25, 1)})`;
+
+  // Step 3: open, the blue warning, More info, Run anyway.
+  $('rExe').style.background = `rgba(255,255,255,${.07 * clamp(prog(t, T.open - .05, .1))})`;
+  const ss = ease(prog(t, T.open + .35, .3)) * (1 - ease(prog(t, T.run + .15, .25)));
+  $('ss').style.opacity = ss; $('ss').style.transform = `translateY(${40 * (1 - ease(prog(t, T.open + .35, .35)))}px)`;
+  const info = ease(prog(t, T.more + .05, .3));
+  $('ssInfo').style.opacity = info; $('ssRun').style.opacity = info;
+  $('ssRun').style.background = `rgba(255,255,255,${.25 * bell(t, T.run - .05, .3)})`;
+  $('ssMore').style.opacity = 1 - .4 * info;
+  const run = ease(prog(t, T.run + .3, .35));
+  $('runPill').style.opacity = run; $('runPill').style.transform = `scale(${.8 + .2 * back(prog(t, T.run + .3, .45))})`;
+
+  // Step 4: preset, checks, apply.
+  const g = ease(prog(t, T.pick, .2));
+  $('chipG').style.background = `rgba(47,139,255,${.9 * g})`; $('chipG').style.borderColor = `rgba(47,139,255,${g})`;
+  all('.prow').forEach((r, i) => {
+    const p = ease(prog(t, T.check + i * .16, .25)), c = r.querySelector('.chk');
+    c.style.background = `rgba(47,139,255,${p})`; c.style.borderColor = p > .5 ? 'transparent' : 'rgba(255,255,255,.2)';
+    c.querySelector('svg').style.opacity = p; c.style.transform = `scale(${1 + .2 * bell(t, T.check + i * .16, .3)})`;
+  });
+  $('btnApply').style.transform = `scale(${1 - .05 * bell(t, T.apply - .02, .2)})`;
+  $('btnApply').style.opacity = 1 - ease(prog(t, T.apply + .2, .2));
+  $('applied').style.opacity = ease(prog(t, T.apply + .3, .25));
+  $('applied').style.transform = `scale(${.8 + .2 * back(prog(t, T.apply + .3, .45))})`;
+
+  // Cursor and click ring.
+  const cv = win(t, T.step1 + .05, T.logo - .25, .3, .25);
+  const [cx, cy] = curAt(t), press = Math.max(...CLICKS.map(c => bell(t, c - .03, .16)));
+  $('cur').style.opacity = cv;
+  $('cur').style.transform = `translate(${cx - 10}px, ${cy - 6}px) scale(${1 - .15 * press})`;
+  const last = CLICKS.filter(c => t >= c).pop();
+  if (last !== undefined && t - last < .45) {
+    const p = (t - last) / .45, [rx, ry] = curAt(last);
+    $('ring').style.left = rx + 'px'; $('ring').style.top = ry + 'px';
+    $('ring').style.opacity = cv * (1 - p); $('ring').style.transform = `scale(${.3 + .9 * ease(p)})`;
+  } else $('ring').style.opacity = 0;
+
+  // End card.
+  $('flash').style.opacity = .7 * bell(t, T.logo - .15, .6);
+  $('sEnd').style.opacity = ease(prog(t, T.logo, .3));
+  $('endIcon').style.transform = `scale(${.5 + .5 * back(prog(t, T.logo, .6))})`;
+  $('endCheck').style.strokeDashoffset = 100 - 100 * ease(prog(t, T.logo + .3, .45));
+  $('endWord').style.opacity = ease(prog(t, T.logo + .1, .4));
+  $('endWord').style.filter = `blur(${12 * (1 - ease(prog(t, T.logo + .1, .45)))}px)`;
+  $('endTag').style.opacity = ease(prog(t, T.anything - .1, .35));
+  $('endTag').style.filter = `blur(${12 * (1 - ease(prog(t, T.anything - .1, .4)))}px)`;
+  $('endLink').style.opacity = ease(prog(t, T.link - .05, .25));
+  $('endLink').style.transform = `translateY(${30 * (1 - back(prog(t, T.link - .05, .45)))}px)`;
+
+  // Big words for the hook, captions for the steps.
+  const k = GROUPS.findIndex(c => t >= c.start - .08 && t < c.end);
+  const big = $('big'), cap = $('cap');
+  big.style.opacity = k >= 0 && GROUPS[k].mode === 'big' ? 1 : 0;
+  cap.style.opacity = k >= 0 && GROUPS[k].mode === 'cap' ? 1 : 0;
+  if (k >= 0 && GROUPS[k].mode === 'big') renderWords(big, k, t, 40, 16);
+  if (k >= 0 && GROUPS[k].mode === 'cap') renderWords(cap, k, t, 18, 6);
+}
+
+measure();
+window.setTime = setTime;
+setTime(0);
+</script>
+</body></html>

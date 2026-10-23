@@ -24,7 +24,7 @@ Desktop\AscendedTweaks\
   app\ascendedtweaks-cli.exe
   Docs\Privacy.md, Licenses.md, Changelog.md, Sources.md, Checksums.txt
   .ascendedtweaks-package        (versteckte Markierung)
-artifacts\AscendedTweaks-<Version>-win-x64.zip   (gleicher Inhalt)
+artifacts\AscendedTweaks.zip   (gleicher Inhalt; immer derselbe Name, damit der Link .../releases/latest/download/AscendedTweaks.zip dauerhaft funktioniert)
 ```
 
 Der Zielordner wird nur geleert, wenn er die Markierung `.ascendedtweaks-package` trägt. Ein gleichnamiger Ordner ohne Markierung bleibt unberührt; das Paket landet dann in `Ascended Tweaks (2)` (oder der nächsten freien Nummer). `-Destination` wählt einen anderen Zielordner, `-PublishDir` überspringt das Veröffentlichen (Test-Hook).

@@ -32,7 +32,7 @@ try {
     Check ($sums.Count -eq 3) 'Checksums for three programs'
     $exeHash = (Get-FileHash (Join-Path $target 'AscendedTweaks.exe') -Algorithm SHA256).Hash
     Check (($sums | Where-Object { $_ -like "$exeHash  AscendedTweaks.exe" }).Count -eq 1) 'Pruefsumme von AscendedTweaks.exe stimmt'
-    Check ((Get-ChildItem $zips -Filter 'AscendedTweaks-*-win-x64.zip').Count -eq 1) 'ZIP vorhanden'
+    Check ((Get-ChildItem $zips -Filter 'AscendedTweaks.zip').Count -eq 1) 'ZIP vorhanden'
 
     # Zweiter Lauf: markierter Ordner wird geleert und neu befuellt.
     Set-Content -LiteralPath (Join-Path $target 'alt.txt') -Value 'alt'

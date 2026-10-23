@@ -14,6 +14,7 @@ const base = `https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
 const links = {
   repo: base,
   latest: `${base}/releases/latest`,
+  zip: `${base}/releases/latest/download/AscendedTweaks.zip`,
   license: `${base}/blob/master/LICENSE`,
 };
 

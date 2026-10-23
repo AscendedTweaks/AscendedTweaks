@@ -8,6 +8,7 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 - GAME-022 "Höchste Bildwiederholrate": stellt den Hauptbildschirm mit einem Klick auf die höchste Rate der aktuellen Auflösung (neuer Aktionstyp `DisplayRefreshRate`, Erkennung `DisplayRefreshIsHighest`); "Jetzt beheben" im Gaming-Check "Bildwiederholrate" nutzt ihn. In den Presets Gaming und Wettkampf.
 - Schlagwörter: Jeder Tweak trägt ein bis drei Schlagwörter aus einer festen Liste (zum Beispiel "FPS", "Verzögerung", "Ping"), als Chips auf den Karten. Sie nennen den Bereich, nie einen gemessenen Gewinn; der Linter prüft sie.
 - GAME-025 "Spiel bleibt bei Anrufen laut" (Experte), GAME-026 "Tastenkürzel für Maustasten aus", GAME-027 "Game-Bar-Aufnahmen aus, auch bei Home" (Experte), NET-013 "Hintergrund-Updates höchstens 25 % Bandbreite".
+- Das Release-ZIP heißt immer `AscendedTweaks.zip` (ohne Version), damit `https://github.com/AscendedTweaks/AscendedTweaks/releases/latest/download/AscendedTweaks.zip` dauerhaft funktioniert; README und Website verlinken direkt darauf.
 - Kurzes Ladefenster beim Start; Arbeitsspeicher in ganzen GB; Autostart-Kachel mit Erklärung und Link zur Liste.
 - GAME-023 "Zeigergeschwindigkeit auf Standard (1:1)" und GAME-024 "Schnellere Tastenwiederholung" (SystemParametersInfo `MouseSpeed`, `KeyboardDelay`, `KeyboardSpeed`).
 

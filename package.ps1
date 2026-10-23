@@ -89,7 +89,8 @@ Set-Content -LiteralPath (Join-Path $target $marker) -Value "Ascended Tweaks $ve
 
 # 4. ZIP with the same content for sharing.
 New-Item -ItemType Directory -Path $ZipDirectory -Force | Out-Null
-$zip = Join-Path $ZipDirectory "AscendedTweaks-$version-win-x64.zip"
+# Always the same name, so ".../releases/latest/download/AscendedTweaks.zip" keeps working for every release.
+$zip = Join-Path $ZipDirectory "AscendedTweaks.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Compress-Archive -Path (Join-Path $target '*') -DestinationPath $zip
 

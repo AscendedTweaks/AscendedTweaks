@@ -4,13 +4,14 @@ Open-source Windows tuning that previews every change and can undo everything.
 
 ## Download
 
-**[Download the latest version](https://github.com/AscendedTweaks/AscendedTweaks/releases/latest)** for Windows 10 22H2 (build 19045) or Windows 11, 64-bit.
+**[Download AscendedTweaks.zip](https://github.com/AscendedTweaks/AscendedTweaks/releases/latest/download/AscendedTweaks.zip)** for Windows 10 22H2 (build 19045) or Windows 11, 64-bit.
+The checksums are on the [latest release page](https://github.com/AscendedTweaks/AscendedTweaks/releases/latest).
 
-1. Download `AscendedTweaks-<version>-win-x64.zip` and `SHA256SUMS.txt`.
+1. Download `AscendedTweaks.zip` and `SHA256SUMS.txt`.
 2. Unzip it and start `AscendedTweaks.exe`. No administrator rights are needed to start.
 3. Choose "Install (recommended)" or "Just try it (portable)". `START HERE.txt` explains install, undo and removal.
 
-Optional check before starting (PowerShell): `Get-FileHash .\AscendedTweaks-<version>-win-x64.zip -Algorithm SHA256`.
+Optional check before starting (PowerShell): `Get-FileHash .\AscendedTweaks.zip -Algorithm SHA256`.
 The hash must match the line in `SHA256SUMS.txt`.
 
 ## What you get
@@ -26,7 +27,7 @@ The files are not code-signed yet, so SmartScreen may show "Windows protected yo
 then click "More info" > "Run anyway". You can also verify that the ZIP was built from this repository:
 
 ```
-gh attestation verify AscendedTweaks-<version>-win-x64.zip --repo AscendedTweaks/AscendedTweaks
+gh attestation verify AscendedTweaks.zip --repo AscendedTweaks/AscendedTweaks
 ```
 
 Do not turn off Microsoft Defender or SmartScreen for this or any other app.

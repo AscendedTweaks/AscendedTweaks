@@ -6,6 +6,8 @@ description: Design rules for the Ascended Tweaks WPF app (colors, type scale, s
 # Ascended Tweaks design rules
 
 A calm Windows 11 Fluent tool that explains instead of pushing. Factual, high quality, tidy, trustworthy.
+Palette: warm graphite neutrals with one signal-orange accent, like a measuring instrument. Never the generic
+"AI app" look: no navy plus electric blue, no blue-violet gradients, no neon, no glass effects.
 Dark is the default, Light is optional, "System" follows Windows. If the UI and these rules disagree, fix the UI.
 
 ## 1. Colors: tokens only
@@ -15,18 +17,18 @@ Never write a hex color in a page, template or control. Use the brushes from `Th
 
 | Brush | Dark | Light | Role |
 | --- | --- | --- | --- |
-| `Brush.Background` | #0F1218 | #F5F7FA | Window background |
-| `Brush.Surface` | #171B24 | #FFFFFF | Cards, navigation |
-| `Brush.Elevated` | #1F2430 | #FFFFFF + border | Dialogs, side panel, hover |
-| `Brush.Border` | #2B3240 | #D5DBE5 | Borders, dividers |
-| `Brush.Accent` | #4D8BFF | #2E6DDD | Primary action, focus, links |
+| `Brush.Background` | #131211 | #F5F3EF | Window background |
+| `Brush.Surface` | #1B1A18 | #FFFFFF | Cards, navigation |
+| `Brush.Elevated` | #242220 | #FFFFFF + border | Dialogs, side panel, hover |
+| `Brush.Border` | #36332F | #DCD7CE | Borders, dividers |
+| `Brush.Accent` | #F0883E | #B4500F | Primary action, focus, links |
 | `Brush.AccentTint` | 14 % accent | 14 % accent | Selected segment, icon tiles |
-| `Brush.OnAccent` | #0F1218 | #FFFFFF | Text and icons on accent fills |
-| `Brush.Success` | #35C98A | #188155 | Risk "Safe", success |
-| `Brush.Warning` | #FFB020 | #A06400 | Risk "Caution", notices |
-| `Brush.Danger` | #F2546B | #D12F49 | Risk "Expert", errors |
-| `Brush.TextPrimary` | #F4F6FA | #121722 | Body text, headings |
-| `Brush.TextSecondary` | #9AA5B8 | #4A5567 | Descriptions, metadata |
+| `Brush.OnAccent` | #131211 | #FFFFFF | Text and icons on accent fills |
+| `Brush.Success` | #6FC48A | #2C7A44 | Risk "Safe", success |
+| `Brush.Warning` | #E8C547 | #8A6300 | Risk "Caution", notices |
+| `Brush.Danger` | #F2666B | #C0323B | Risk "Expert", errors |
+| `Brush.TextPrimary` | #EFECE7 | #1D1B18 | Body text, headings |
+| `Brush.TextSecondary` | #A8A29A | #5C564E | Descriptions, metadata |
 
 - One accent fill per screen: the main action. Everything else is outline, text or neutral.
 - Color is never the only signal: risk badges always have text and a symbol.

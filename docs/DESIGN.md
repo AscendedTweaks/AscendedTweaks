@@ -18,47 +18,37 @@ Tokens werden ausschließlich über Ressourcen-Schlüssel verwendet, nie als Hex
 
 | Token | Hex | Rolle |
 |---|---|---|
-| `Color.Background` | #0F1218 | Fensterhintergrund |
-| `Color.Surface` | #171B24 | Karten, Navigation |
-| `Color.Elevated` | #1F2430 | Dialoge, Seitenpanel, Hover-Fläche |
-| `Color.Border` | #2B3240 | Ränder, Trennlinien |
-| `Color.Accent` | #4D8BFF | Primäraktion, Fokusrahmen, Links |
-| `Color.Success` | #35C98A | Risiko "Sicher", Erfolg |
-| `Color.Warning` | #FFB020 | Risiko "Vorsicht", Hinweise |
-| `Color.Danger` | #F2546B | Risiko "Experte", Fehler |
-| `Color.TextPrimary` | #F4F6FA | Fließtext, Überschriften |
-| `Color.TextSecondary` | #9AA5B8 | Beschreibungen, Metadaten |
-| `Color.OnAccent` | #0F1218 | Schrift und Symbole auf Akzentflächen |
+| `Color.Background` | #131211 | Fensterhintergrund |
+| `Color.Surface` | #1B1A18 | Karten, Navigation |
+| `Color.Elevated` | #242220 | Dialoge, Seitenpanel, Hover-Fläche |
+| `Color.Border` | #36332F | Ränder, Trennlinien |
+| `Color.Accent` | #F0883E | Primäraktion, Fokusrahmen, Links |
+| `Color.Success` | #6FC48A | Risiko "Sicher", Erfolg |
+| `Color.Warning` | #E8C547 | Risiko "Vorsicht", Hinweise |
+| `Color.Danger` | #F2666B | Risiko "Experte", Fehler |
+| `Color.TextPrimary` | #EFECE7 | Fließtext, Überschriften |
+| `Color.TextSecondary` | #A8A29A | Beschreibungen, Metadaten |
+| `Color.OnAccent` | #131211 | Schrift und Symbole auf Akzentflächen |
 
 ### Hell
 
 | Token | Hex | Rolle |
 |---|---|---|
-| `Color.Background` | #F5F7FA | Fensterhintergrund |
+| `Color.Background` | #F5F3EF | Fensterhintergrund |
 | `Color.Surface` | #FFFFFF | Karten, Navigation |
 | `Color.Elevated` | #FFFFFF mit Rand `Color.Border` | Dialoge, Seitenpanel |
-| `Color.Border` | #D5DBE5 | Ränder |
-| `Color.Accent` | #2E6DDD (angepasst, siehe unten) | Primäraktion, Fokus |
-| `Color.Success` | #188155 (angepasst) | Risiko "Sicher" |
-| `Color.Warning` | #A06400 (angepasst) | Risiko "Vorsicht" |
-| `Color.Danger` | #D12F49 | Risiko "Experte" |
-| `Color.TextPrimary` | #121722 | Fließtext |
-| `Color.TextSecondary` | #4A5567 | Beschreibungen |
+| `Color.Border` | #DCD7CE | Ränder |
+| `Color.Accent` | #B4500F | Primäraktion, Fokus |
+| `Color.Success` | #2C7A44 | Risiko "Sicher" |
+| `Color.Warning` | #8A6300 | Risiko "Vorsicht" |
+| `Color.Danger` | #C0323B | Risiko "Experte" |
+| `Color.TextPrimary` | #1D1B18 | Fließtext |
+| `Color.TextSecondary` | #5C564E | Beschreibungen |
 | `Color.OnAccent` | #FFFFFF | Schrift und Symbole auf Akzentflächen |
 
-### Kontrast (vorläufige Prüfung in Phase 1, WCAG-Formel)
+### Kontrast
 
-Die Vorgabewerte der hellen Palette erreichten auf Hintergrund und Fläche nicht 4,5:1. Sie wurden minimal abgedunkelt (nur Helligkeit, Farbton gleich):
-
-| Token | Vorgabe | Kontrast Vorgabe auf #F5F7FA | Neuer Wert | Kontrast auf #F5F7FA / #FFFFFF |
-|---|---|---|---|---|
-| Akzent | #2F6FE0 | 4,38 | #2E6DDD | 4,50 / 4,83 |
-| Erfolg | #1E9E68 | 3,18 | #188155 | 4,54 / 4,87 |
-| Warnung | #B87400 | 3,53 | #A06400 | 4,53 / 4,86 |
-
-Dunkle Palette: alle Text- und Statusfarben auf Hintergrund, Fläche und Erhöht mindestens 4,62:1 (niedrigster Wert: Gefahr auf Erhöht).
-Primärbutton dunkel: weiße Schrift auf #4D8BFF hätte nur 3,25:1. Deshalb steht auf dem Akzent im dunklen Theme die Schrift in `Color.Background` (#0F1218, 5,76:1). Im hellen Theme steht weiße Schrift auf #2E6DDD (4,83:1).
-`tools/contrast-check` prüft seit Phase 3 im Build 102 Paare: alle Text- und Statusfarben auf Hintergrund, Fläche und Erhöht (4,5:1), OnAccent auf Akzent, und getönte Flächen als Alpha-Mischung (Auswahl 14 % Akzent, Hover 10 % TextSecondary, gefüllte Badges 15 % Tonfarbe; Text 4,5:1, Symbole 3:1).
+Farbschema seit 2026-10-23: warmes Graphit mit Signal-Orange (bewusst nicht der verbreitete Look aus Marineblau und elektrischem Blau). `tools/contrast-check` prüft im Build 102 Paare: alle Text- und Statusfarben auf Hintergrund, Fläche und Erhöht (4,5:1), OnAccent auf Akzent, und getönte Flächen als Alpha-Mischung (Auswahl 14 % Akzent, Hover 10 % TextSecondary, gefüllte Badges 15 % Tonfarbe; Text 4,5:1, Symbole 3:1). Niedrigste Werte: Akzent als Text im hellen Theme 4,63:1, Gefahr auf Erhöht im dunklen Theme 5,20:1.
 
 ### Risiko- und Wirkungs-Badges
 
@@ -149,7 +139,7 @@ Kontrast: Der Einfach-Modus verwendet nur vorhandene Token-Paare (Text und Text-
 
 ## 9. Agent Prompt Guide
 
-Kurzreferenz: Hintergrund #0F1218, Fläche #171B24, Erhöht #1F2430, Rand #2B3240, Akzent #4D8BFF (Schrift darauf #0F1218), Erfolg #35C98A, Warnung #FFB020, Gefahr #F2546B, Text #F4F6FA / #9AA5B8. Hell: #F5F7FA, #FFFFFF, #D5DBE5, Akzent #2E6DDD, Erfolg #188155, Warnung #A06400, Gefahr #D12F49, Text #121722 / #4A5567.
+Kurzreferenz: Hintergrund #131211, Fläche #1B1A18, Erhöht #242220, Rand #36332F, Akzent #F0883E (Schrift darauf #131211), Erfolg #6FC48A, Warnung #E8C547, Gefahr #F2666B, Text #EFECE7 / #A8A29A. Hell: #F5F3EF, #FFFFFF, #DCD7CE, Akzent #B4500F, Erfolg #2C7A44, Warnung #8A6300, Gefahr #C0323B, Text #1D1B18 / #5C564E.
 
 Vorlagen für UI-Aufgaben:
 - "Baue die Komponente X nach docs/DESIGN.md Abschnitt 4. Nutze nur Tokens aus Abschnitt 2, Abstände aus Abschnitt 5, alle Zustände aus Abschnitt 4, Texte über Lokalisierungsschlüssel."

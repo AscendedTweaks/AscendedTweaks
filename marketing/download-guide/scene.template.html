@@ -159,12 +159,14 @@ function measure() {
   $('ctx').style.left = (ctxAt[0] - $('pFiles').getBoundingClientRect().left) + 'px';
   $('ctx').style.top = (ctxAt[1] - $('pFiles').getBoundingClientRect().top) + 'px';
   const ex = center('ctxEx', -60, 0);
+  // The cursor stays where its last action ended and only moves to the next target.
+  const dl = center('bDl', 120, 10), exe = center('rExe', -60, 0), more = center('ssMore', 10, 4), runB = center('ssRun'), chip = center('chipG', 20, 4);
   CUR = [
-    [T.step1 - .1, 860, 1300], [T.download - .3, ...center('bDl', 120, 10)], [T.download + .6, ...center('bDl', 200, 160)],
-    [T.step2 + .05, 780, 1200], [T.right - .2, ...zip], [T.extract - .15, ...ex], [T.all + .4, ex[0] + 60, ex[1] + 120],
-    [T.step3 + .05, 760, 1150], [T.open - .3, ...center('rExe', -60, 0)], [T.open + .5, 700, 1100],
-    [T.more - .2, ...center('ssMore', 10, 4)], [T.run - .2, ...center('ssRun', 0, 0)], [T.run + .5, 820, 1250],
-    [T.pick - .25, ...center('chipG', 20, 4)], [T.apply - .3, ...center('btnApply', 60, 6)], [T.apply + .5, 800, 1300],
+    [T.step1 - .1, 760, 1150], [T.download - .3, ...dl], [T.step2 + .1, ...dl],
+    [T.right - .2, ...zip], [T.extract - .4, ...zip], [T.extract - .15, ...ex], [T.step3 + .2, ...ex],
+    [T.open - .3, ...exe], [T.open + .6, ...exe], [T.more - .2, ...more], [T.run - .6, ...more],
+    [T.run - .2, ...runB], [T.pick - .7, ...runB], [T.pick - .25, ...chip], [T.apply - .7, ...chip],
+    [T.apply - .3, ...center('btnApply', 60, 6)],
   ];
   CLICKS = [T.download, T.right, T.all, T.open, T.open + .14, T.more, T.run, T.pick, T.apply];
 }

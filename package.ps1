@@ -61,6 +61,11 @@ while ((Test-Path $target) -and -not (Test-Path (Join-Path $target $marker))) {
 }
 
 if (Test-Path $target) {
+    # A running copy locks its files; stop before deleting anything, so the folder never ends up half empty.
+    $running = Get-Process | Where-Object { $_.Path -and $_.Path.StartsWith($target + '\', [StringComparison]::OrdinalIgnoreCase) }
+    if ($running) {
+        throw "Ascended Tweaks is running from $target (process $($running.Id -join ', ')). Close it and run package.ps1 again."
+    }
     Get-ChildItem -LiteralPath $target -Force | Where-Object { $_.Name -ne $marker } | Remove-Item -Recurse -Force
 } else {
     New-Item -ItemType Directory -Path $target | Out-Null

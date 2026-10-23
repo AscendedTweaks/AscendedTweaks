@@ -51,6 +51,27 @@ public sealed partial class TweakWorkspace : ObservableObject
     [ObservableProperty]
     private bool _isBusy;
 
+    /// <summary>What runs right now ("Applying...", "Resetting..."); the shell shows it in the bottom-right corner. Null when idle.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsApplying))]
+    private string? _activity;
+
+    public bool IsApplying => Activity is not null;
+
+    /// <summary>Runs an apply or reset in the background and shows the corner indicator meanwhile.</summary>
+    private async Task<T> Working<T>(string textKey, Func<T> work)
+    {
+        Activity = _localizer[textKey];
+        try
+        {
+            return await Task.Run(work).ConfigureAwait(true);
+        }
+        finally
+        {
+            Activity = null;
+        }
+    }
+
     [ObservableProperty]
     private TweakDetailsViewModel? _details;
 
@@ -303,7 +324,7 @@ public sealed partial class TweakWorkspace : ObservableObject
             var results = new List<RevertResult>();
             foreach (var id in tweakIds.Reverse())
             {
-                results.Add(await Task.Run(() => _service.Revert(id, Resolver)).ConfigureAwait(true));
+                results.Add(await Working("activity.resetting", () => _service.Revert(id, Resolver)).ConfigureAwait(true));
             }
 
             await ShowRevertResults(results).ConfigureAwait(true);
@@ -332,7 +353,7 @@ public sealed partial class TweakWorkspace : ObservableObject
         IsBusy = true;
         try
         {
-            var result = await Task.Run(() => _service.Revert(tweakId, Resolver)).ConfigureAwait(true);
+            var result = await Working("activity.resetting", () => _service.Revert(tweakId, Resolver)).ConfigureAwait(true);
             await ShowRevertResults([result]).ConfigureAwait(true);
         }
         finally
@@ -416,12 +437,37 @@ public sealed partial class TweakWorkspace : ObservableObject
             return false;
         }
 
+        // Switching between alternatives (for example from Google DNS to Cloudflare): one click resets the applied
+        // alternative first, so the backup of the new one still holds the original state, then applies the new one.
+        var rows = new List<ResultRow>();
+        var reverted = new List<string>();
+        var replace = direct
+            ? plan.Excluded.Where(e => e.Replaceable && e.ConflictWith is not null).Select(e => e.ConflictWith!).Distinct(StringComparer.Ordinal).ToList()
+            : [];
+        if (replace.Count > 0)
+        {
+            foreach (var owner in replace)
+            {
+                var switched = await Working("activity.applying", () => _service.Revert(owner, Resolver)).ConfigureAwait(true);
+                if (switched.Outcome == RevertOutcome.Reverted)
+                {
+                    reverted.Add(owner);
+                }
+                else
+                {
+                    rows.Add(new ResultRow(NameOf(owner), false, switched.Error?.Message ?? _localizer["result.cancelled"]));
+                }
+            }
+
+            plan = await Task.Run(() => _service.Preview(applies)).ConfigureAwait(true);
+        }
+
         var userOnly = plan.Ready.Count > 0 && plan.Ready.All(t => t.Scope == TweakScope.User);
         if (!direct)
         {
             var preview = new PreviewDialogViewModel(
                 plan.Items.Select(i => new PreviewRow(NameOf(i.TweakId), i.ValueName is null ? i.Target : $"{i.Target} : {i.ValueName}", i.Current, i.New)).ToList(),
-                plan.Excluded.Select(e => new NoteRow(NameOf(e.TweakId), e.Reason)).ToList(),
+                plan.Excluded.Select(e => new NoteRow(NameOf(e.TweakId), ReasonOf(e))).ToList(),
                 reverts.Select(NameOf).ToList(),
                 plan.RequiresReboot,
                 plan.Ready.Any(t => t.RequiresAdmin),
@@ -442,7 +488,6 @@ public sealed partial class TweakWorkspace : ObservableObject
             return false;
         }
 
-        var rows = new List<ResultRow>();
         var reboot = false;
         var restartExplorer = false;
         if (plan.Ready.Count > 0)
@@ -453,7 +498,7 @@ public sealed partial class TweakWorkspace : ObservableObject
             try
             {
                 var reporter = new Progress<BatchProgress>(progress.Report);
-                result = await Task.Run(() => _service.Apply(plan.Ready.Select(t => t.Id), new ApplyOptions
+                result = await Working("activity.applying", () => _service.Apply(plan.Ready.Select(t => t.Id), new ApplyOptions
                 {
                     // Reine Benutzer-Tweaks: Der Hinweis stand in der Vorschau, deren Bestaetigung ist die Zustimmung.
                     // Ist ein Wiederherstellungspunkt dagegen fehlgeschlagen, wird ausdruecklich nachgefragt (Regel S1).
@@ -477,11 +522,15 @@ public sealed partial class TweakWorkspace : ObservableObject
             _lastSummary = _lastSummary with { Applied = result.AppliedTweaks.ToList() };
             restartExplorer = result.AppliedTweaks.Any(id => _cards.TryGetValue(id, out var card) && card.Tweak.RestartExplorer);
         }
+        else
+        {
+            // Nothing could start (for example a conflict): say why instead of staying silent.
+            rows.AddRange(plan.Excluded.Select(ExcludedRow));
+        }
 
-        var reverted = new List<string>();
         foreach (var id in reverts)
         {
-            var revert = await Task.Run(() => _service.Revert(id, Resolver)).ConfigureAwait(true);
+            var revert = await Working("activity.resetting", () => _service.Revert(id, Resolver)).ConfigureAwait(true);
             if (revert.Outcome == RevertOutcome.Reverted)
             {
                 reverted.Add(id);
@@ -557,9 +606,20 @@ public sealed partial class TweakWorkspace : ObservableObject
 
         foreach (var excluded in result.Plan.Excluded)
         {
-            yield return new ResultRow(NameOf(excluded.TweakId), false, excluded.Reason);
+            yield return ExcludedRow(excluded);
         }
     }
+
+    private ResultRow ExcludedRow(PreflightEntry entry) =>
+        new(NameOf(entry.TweakId), entry.Outcome == PreflightOutcome.AlreadyApplied, ReasonOf(entry));
+
+    /// <summary>Reasons the app can name in the user's language; the others come from the engine in English.</summary>
+    private string ReasonOf(PreflightEntry entry) => entry.Outcome switch
+    {
+        PreflightOutcome.AlreadyApplied => _localizer["result.alreadyapplied"],
+        PreflightOutcome.Conflict when entry.ConflictWith is { } other => _localizer.Format("result.conflict", ("name", NameOf(other))),
+        _ => entry.Reason,
+    };
 
     private string Summary(IReadOnlyList<ResultRow> rows)
     {

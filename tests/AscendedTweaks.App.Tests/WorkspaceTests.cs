@@ -111,6 +111,8 @@ public sealed class WorkspaceTests : IDisposable
         _h.Registry.Seed(RegHive.HKCU, P, "B", RegistryData.DWord(1));
         _h.Registry.Seed(RegHive.HKCU, P, "C", RegistryData.DWord(0));
         _h.Registry.Seed(RegHive.HKLM, @"SOFTWARE\AscendedTweaksTest", "M", RegistryData.DWord(1));
+        _h.Registry.Seed(RegHive.HKCU, P, "D", RegistryData.DWord(0));
+        _h.Registry.Seed(RegHive.HKCU, P, "E", RegistryData.DWord(0));
         TweakDefinition[] tweaks =
         [
             TestTweaks.Dword("PRIV-901", P, "A", 0),
@@ -126,6 +128,24 @@ public sealed class WorkspaceTests : IDisposable
                 : null!,
             TestTweaks.Dword("PERF-901", @"SOFTWARE\AscendedTweaksTest", "M", 0, RegHive.HKLM),
             TestTweaks.Service("PERF-916", "Fax", ServiceStartSetting.Disabled),
+
+            // Two alternatives for one setting (like two DNS choices) and one tweak that changes more than that setting.
+            TestTweaks.Dword("PRIV-904", P, "D", 1),
+            TestTweaks.Dword("PRIV-905", P, "D", 2),
+            TestTweaks.Create(
+                "PRIV-906",
+                new AllOfCondition
+                {
+                    Conditions =
+                    [
+                        new RegistryValueEqualsCondition { Hive = RegHive.HKCU, Path = P, Name = "D", Value = new RegLiteral { Number = 3 } },
+                        new RegistryValueEqualsCondition { Hive = RegHive.HKCU, Path = P, Name = "E", Value = new RegLiteral { Number = 3 } },
+                    ],
+                },
+                [
+                    new RegistrySetValueAction { Hive = RegHive.HKCU, Path = P, Name = "D", Kind = RegValueKind.DWord, Value = new RegLiteral { Number = 3 } },
+                    new RegistrySetValueAction { Hive = RegHive.HKCU, Path = P, Name = "E", Kind = RegValueKind.DWord, Value = new RegLiteral { Number = 3 } },
+                ]),
         ];
         _h.Services.Services["Fax"] = new ServiceConfig(ServiceStartType.Manual, false, false);
         var texts = tweaks.SelectMany(t => new[] { t.NameKey, t.DescriptionKey, t.SideEffectsKey })
@@ -200,6 +220,70 @@ public sealed class WorkspaceTests : IDisposable
         _workspace.Card("PRIV-901").IsOn = false;
         await _workspace.ApplyCommand.ExecutionTask!;
         _h.Registry.GetValue(RegHive.HKCU, P, "A").Should().Be(RegistryData.DWord(1), "switching off resets from the backup");
+    }
+
+    [Fact]
+    public async Task One_click_switches_between_alternatives_and_reset_returns_to_the_original()
+    {
+        // Seen with DNS: Google was on, turning on Cloudflare did nothing and showed no reason.
+        _workspace.OneClick = true;
+        await _workspace.RefreshAsync();
+        _workspace.Card("PRIV-904").IsOn = true;
+        await _workspace.ApplyCommand.ExecutionTask!;
+        _h.Registry.GetValue(RegHive.HKCU, P, "D").Should().Be(RegistryData.DWord(1));
+
+        _workspace.Card("PRIV-905").IsOn = true;
+        await _workspace.ApplyCommand.ExecutionTask!;
+
+        _h.Registry.GetValue(RegHive.HKCU, P, "D").Should().Be(RegistryData.DWord(2));
+        _workspace.Card("PRIV-904").State.Should().Be(TweakState.NotApplied);
+        _workspace.Card("PRIV-904").Tracked.Should().BeFalse("the old choice was reset, not left behind");
+        _workspace.Card("PRIV-905").State.Should().Be(TweakState.Applied);
+        _dialogs.Shown.Should().NotContain(d => d is ResultDialogViewModel, "a clean switch is a success");
+        _workspace.Activity.Should().BeNull("the corner indicator is gone when nothing runs");
+
+        _workspace.Card("PRIV-905").IsOn = false;
+        await _workspace.ApplyCommand.ExecutionTask!;
+        _h.Registry.GetValue(RegHive.HKCU, P, "D").Should().Be(RegistryData.DWord(0), "resetting goes back to the state before both choices");
+    }
+
+    [Fact]
+    public async Task A_conflict_that_cannot_be_switched_says_why_and_changes_nothing()
+    {
+        _workspace.OneClick = true;
+        await _workspace.RefreshAsync();
+        _workspace.Card("PRIV-906").IsOn = true;
+        await _workspace.ApplyCommand.ExecutionTask!;
+
+        // PRIV-906 also changes E; replacing it with PRIV-904 would silently undo that part.
+        _workspace.Card("PRIV-904").IsOn = true;
+        await _workspace.ApplyCommand.ExecutionTask!;
+
+        var row = _dialogs.Last<ResultDialogViewModel>()!.Rows.Should().ContainSingle().Subject;
+        row.Ok.Should().BeFalse();
+        row.Message.Should().StartWith("Ändert dieselbe Einstellung wie");
+        _h.Registry.GetValue(RegHive.HKCU, P, "D").Should().Be(RegistryData.DWord(3));
+        _workspace.Card("PRIV-906").State.Should().Be(TweakState.Applied);
+    }
+
+    [Fact]
+    public async Task The_corner_indicator_shows_while_applying()
+    {
+        _workspace.OneClick = true;
+        await _workspace.RefreshAsync();
+        var seen = new List<string?>();
+        _workspace.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(TweakWorkspace.IsApplying))
+            {
+                seen.Add(_workspace.Activity);
+            }
+        };
+
+        _workspace.Card("PRIV-901").IsOn = true;
+        await _workspace.ApplyCommand.ExecutionTask!;
+
+        seen.Should().Equal("Wird angewendet…", null);
     }
 
     [Fact]

@@ -1052,5 +1052,9 @@
   "check.fix.what": "Changes: {name}",
   "preview.title": "Design preview",
   "preview.body": "This copy only shows the design with sample data. Nothing on your PC is changed, and it needs no helper or administrator rights. Use the real Ascended Tweaks to apply settings.",
-  "simple.start.yourpc": "Your PC"
+  "simple.start.yourpc": "Your PC",
+  "activity.applying": "Applying…",
+  "activity.resetting": "Resetting…",
+  "result.alreadyapplied": "Already applied.",
+  "result.conflict": "Changes the same setting as \"{name}\". Turn that off first."
 }

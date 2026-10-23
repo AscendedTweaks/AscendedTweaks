@@ -184,12 +184,15 @@ public sealed class TweakEngine
         var excluded = new List<PreflightEntry>();
         var ledger = _store.LoadLedger();
         var claimed = new Dictionary<string, string>(StringComparer.Ordinal);
+        var appliedKeys = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var entry in ledger.Entries)
         {
             if (_catalog.TryGet(entry.TweakId, out var applied))
             {
-                foreach (var key in applied.Apply.Select(a => _executors.For(a).TargetKey(a)))
+                var keys = applied.Apply.Select(a => _executors.For(a).TargetKey(a)).ToList();
+                appliedKeys[applied.Id] = keys;
+                foreach (var key in keys)
                 {
                     claimed.TryAdd(key, applied.Id);
                 }
@@ -228,7 +231,7 @@ public sealed class TweakEngine
 
             if (state.State == TweakState.Applied)
             {
-                excluded.Add(new PreflightEntry(tweak.Id, PreflightOutcome.AlreadyApplied, "Bereits angewendet."));
+                excluded.Add(new PreflightEntry(tweak.Id, PreflightOutcome.AlreadyApplied, "Already applied."));
                 continue;
             }
 
@@ -238,7 +241,11 @@ public sealed class TweakEngine
                 .FirstOrDefault(o => o is not null);
             if (conflict is not null)
             {
-                excluded.Add(new PreflightEntry(tweak.Id, PreflightOutcome.Conflict, $"Aendert dieselbe Stelle wie {conflict}."));
+                excluded.Add(new PreflightEntry(tweak.Id, PreflightOutcome.Conflict, $"Changes the same setting as {conflict}.")
+                {
+                    ConflictWith = conflict,
+                    Replaceable = appliedKeys.TryGetValue(conflict, out var ownerKeys) && ownerKeys.All(keys.Contains),
+                });
                 continue;
             }
 

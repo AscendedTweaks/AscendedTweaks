@@ -55,7 +55,17 @@ public enum PreflightOutcome
     Conflict,
 }
 
-public sealed record PreflightEntry(string TweakId, PreflightOutcome Outcome, string Reason);
+public sealed record PreflightEntry(string TweakId, PreflightOutcome Outcome, string Reason)
+{
+    /// <summary>Conflict: the tweak that already changes the same setting.</summary>
+    public string? ConflictWith { get; init; }
+
+    /// <summary>
+    /// Conflict with an applied tweak that only changes settings this one sets too (for example two DNS choices). Resetting
+    /// it first and then applying this one switches cleanly; the backup then still holds the original state.
+    /// </summary>
+    public bool Replaceable { get; init; }
+}
 
 public sealed record BatchPlan
 {

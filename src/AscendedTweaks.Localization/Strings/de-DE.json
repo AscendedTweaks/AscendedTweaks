@@ -1052,5 +1052,9 @@
   "check.fix.what": "Ändert: {name}",
   "preview.title": "Design-Vorschau",
   "preview.body": "Diese Kopie zeigt nur das Design mit Beispieldaten. An deinem PC wird nichts geändert, und sie braucht keinen Helfer und keine Administratorrechte. Zum Anwenden nimm das echte Ascended Tweaks.",
-  "simple.start.yourpc": "Dein PC"
+  "simple.start.yourpc": "Dein PC",
+  "activity.applying": "Wird angewendet…",
+  "activity.resetting": "Wird zurückgesetzt…",
+  "result.alreadyapplied": "Bereits angewendet.",
+  "result.conflict": "Ändert dieselbe Einstellung wie „{name}“. Schalte das zuerst aus."
 }

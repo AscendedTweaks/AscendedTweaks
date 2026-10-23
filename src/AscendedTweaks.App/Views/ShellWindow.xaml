@@ -248,5 +248,17 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        <!-- Activity in the bottom-right corner while something is applied or reset; above dialogs, never blocks clicks. -->
+        <Border Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,20" Padding="14,8"
+                CornerRadius="18" Background="{DynamicResource Brush.Elevated}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1"
+                Effect="{DynamicResource Shadow.Card}" IsHitTestVisible="False"
+                Visibility="{Binding Workspace.IsApplying, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}"
+                AutomationProperties.LiveSetting="Polite" AutomationProperties.Name="{Binding Workspace.Activity}">
+            <StackPanel Orientation="Horizontal">
+                <ui:ProgressRing Width="16" Height="16" IsIndeterminate="True" Foreground="{DynamicResource Brush.Accent}" Margin="0,0,10,0" />
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Workspace.Activity}" VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
     </Grid>
 </ui:FluentWindow>

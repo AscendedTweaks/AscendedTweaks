@@ -205,6 +205,7 @@ public static class CatalogLinter
             RegistryDeleteKeyAction a => RegistryPaths.ScopeFor(a.Hive, a.Path),
             RegistryListEntryAction a => RegistryPaths.ScopeFor(a.Hive, a.Path),
             SystemParametersInfoAction => TweakScope.User,
+            DisplayRefreshRateAction => TweakScope.User,
             _ => TweakScope.Machine,
         };
         if (expectedScope != t.Scope)
@@ -362,6 +363,7 @@ public static class CatalogLinter
                 && string.Equals(a.Key, c.Key, StringComparison.OrdinalIgnoreCase) && string.Equals(a.Value, c.Value, StringComparison.Ordinal),
             (SystemParametersInfoAction a, SystemParameterEqualsCondition c) =>
                 string.Equals(a.Parameter, c.Parameter, StringComparison.Ordinal) && a.Value == c.Value,
+            (DisplayRefreshRateAction, DisplayRefreshIsHighestCondition) => true,
             _ => false,
         };
     }

@@ -1,0 +1,46 @@
+{
+  "id": "GAME-022",
+  "category": "Gaming.Display",
+  "nameKey": "tweak.GAME-022.name",
+  "descriptionKey": "tweak.GAME-022.desc",
+  "sideEffectsKey": "tweak.GAME-022.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "DisplayRefreshIsHighest"
+  },
+  "apply": [
+    {
+      "type": "DisplayRefreshRate"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Support: 'Change the refresh rate on your monitor in Windows' (a higher refresh rate shows motion more smoothly, especially in games).",
+    "Microsoft Learn: 'EnumDisplaySettingsW' (modes the driver lists) and 'ChangeDisplaySettingsExW' (CDS_TEST, then CDS_UPDATEREGISTRY). Only a rate the driver lists for the current resolution and color depth is set; resetting sets the rate from before."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Noticeable",
+  "impactNote": "tweak.GAME-022.impact",
+  "measuredOn": [
+    "Microsoft Support: 'Change the refresh rate on your monitor in Windows' (higher rate = smoother motion). Changes something only when the display runs below its highest rate; the gaming check 'Refresh rate' shows both values."
+  ],
+  "plainTitleKey": "tweak.GAME-022.plain.title",
+  "plainDescKey": "tweak.GAME-022.plain.desc"
+}

@@ -30,6 +30,9 @@ Ergebnis: 4 Spürbar, 43 Klein, 54 Unklar (Katalog plus Basis der erzeugten Twea
 | GAME-016 | Dauerhaft hohe Priorität für ein Spiel (Experte) | erzeugt | - | Unklar | Kein belegter Gewinn; bei Anti-Cheat gesperrt. |
 | GAME-019 | Speicherintegrität ausschalten (Experte) | Expert | Disputed | Unklar | Schwächt die Sicherheit; Gewinn nicht belegt. |
 | GAME-021 | Globale Timer-Auflösung (Experte) | Expert | Disputed | Unklar | Kein belegter Nutzen, mehr Stromverbrauch. |
+| GAME-022 | Höchste Bildwiederholrate | Caution | Proven | Spürbar | Deutlich flüssigere Bewegung, wenn der Bildschirm unter seinem Maximum lief. |
+| GAME-023 | Zeigergeschwindigkeit auf Standard (1:1) | Caution | Proven | Klein | Ändert nur etwas, wenn die Zeigergeschwindigkeit nicht in der Mitte stand. |
+| GAME-024 | Schnellere Tastenwiederholung | Caution | Proven | Klein | Nur gehaltene Tasten außerhalb von Spielen, die Tasten direkt lesen. |
 | NET-001 | DNS: Cloudflare | Safe | Proven | Klein | Andere Namensauflösung; Geschwindigkeit hängt vom Anschluss ab. |
 | NET-002 | DNS: Google | Safe | Proven | Klein | Andere Namensauflösung; Geschwindigkeit hängt vom Anschluss ab. |
 | NET-003 | DNS: Quad9 | Safe | Proven | Klein | Andere Namensauflösung mit Schutz vor Schadseiten. |
@@ -111,6 +114,7 @@ Ergebnis: 4 Spürbar, 43 Klein, 54 Unklar (Katalog plus Basis der erzeugten Twea
 ## Messbelege für "Spürbar"
 
 - GAME-011: Microsoft Learn: SystemParametersInfo SPI_SETMOUSE (Beschleunigungsschwellen und Faktor 0 = Zeiger folgt der Maus ohne Beschleunigung); Host-Test 26200: Werte vorher/nachher geprüft
+- GAME-022: Microsoft Support: "Change the refresh rate on your monitor in Windows" (höhere Rate = flüssigere Bewegung). Wirkt nur, wenn der Bildschirm unter seiner höchsten Rate läuft; der Gaming-Check "Bildwiederholrate" zeigt beide Werte. Kein Host-Test (kein HKCU-Tweak), nur Engine-Tests mit Fake-Bildschirm.
 - PERF-005: Microsoft Learn: SystemParametersInfo SPI_SETCLIENTAREAANIMATION und SPI_SETANIMATION (Fensteranimationen aus); Host-Test 26200
 - PERF-006: Microsoft Learn: SystemParametersInfo SPI_SETMENUSHOWDELAY (Verzögerung in Millisekunden); Host-Test 26200: Windows-Standard 400 ms, nachher 100 ms
 - PERF-009: Microsoft Learn: "Hibernation" (Größe der Ruhezustandsdatei standardmäßig rund 40 Prozent des Arbeitsspeichers; powercfg /hibernate off entfernt sie)

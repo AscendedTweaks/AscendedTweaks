@@ -16,6 +16,9 @@ public interface INetworkAccess
     /// <summary>Setzt statische DNS-Server; eine leere Liste stellt "automatisch (DHCP)" ein.</summary>
     void SetDnsServers(string adapter, IReadOnlyList<string> servers);
 
+    /// <summary>True if the adapter has this address family. SetDnsServers skips addresses of a family the adapter lacks.</summary>
+    bool SupportsFamily(string adapter, AddressFamily family) => true;
+
     /// <summary>Autotuning-Stufe des TCP-Empfangsfensters (normal, disabled, highlyrestricted, restricted, experimental) oder null.</summary>
     string? GetAutotuning();
 
@@ -61,6 +64,27 @@ public static partial class AdapterState
         return state.Split(';', StringSplitOptions.RemoveEmptyEntries)
             .Select(p => p.Split('=', 2))
             .ToDictionary(p => p[0], p => p[1], StringComparer.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// The DNS state the adapters can actually hold: an adapter without IPv6 keeps only the IPv4 addresses (and the other way
+    /// round). Without this, a Cloudflare list with IPv6 never matches on such an adapter and the change is rolled back.
+    /// </summary>
+    public static string ReachableDns(string state, IReadOnlyList<string> adapters, Func<string, AddressFamily, bool> supports)
+    {
+        ArgumentNullException.ThrowIfNull(supports);
+        if (adapters.Count == 0)
+        {
+            return state;
+        }
+
+        var perAdapter = Split(state, adapters).ToDictionary(
+            p => p.Key,
+            p => p.Value == Dhcp || DnsServers.Parse(p.Value) is not { } list
+                ? p.Value
+                : list.Where(a => supports(p.Key, a.AddressFamily)).ToList() is { Count: > 0 } kept ? DnsServers.Normalize(kept) : Dhcp,
+            StringComparer.OrdinalIgnoreCase);
+        return Combine(perAdapter);
     }
 
     public static bool IsAdapterId(string id) => AdapterPattern().IsMatch(id);

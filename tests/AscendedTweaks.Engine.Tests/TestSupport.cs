@@ -21,13 +21,15 @@ internal sealed class Harness : IDisposable
 
     public FakeParameters Parameters { get; } = new();
 
+    public FakeDisplay Display { get; } = new();
+
     public FakeRestorePoints RestorePoints { get; } = new();
 
     public string StateRoot { get; } = Path.Combine(Path.GetTempPath(), "AscendedTweaks.Tests", Guid.NewGuid().ToString("N"));
 
-    public ExecutorSet Executors => new(Registry, Services, Power, Commands, Environment.SystemDirectory, Tasks, Parameters);
+    public ExecutorSet Executors => new(Registry, Services, Power, Commands, Environment.SystemDirectory, Tasks, Parameters, display: Display);
 
-    public int TotalWrites => Registry.WriteCount + Services.WriteCount + Power.WriteCount + Commands.WriteCount + Tasks.WriteCount + Parameters.WriteCount;
+    public int TotalWrites => Registry.WriteCount + Services.WriteCount + Power.WriteCount + Commands.WriteCount + Tasks.WriteCount + Parameters.WriteCount + Display.WriteCount;
 
     public StateStore Store => new(StateRoot, new FakeTime());
 

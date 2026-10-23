@@ -90,7 +90,7 @@
     "taskPath": { "type": "string", "minLength": 20, "maxLength": 260, "pattern": "^\\\\Microsoft\\\\Windows\\\\" },
     "listFormat": { "enum": ["KeyValueSemicolon", "CompatLayers"] },
     "listKey": { "type": "string", "pattern": "^[A-Za-z0-9_]{1,64}$" },
-    "spiParameter": { "enum": ["ClientAreaAnimation", "MinimizeMaximizeAnimation", "MenuShowDelay", "MouseAcceleration", "StickyKeysHotkey", "FilterKeysHotkey", "ToggleKeysHotkey"] },
+    "spiParameter": { "enum": ["ClientAreaAnimation", "MinimizeMaximizeAnimation", "MenuShowDelay", "MouseAcceleration", "StickyKeysHotkey", "FilterKeysHotkey", "ToggleKeysHotkey", "MouseSpeed", "KeyboardDelay", "KeyboardSpeed"] },
     "state": { "enum": ["Applied", "NotApplied", "Mixed", "Unavailable"] },
     "condition": {
       "oneOf": [
@@ -160,6 +160,11 @@
             "type": { "const": "ScheduledTaskEnabledEquals" },
             "taskPath": { "$ref": "#/$defs/taskPath" }, "value": { "type": "boolean" }
           }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type"],
+          "properties": { "type": { "const": "DisplayRefreshIsHighest" } }
         },
         {
           "type": "object", "additionalProperties": false,
@@ -267,6 +272,11 @@
             "type": { "const": "ScheduledTaskSetEnabled" },
             "taskPath": { "$ref": "#/$defs/taskPath" }, "enabled": { "type": "boolean" }
           }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type"],
+          "properties": { "type": { "const": "DisplayRefreshRate" } }
         },
         {
           "type": "object", "additionalProperties": false,

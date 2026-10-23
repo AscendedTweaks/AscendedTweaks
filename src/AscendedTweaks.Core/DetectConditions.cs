@@ -116,6 +116,7 @@ public static class DetectTypeNames
         ["ScheduledTaskEnabledEquals"] = typeof(ScheduledTaskEnabledEqualsCondition),
         ["SystemParameterEquals"] = typeof(SystemParameterEqualsCondition),
         ["RegistryListEntryEquals"] = typeof(RegistryListEntryEqualsCondition),
+        ["DisplayRefreshIsHighest"] = typeof(DisplayRefreshIsHighestCondition),
         ["AllOf"] = typeof(AllOfCondition),
     };
 

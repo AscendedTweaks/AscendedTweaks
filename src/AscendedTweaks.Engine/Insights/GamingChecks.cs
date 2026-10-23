@@ -94,7 +94,7 @@ public static class GamingChecks
         }
 
         return display.CurrentHz < display.MaxHz
-            ? new("refresh", CheckState.Attention, "check.refresh.low", [("current", display.CurrentHz), ("max", display.MaxHz)], "check.refresh.howto", "ms-settings:display-advanced")
+            ? new("refresh", CheckState.Attention, "check.refresh.low", [("current", display.CurrentHz), ("max", display.MaxHz)], "check.refresh.howto", "ms-settings:display-advanced", FixTweakId: "GAME-022")
             : new("refresh", CheckState.Good, "check.refresh.ok", [("current", display.CurrentHz)]);
     }
 

@@ -344,10 +344,16 @@ internal sealed class CommandExecutor : ActionExecutor<CommandAction, CommandCap
     protected override CommandCapture Apply(CommandAction action, CommandCapture before)
     {
         Set(action.Command, action.Value);
-        return before with { Applied = true, WrittenValue = action.Value };
+        return before with { Applied = true, WrittenValue = Expected(action.Command, action.Value) };
     }
 
-    protected override bool Verify(CommandAction action) => string.Equals(Query(action.Command), action.Value, StringComparison.Ordinal);
+    protected override bool Verify(CommandAction action) => string.Equals(Query(action.Command), Expected(action.Command, action.Value), StringComparison.Ordinal);
+
+    /// <summary>The value Query returns after writing <paramref name="value"/>; differs only for DNS on adapters without IPv6 or IPv4.</summary>
+    public string Expected(string commandId, string value) =>
+        Definition(commandId).BuiltInQuery == BuiltInQueries.DnsServers && AdapterState.IsValidDnsState(value)
+            ? AdapterState.ReachableDns(value, Network.PhysicalAdapters(), Network.SupportsFamily)
+            : value;
 
     protected override void Restore(CommandCapture capture)
     {

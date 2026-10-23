@@ -4,6 +4,13 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 
 ## [Unreleased]
 
+### Hinzugefügt
+- GAME-022 "Höchste Bildwiederholrate": stellt den Hauptbildschirm mit einem Klick auf die höchste Rate der aktuellen Auflösung (neuer Aktionstyp `DisplayRefreshRate`, Erkennung `DisplayRefreshIsHighest`); "Jetzt beheben" im Gaming-Check "Bildwiederholrate" nutzt ihn. In den Presets Gaming und Wettkampf.
+- GAME-023 "Zeigergeschwindigkeit auf Standard (1:1)" und GAME-024 "Schnellere Tastenwiederholung" (SystemParametersInfo `MouseSpeed`, `KeyboardDelay`, `KeyboardSpeed`).
+
+### Behoben
+- DNS-Tweaks meldeten auf Adaptern ohne IPv6 "Windows oder ein anderes Programm blockiert die Änderung" und setzten alles zurück; erwartet werden jetzt nur die Adressen, die der Adapter aufnehmen kann.
+
 ## [1.1.0] - noch nicht veröffentlicht
 
 Erste öffentliche Version (V3), nicht signiert. Lizenz MIT.

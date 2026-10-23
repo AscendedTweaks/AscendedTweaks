@@ -85,6 +85,20 @@ public sealed class WindowsNetworkAccess : INetworkAccess
         Apply("ipv6", ipv6, addresses.Where(a => a.AddressFamily == AddressFamily.InterNetworkV6).ToList());
     }
 
+    public bool SupportsFamily(string adapter, AddressFamily family)
+    {
+        Guard(adapter);
+        try
+        {
+            var nic = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(n => string.Equals(n.Id, adapter, StringComparison.OrdinalIgnoreCase));
+            return nic is not null && nic.Supports(family == AddressFamily.InterNetworkV6 ? NetworkInterfaceComponent.IPv6 : NetworkInterfaceComponent.IPv4);
+        }
+        catch (NetworkInformationException)
+        {
+            return true;
+        }
+    }
+
     public string? GetAutotuning()
     {
         try

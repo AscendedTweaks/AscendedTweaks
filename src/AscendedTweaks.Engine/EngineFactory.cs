@@ -37,7 +37,8 @@ public static class EngineFactory
             new WindowsScheduledTaskAccess(commands, environment.SystemDirectory),
             machineOnly ? null : new WindowsSystemParametersAccess(),
             new WindowsNetworkAccess(commands, environment.SystemDirectory),
-            new WindowsDefenderAccess(registry));
+            new WindowsDefenderAccess(registry),
+            machineOnly ? null : new WindowsHardwareFacts());
         return new TweakEngine(
             catalog,
             executors,

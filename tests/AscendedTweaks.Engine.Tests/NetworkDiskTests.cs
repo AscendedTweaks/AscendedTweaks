@@ -63,6 +63,24 @@ public sealed class NetworkDiskTests : IDisposable
     }
 
     [Fact]
+    public void Dns_tweak_with_ipv6_succeeds_on_an_adapter_without_ipv6()
+    {
+        // Seen on a real PC: Ethernet without IPv6 got only the IPv4 addresses, and the check wrongly reported "blocked".
+        _net.Ipv4Only.Add(Eth);
+        _net.Dns[Eth] = ["192.168.178.1"];
+        var engine = Engine(Dns("NET-001", DnsServers.Cloudflare));
+
+        engine.ApplyBatch(["NET-001"], new ApplyOptions()).Outcome.Should().Be(BatchOutcome.Committed);
+        _net.Dns[Eth].Should().Equal("1.1.1.1", "1.0.0.1");
+        _net.Dns[Wifi].Should().Equal(DnsServers.Cloudflare.Split(','));
+        engine.GetStatus("NET-001").State.Should().Be(TweakState.Applied);
+
+        engine.RevertTweak("NET-001", _ => ConflictDecision.Cancel).Outcome.Should().Be(RevertOutcome.Reverted);
+        _net.Dns[Eth].Should().Equal("192.168.178.1");
+        _net.Dns[Wifi].Should().BeEmpty();
+    }
+
+    [Fact]
     public void Custom_dns_is_a_generated_tweak_with_strict_validation()
     {
         var id = CustomDnsTweaks.IdFor([IPAddress.Parse("94.140.14.14"), IPAddress.Parse("94.140.15.15")]);
@@ -196,7 +214,14 @@ public sealed class NetworkDiskTests : IDisposable
 
         public IReadOnlyList<string> GetDnsServers(string adapter) => Dns[adapter];
 
-        public void SetDnsServers(string adapter, IReadOnlyList<string> servers) => Dns[adapter] = servers.ToList();
+        public HashSet<string> Ipv4Only { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>Like WindowsNetworkAccess: addresses of a family the adapter lacks are skipped.</summary>
+        public void SetDnsServers(string adapter, IReadOnlyList<string> servers) =>
+            Dns[adapter] = servers.Where(s => SupportsFamily(adapter, IPAddress.Parse(s).AddressFamily)).ToList();
+
+        public bool SupportsFamily(string adapter, System.Net.Sockets.AddressFamily family) =>
+            family != System.Net.Sockets.AddressFamily.InterNetworkV6 || !Ipv4Only.Contains(adapter);
 
         public string? GetAutotuning() => "normal";
 

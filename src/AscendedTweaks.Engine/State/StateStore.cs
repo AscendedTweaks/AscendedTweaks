@@ -243,7 +243,7 @@ public sealed class StateStore
             PowerPlanCapture or PowerSettingCapture => "power.json",
             CommandCapture => "commands.json",
             ScheduledTaskCapture => "tasks.json",
-            SystemParameterCapture => "parameters.json",
+            SystemParameterCapture or DisplayRefreshCapture => "parameters.json",
             _ => throw new AscendedTweaksException(ErrorKind.BackupFailed, $"Unknown backup type {capture.GetType().Name}."),
         };
     }

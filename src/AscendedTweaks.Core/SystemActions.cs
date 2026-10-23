@@ -19,6 +19,29 @@ public sealed class SystemParametersInfoAction : TweakAction
     public required uint Value { get; init; }
 }
 
+/// <summary>Main display: highest refresh rate the display offers at its current resolution. The target is read on the PC.</summary>
+public sealed class DisplayRefreshRateAction : TweakAction
+{
+}
+
+/// <summary>True when the main display already runs at the highest refresh rate of its current resolution.</summary>
+public sealed class DisplayRefreshIsHighestCondition : DetectCondition
+{
+}
+
+/// <summary>Refresh rates of the main display at its current resolution, in hertz.</summary>
+public sealed record RefreshRates(int Current, int Highest);
+
+/// <summary>Refresh rate of the main display (EnumDisplaySettings, ChangeDisplaySettingsEx). No administrator rights needed.</summary>
+public interface IDisplayAccess
+{
+    /// <summary>Null when the display mode is not readable.</summary>
+    RefreshRates? ReadRefreshRates();
+
+    /// <summary>Sets a rate the display offers at its current resolution; other rates are refused.</summary>
+    void SetRefreshRate(int hertz);
+}
+
 public sealed class ScheduledTaskEnabledEqualsCondition : DetectCondition
 {
     public required string TaskPath { get; init; }
@@ -64,6 +87,9 @@ public enum SystemParameterKind
 
     /// <summary>SPI_GETMOUSE/SETMOUSE: drei Werte (Schwelle 1, Schwelle 2, Beschleunigung), gepackt als t1 | t2 &lt;&lt; 8 | acc &lt;&lt; 16.</summary>
     MouseTriple,
+
+    /// <summary>INT; Lesen ueber pvParam (Zeiger), Schreiben ueber pvParam (Wert selbst), zum Beispiel SPI_SETMOUSESPEED.</summary>
+    UIntInPvParam,
 
     /// <summary>Nur das Bit "Tastenkuerzel aktiv" (0x4) in STICKYKEYS/TOGGLEKEYS (8 Byte) oder FILTERKEYS (24 Byte); Wert 0 oder 1.</summary>
     AccessibilityHotkey,
@@ -162,6 +188,39 @@ public static class SystemParameterWhitelist
             Min = 0,
             Max = 4000,
             RegistryFootprint = @"HKCU\Control Panel\Desktop\MenuShowDelay",
+        },
+        new SystemParameterDefinition
+        {
+            // 10 is the Windows default (pointer speed slider in the middle): one pointer step per mouse step.
+            Id = "MouseSpeed",
+            GetAction = 0x0070,
+            SetAction = 0x0071,
+            Kind = SystemParameterKind.UIntInPvParam,
+            Min = 1,
+            Max = 20,
+            RegistryFootprint = @"HKCU\Control Panel\Mouse\MouseSensitivity",
+        },
+        new SystemParameterDefinition
+        {
+            // 0 (about 250 ms) to 3 (about 1 s) before a held key starts repeating.
+            Id = "KeyboardDelay",
+            GetAction = 0x0016,
+            SetAction = 0x0017,
+            Kind = SystemParameterKind.UIntInUiParam,
+            Min = 0,
+            Max = 3,
+            RegistryFootprint = @"HKCU\Control Panel\Keyboard\KeyboardDelay",
+        },
+        new SystemParameterDefinition
+        {
+            // 0 (about 2.5 repeats per second) to 31 (about 30 per second).
+            Id = "KeyboardSpeed",
+            GetAction = 0x000A,
+            SetAction = 0x000B,
+            Kind = SystemParameterKind.UIntInUiParam,
+            Min = 0,
+            Max = 31,
+            RegistryFootprint = @"HKCU\Control Panel\Keyboard\KeyboardSpeed",
         },
     }.ToDictionary(d => d.Id, StringComparer.Ordinal);
 

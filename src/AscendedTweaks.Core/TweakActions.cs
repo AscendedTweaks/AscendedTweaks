@@ -103,6 +103,7 @@ public static class ActionTypeNames
         ["ScheduledTaskSetEnabled"] = typeof(ScheduledTaskSetEnabledAction),
         ["SystemParametersInfo"] = typeof(SystemParametersInfoAction),
         ["RegistryListEntry"] = typeof(RegistryListEntryAction),
+        ["DisplayRefreshRate"] = typeof(DisplayRefreshRateAction),
     };
 
     /// <summary>In Abschnitt 5.2 vorgesehen, aber erst in spaeteren Phasen implementiert.</summary>

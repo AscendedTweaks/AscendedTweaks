@@ -84,6 +84,7 @@ public sealed class ScriptExporter
     {
         RegistryDeleteKeyAction => "deletes a whole key; resetting is only possible in the app",
         SystemParametersInfoAction => "uses SystemParametersInfo; only possible in the app",
+        DisplayRefreshRateAction => "changes the display mode; only possible in the app",
         RegistryListEntryAction => "changes an entry in a shared list; only possible in the app",
         CommandAction c when CommandExecutor.Definition(c.Command).BuiltInSet is not null => "uses a Windows interface (network adapter or Defender); only possible in the app",
         RegistrySetValueAction { Hive: RegHive.HKU } or RegistryDeleteValueAction { Hive: RegHive.HKU } or RegistryCreateKeyAction { Hive: RegHive.HKU } => "internal user area",

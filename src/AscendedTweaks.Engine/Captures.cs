@@ -41,6 +41,7 @@ public sealed record StoredRegistryData
 [JsonDerivedType(typeof(ScheduledTaskCapture), "scheduledTask")]
 [JsonDerivedType(typeof(SystemParameterCapture), "systemParameter")]
 [JsonDerivedType(typeof(RegistryListEntryCapture), "registryListEntry")]
+[JsonDerivedType(typeof(DisplayRefreshCapture), "displayRefresh")]
 public abstract record ActionCapture
 {
     /// <summary>True, sobald die Aktion ausgefuehrt wurde und die Written-Felder gueltig sind.</summary>
@@ -167,6 +168,16 @@ public sealed record SystemParameterCapture : ActionCapture
     public required uint BeforeValue { get; init; }
 
     public uint? WrittenValue { get; init; }
+}
+
+/// <summary>Refresh rate of the main display before the change and the rate that was set.</summary>
+public sealed record DisplayRefreshCapture : ActionCapture
+{
+    public required int BeforeHertz { get; init; }
+
+    public required int TargetHertz { get; init; }
+
+    public int? WrittenHertz { get; init; }
 }
 
 public sealed record RegistryListEntryCapture : ActionCapture

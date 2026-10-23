@@ -279,6 +279,9 @@ internal sealed class FakeParameters : ISystemParametersAccess
         ["StickyKeysHotkey"] = 1,
         ["FilterKeysHotkey"] = 1,
         ["ToggleKeysHotkey"] = 1,
+        ["MouseSpeed"] = 14,
+        ["KeyboardDelay"] = 1,
+        ["KeyboardSpeed"] = 20,
     };
 
     public int WriteCount { get; private set; }
@@ -289,6 +292,31 @@ internal sealed class FakeParameters : ISystemParametersAccess
     {
         WriteCount++;
         Values[parameter] = value;
+    }
+}
+
+/// <summary>Main display with a list of offered rates, like EnumDisplaySettings at one resolution.</summary>
+internal sealed class FakeDisplay : IDisplayAccess
+{
+    public int Current { get; set; } = 60;
+
+    public List<int> Offered { get; } = [60, 120, 144];
+
+    public bool Readable { get; set; } = true;
+
+    public int WriteCount { get; private set; }
+
+    public RefreshRates? ReadRefreshRates() => Readable ? new RefreshRates(Current, Offered.Max()) : null;
+
+    public void SetRefreshRate(int hertz)
+    {
+        if (!Offered.Contains(hertz))
+        {
+            throw new AscendedTweaksException(ErrorKind.Unavailable, $"{hertz} Hz is not offered (test).");
+        }
+
+        WriteCount++;
+        Current = hertz;
     }
 }
 

@@ -155,6 +155,81 @@ internal sealed class SystemParameterExecutor : ActionExecutor<SystemParametersI
     }
 }
 
+/// <summary>Main display to the highest refresh rate of its current resolution; resetting sets the rate from before.</summary>
+internal sealed class DisplayRefreshExecutor : ActionExecutor<DisplayRefreshRateAction, DisplayRefreshCapture>
+{
+    private const string Target = "Main display refresh rate";
+    private readonly IDisplayAccess _display;
+
+    public DisplayRefreshExecutor(IDisplayAccess display) => _display = display;
+
+    public RefreshRates? Read() => _display.ReadRefreshRates();
+
+    protected override string TargetKey(DisplayRefreshRateAction action) => "display:refresh";
+
+    protected override DisplayRefreshCapture Capture(DisplayRefreshRateAction action)
+    {
+        var rates = Read() ?? throw new AscendedTweaksException(ErrorKind.Unavailable, "The refresh rate of the main display is not readable.");
+        return new DisplayRefreshCapture { BeforeHertz = rates.Current, TargetHertz = rates.Highest };
+    }
+
+    protected override DisplayRefreshCapture Apply(DisplayRefreshRateAction action, DisplayRefreshCapture before)
+    {
+        if (before.BeforeHertz != before.TargetHertz)
+        {
+            _display.SetRefreshRate(before.TargetHertz);
+        }
+
+        return before with { Applied = true, WrittenHertz = before.TargetHertz };
+    }
+
+    protected override bool Verify(DisplayRefreshRateAction action) => Read() is { } rates && rates.Current == rates.Highest;
+
+    protected override void Restore(DisplayRefreshCapture capture)
+    {
+        if (Read()?.Current != capture.BeforeHertz)
+        {
+            _display.SetRefreshRate(capture.BeforeHertz);
+        }
+    }
+
+    protected override bool IsAtWrittenState(DisplayRefreshCapture capture) => Read()?.Current == capture.WrittenHertz;
+
+    protected override bool IsAtOriginalState(DisplayRefreshCapture capture) => Read()?.Current == capture.BeforeHertz;
+
+    protected override PlanItem Describe(string tweakId, DisplayRefreshRateAction action)
+    {
+        var rates = Read();
+        return new PlanItem
+        {
+            TweakId = tweakId,
+            ActionType = NameOf(action),
+            Target = Target,
+            Current = rates is null ? "(not readable)" : Hertz(rates.Current),
+            New = rates is null ? "(not readable)" : Hertz(rates.Highest),
+        };
+    }
+
+    protected override CaptureView View(DisplayRefreshCapture capture)
+    {
+        return new CaptureView(
+            Target,
+            Read() is { } rates ? Hertz(rates.Current) : EngineText.Missing,
+            Hertz(capture.BeforeHertz),
+            capture.WrittenHertz is { } written ? Hertz(written) : EngineText.Missing);
+    }
+
+    private static string Hertz(int value) => value.ToString(CultureInfo.InvariantCulture) + " Hz";
+}
+
+internal sealed class UnavailableDisplay : IDisplayAccess
+{
+    public RefreshRates? ReadRefreshRates() => null;
+
+    public void SetRefreshRate(int hertz) =>
+        throw new AscendedTweaksException(ErrorKind.Unavailable, "Display settings are not available in this process.");
+}
+
 /// <summary>Platzhalter, wenn eine Umgebung keine Aufgabenplanung bereitstellt (zum Beispiel aeltere Tests).</summary>
 internal sealed class UnavailableScheduledTasks : IScheduledTaskAccess
 {

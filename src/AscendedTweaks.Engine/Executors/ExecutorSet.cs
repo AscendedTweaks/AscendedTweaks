@@ -17,7 +17,8 @@ public sealed class ExecutorSet
         IScheduledTaskAccess? tasks = null,
         ISystemParametersAccess? parameters = null,
         INetworkAccess? network = null,
-        IDefenderAccess? defender = null)
+        IDefenderAccess? defender = null,
+        IDisplayAccess? display = null)
     {
         Registry = registry;
         Services = services;
@@ -27,6 +28,7 @@ public sealed class ExecutorSet
         Tasks = new ScheduledTaskExecutor(tasks ?? new UnavailableScheduledTasks());
         Parameters = new SystemParameterExecutor(parameters ?? new UnavailableSystemParameters());
         ListEntries = new RegistryListEntryExecutor(registry);
+        Display = new DisplayRefreshExecutor(display ?? new UnavailableDisplay());
 
         IActionExecutor[] all =
         [
@@ -41,6 +43,7 @@ public sealed class ExecutorSet
             Tasks,
             Parameters,
             ListEntries,
+            Display,
         ];
         _byAction = all.ToDictionary(e => e.ActionType);
 
@@ -66,6 +69,8 @@ public sealed class ExecutorSet
     internal SystemParameterExecutor Parameters { get; }
 
     internal RegistryListEntryExecutor ListEntries { get; }
+
+    internal DisplayRefreshExecutor Display { get; }
 
     public IActionExecutor For(TweakAction action)
     {

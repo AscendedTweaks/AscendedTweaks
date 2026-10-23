@@ -12,6 +12,9 @@ public sealed class Phase7Tests : IDisposable
 
     public void Dispose() => _h.Dispose();
 
+    private static TweakDefinition Refresh(string id) =>
+        TestTweaks.Create(id, new DisplayRefreshIsHighestCondition(), [new DisplayRefreshRateAction()]);
+
     [Theory]
     [InlineData(null, "SwapEffectUpgradeEnable", "1", "SwapEffectUpgradeEnable=1;")]
     [InlineData("VRROptimizeEnable=1;", "SwapEffectUpgradeEnable", "1", "VRROptimizeEnable=1;SwapEffectUpgradeEnable=1;")]
@@ -146,6 +149,64 @@ public sealed class Phase7Tests : IDisposable
 
         _h.Parameters.Values["MouseAcceleration"].Should().Be(6u | 10u << 8 | 1u << 16);
         _h.Parameters.Values["StickyKeysHotkey"].Should().Be(1);
+    }
+
+    [Fact]
+    public void Pointer_speed_and_key_repeat_restore_original_values()
+    {
+        var engine = _h.Engine(
+            TestTweaks.Create("GAME-923", new SystemParameterEqualsCondition { Parameter = "MouseSpeed", Value = 10 }, [new SystemParametersInfoAction { Parameter = "MouseSpeed", Value = 10 }]),
+            TestTweaks.Create(
+                "GAME-924",
+                new AllOfCondition
+                {
+                    Conditions =
+                    [
+                        new SystemParameterEqualsCondition { Parameter = "KeyboardDelay", Value = 0 },
+                        new SystemParameterEqualsCondition { Parameter = "KeyboardSpeed", Value = 31 },
+                    ],
+                },
+                [new SystemParametersInfoAction { Parameter = "KeyboardDelay", Value = 0 }, new SystemParametersInfoAction { Parameter = "KeyboardSpeed", Value = 31 }]));
+
+        engine.ApplyBatch(["GAME-923", "GAME-924"], new ApplyOptions()).Outcome.Should().Be(BatchOutcome.Committed);
+        _h.Parameters.Values["MouseSpeed"].Should().Be(10);
+        _h.Parameters.Values["KeyboardDelay"].Should().Be(0);
+        _h.Parameters.Values["KeyboardSpeed"].Should().Be(31);
+        engine.GetStatus("GAME-924").State.Should().Be(TweakState.Applied);
+
+        engine.RevertAll(_ => ConflictDecision.Cancel);
+        _h.Parameters.Values["MouseSpeed"].Should().Be(14);
+        _h.Parameters.Values["KeyboardDelay"].Should().Be(1);
+        _h.Parameters.Values["KeyboardSpeed"].Should().Be(20);
+    }
+
+    [Fact]
+    public void Highest_refresh_rate_is_set_and_the_old_rate_comes_back()
+    {
+        var engine = _h.Engine(Refresh("GAME-922"));
+
+        engine.GetStatus("GAME-922").State.Should().Be(TweakState.NotApplied);
+        var plan = engine.PlanPreview(["GAME-922"]);
+        plan.Ready.Should().ContainSingle();
+        plan.Items.Should().ContainSingle().Which.Should().Match<PlanItem>(i => i.Current == "60 Hz" && i.New == "144 Hz");
+        engine.ApplyBatch(["GAME-922"], new ApplyOptions()).Outcome.Should().Be(BatchOutcome.Committed);
+        _h.Display.Current.Should().Be(144);
+        engine.GetStatus("GAME-922").State.Should().Be(TweakState.Applied);
+
+        engine.RevertTweak("GAME-922", _ => ConflictDecision.Cancel).Outcome.Should().Be(RevertOutcome.Reverted);
+        _h.Display.Current.Should().Be(60);
+    }
+
+    [Fact]
+    public void Refresh_rate_already_at_maximum_or_unreadable_changes_nothing()
+    {
+        _h.Display.Current = 144;
+        _h.Engine(Refresh("GAME-922")).GetStatus("GAME-922").State.Should().Be(TweakState.Applied);
+
+        _h.Display.Readable = false;
+        var status = _h.Engine(Refresh("GAME-922")).GetStatus("GAME-922");
+        status.State.Should().Be(TweakState.Unavailable);
+        _h.Display.WriteCount.Should().Be(0);
     }
 
     [Fact]

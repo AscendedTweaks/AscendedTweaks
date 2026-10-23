@@ -94,7 +94,7 @@ public sealed class DetectEvaluator
                     };
                 }
 
-                return DetectResult.Of(string.Equals(current, c.Value, StringComparison.Ordinal) ? TweakState.Applied : TweakState.NotApplied);
+                return DetectResult.Of(string.Equals(current, _executors.Commands.Expected(c.Command, c.Value), StringComparison.Ordinal) ? TweakState.Applied : TweakState.NotApplied);
 
             case ScheduledTaskEnabledEqualsCondition c:
                 var enabled = _executors.Tasks.Read(c.TaskPath);
@@ -107,6 +107,11 @@ public sealed class DetectEvaluator
 
             case SystemParameterEqualsCondition c:
                 return DetectResult.Of(_executors.Parameters.Read(c.Parameter) == c.Value ? TweakState.Applied : TweakState.NotApplied);
+
+            case DisplayRefreshIsHighestCondition:
+                return _executors.Display.Read() is { } rates
+                    ? DetectResult.Of(rates.Current == rates.Highest ? TweakState.Applied : TweakState.NotApplied)
+                    : new DetectResult(TweakState.Unavailable, "The refresh rate of the main display is not readable.");
 
             case RegistryListEntryEqualsCondition c:
                 var entry = _executors.ListEntries.ReadEntry(c.Hive, c.Path, c.Name, c.Format, c.Key);

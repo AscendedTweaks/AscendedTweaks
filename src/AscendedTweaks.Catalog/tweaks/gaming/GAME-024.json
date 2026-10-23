@@ -1,0 +1,65 @@
+{
+  "id": "GAME-024",
+  "category": "Gaming.Input",
+  "nameKey": "tweak.GAME-024.name",
+  "descriptionKey": "tweak.GAME-024.desc",
+  "sideEffectsKey": "tweak.GAME-024.side",
+  "risk": "Caution",
+  "evidence": "Proven",
+  "builds": [
+    {
+      "min": 19045,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "User",
+  "requiresAdmin": false,
+  "requiresReboot": false,
+  "detect": {
+    "type": "AllOf",
+    "conditions": [
+      {
+        "type": "SystemParameterEquals",
+        "parameter": "KeyboardDelay",
+        "value": 0
+      },
+      {
+        "type": "SystemParameterEquals",
+        "parameter": "KeyboardSpeed",
+        "value": 31
+      }
+    ]
+  },
+  "apply": [
+    {
+      "type": "SystemParametersInfo",
+      "parameter": "KeyboardDelay",
+      "value": 0
+    },
+    {
+      "type": "SystemParametersInfo",
+      "parameter": "KeyboardSpeed",
+      "value": 31
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Learn: 'SystemParametersInfoW function', SPI_SETKEYBOARDDELAY (0 = shortest delay, about 250 ms) and SPI_SETKEYBOARDSPEED (31 = fastest, about 30 repeats per second). Same values as the sliders in Control Panel > Keyboard. The app restores both previous values when resetting.",
+    "Games that read the keys directly are not affected; the setting applies to held keys in Windows, chats and menus."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": false,
+  "impact": "Small",
+  "impactNote": "tweak.GAME-024.impact",
+  "measuredOn": [
+    "Microsoft Learn: SystemParametersInfo SPI_SETKEYBOARDDELAY and SPI_SETKEYBOARDSPEED (value ranges and meaning); effect limited to held keys outside games that read keys directly"
+  ],
+  "plainTitleKey": "tweak.GAME-024.plain.title",
+  "plainDescKey": "tweak.GAME-024.plain.desc"
+}

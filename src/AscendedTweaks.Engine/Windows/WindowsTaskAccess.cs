@@ -110,7 +110,7 @@ public sealed class WindowsSystemParametersAccess : ISystemParametersAccess
                 var info = new AnimationInfo { Size = (uint)Marshal.SizeOf<AnimationInfo>(), MinAnimate = (int)value };
                 Check(Native.SystemParametersInfoW(definition.SetAction, info.Size, ref info, UpdateIniFile | SendChange), parameter);
                 break;
-            case SystemParameterKind.BoolInPointer:
+            case SystemParameterKind.BoolInPointer or SystemParameterKind.UIntInPvParam:
                 Check(Native.SystemParametersInfoW(definition.SetAction, 0, (IntPtr)value, UpdateIniFile | SendChange), parameter);
                 break;
             case SystemParameterKind.MouseTriple:

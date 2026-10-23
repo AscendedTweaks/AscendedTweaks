@@ -38,6 +38,9 @@ public sealed record CommandDefinition
     /// <summary>Grund fuer "nicht verfuegbar", wenn der Ist-Wert fehlt (zum Beispiel: kein Adapter mit dieser Eigenschaft).</summary>
     public string? UnreadableReason { get; init; }
 
+    /// <summary>Exit codes that mean success; DISM answers 3010 when the change needs a restart.</summary>
+    public IReadOnlyList<int> SuccessExitCodes { get; init; } = [0];
+
     public bool IsAllowed(string value) =>
         AllowedValues.Contains(value, StringComparer.Ordinal) || ValueValidator?.Invoke(value) == true;
 
@@ -142,6 +145,20 @@ public static class CommandWhitelist
             QueryPattern = @"Reserved storage is (?<value>enabled|disabled)",
             AllowedValues = ["enabled", "disabled"],
             ReadRequiresAdmin = true,
+        },
+        new CommandDefinition
+        {
+            // Windows feature "Virtual Machine Platform". Values are the DISM verbs; the query maps "Disabled" and
+            // "Disable Pending" (after the change, before the restart) to "Disable", and the same for "Enable".
+            Id = "dism.virtualmachineplatform",
+            Executable = "dism.exe",
+            SetArguments = ["/Online", $"/{CommandDefinition.ValuePlaceholder}-Feature", "/FeatureName:VirtualMachinePlatform", "/NoRestart", "/English"],
+            QueryArguments = ["/Online", "/Get-FeatureInfo", "/FeatureName:VirtualMachinePlatform", "/English"],
+            QueryPattern = @"State : (?<value>Enable|Disable)(?:d| Pending)",
+            AllowedValues = ["Enable", "Disable"],
+            ReadRequiresAdmin = true,
+            SuccessExitCodes = [0, 3010],
+            UnreadableReason = "The Windows feature \"Virtual Machine Platform\" is not available on this Windows.",
         },
         new CommandDefinition
         {

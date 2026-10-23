@@ -459,7 +459,7 @@ internal sealed class CommandExecutor : ActionExecutor<CommandAction, CommandCap
         }
 
         var result = _runner.Run(ExecutablePath(definition), definition.BuildSetArguments(value), Timeout);
-        if (result.ExitCode != 0)
+        if (!definition.SuccessExitCodes.Contains(result.ExitCode))
         {
             throw new AscendedTweaksException(
                 result.ExitCode == 5 ? ErrorKind.PermissionDenied : ErrorKind.General,

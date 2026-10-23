@@ -326,6 +326,9 @@ internal sealed class FakeCommands : ICommandRunner
 {
     public string LastAccessValue { get; set; } = "2";
 
+    /// <summary>DISM state of Virtual Machine Platform ("Enabled", "Disabled", "... Pending"); null = feature unknown.</summary>
+    public string? VmpState { get; set; } = "Enabled";
+
     public int WriteCount { get; private set; }
 
     public bool BrokenOutput { get; set; }
@@ -350,6 +353,21 @@ internal sealed class FakeCommands : ICommandRunner
             WriteCount++;
             OnHibernate?.Invoke(arguments[1] == "on");
             return new CommandResult(0, string.Empty, string.Empty);
+        }
+
+        // DISM for Virtual Machine Platform: a change is "Pending" until the restart and answers 3010.
+        if (executable.EndsWith("dism.exe", StringComparison.OrdinalIgnoreCase) && arguments.Contains("/FeatureName:VirtualMachinePlatform"))
+        {
+            if (arguments.Contains("/Get-FeatureInfo"))
+            {
+                return VmpState is null
+                    ? new CommandResult(unchecked((int)0x800F080C), "Error: 0x800f080c Feature name VirtualMachinePlatform is unknown.", string.Empty)
+                    : new CommandResult(0, $"Feature Name : VirtualMachinePlatform\r\nState : {VmpState}\r\n", string.Empty);
+            }
+
+            WriteCount++;
+            VmpState = arguments.Contains("/Disable-Feature") ? "Disable Pending" : "Enable Pending";
+            return new CommandResult(3010, "The operation completed successfully.\r\nRestart Windows to complete this operation.", string.Empty);
         }
 
         if (arguments.Count == 4 && arguments[1] == "set" && Regex.IsMatch(arguments[3], "^[0-3]$"))

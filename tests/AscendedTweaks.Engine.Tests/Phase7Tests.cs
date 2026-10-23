@@ -181,6 +181,29 @@ public sealed class Phase7Tests : IDisposable
     }
 
     [Fact]
+    public void Virtual_machine_platform_is_turned_off_with_a_pending_restart_and_comes_back()
+    {
+        var engine = _h.Engine(TestTweaks.Create(
+            "GAME-928",
+            new CommandQueryEqualsCondition { Command = "dism.virtualmachineplatform", Value = "Disable" },
+            [new CommandAction { Command = "dism.virtualmachineplatform", Value = "Disable" }],
+            TweakScope.Machine));
+
+        engine.GetStatus("GAME-928").State.Should().Be(TweakState.NotApplied);
+        engine.ApplyBatch(["GAME-928"], new ApplyOptions()).Outcome.Should().Be(BatchOutcome.Committed, "3010 means success with restart");
+        _h.Commands.VmpState.Should().Be("Disable Pending");
+        engine.GetStatus("GAME-928").State.Should().Be(TweakState.Applied, "pending counts as the new state");
+
+        engine.RevertTweak("GAME-928", _ => ConflictDecision.Cancel).Outcome.Should().Be(RevertOutcome.Reverted);
+        _h.Commands.VmpState.Should().Be("Enable Pending");
+
+        _h.Commands.VmpState = "Disabled";
+        engine.GetStatus("GAME-928").State.Should().Be(TweakState.Applied, "already off: nothing to do");
+        _h.Commands.VmpState = null;
+        engine.GetStatus("GAME-928").State.Should().Be(TweakState.Unavailable);
+    }
+
+    [Fact]
     public void Highest_refresh_rate_is_set_and_the_old_rate_comes_back()
     {
         var engine = _h.Engine(Refresh("GAME-922"));

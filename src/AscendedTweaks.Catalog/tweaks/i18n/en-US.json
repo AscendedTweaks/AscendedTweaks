@@ -646,5 +646,11 @@
   "tweak.NET-013.side": "Updates downloading in the background take longer. Downloads you start yourself are not limited.",
   "tweak.NET-013.impact": "Helps only while Windows downloads updates in the background.",
   "tweak.NET-013.plain.title": "Updates leave room for games",
-  "tweak.NET-013.plain.desc": "Background updates use at most a quarter of your internet speed."
+  "tweak.NET-013.plain.desc": "Background updates use at most a quarter of your internet speed.",
+  "tweak.GAME-028.name": "Turn off Virtual Machine Platform (expert)",
+  "tweak.GAME-028.desc": "Turns off the Windows feature \"Virtual Machine Platform\". Microsoft names it as a feature that can cost gaming performance in some configurations and suggests turning it off while gaming. Only changes something if the feature is on, for example after installing WSL 2 or Android apps.",
+  "tweak.GAME-028.side": "WSL 2, Windows Subsystem for Android and emulators that use Hyper-V stop working until you turn it back on. A restart is needed.",
+  "tweak.GAME-028.impact": "Microsoft names an effect only for some configurations; not measured here.",
+  "tweak.GAME-028.plain.title": "Virtual machines off for games",
+  "tweak.GAME-028.plain.desc": "Turns off Windows' virtual machine support, which can slow some games."
 }

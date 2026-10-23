@@ -36,6 +36,7 @@ Ergebnis: 4 Spürbar, 43 Klein, 54 Unklar (Katalog plus Basis der erzeugten Twea
 | GAME-025 | Spiel bleibt bei Anrufen laut (Experte) | Safe | Disputed | Unklar | Registry-Wert nicht dokumentiert; nur wichtig bei Sprachanrufen. |
 | GAME-026 | Tastenkürzel für Maustasten aus | Safe | Proven | Klein | Verhindert nur die Abfrage nach linker Alt + linker Umschalt + Num. |
 | GAME-027 | Game-Bar-Aufnahmen aus, auch bei Home (Experte) | Safe | Disputed | Unklar | Werte nicht dokumentiert; keine belegte Wirkung ohne Aufnahme. |
+| GAME-028 | Plattform für virtuelle Computer aus (Experte) | Caution | Disputed | Unklar | Microsoft nennt eine Wirkung nur für manche Konfigurationen; hier nicht gemessen. |
 | NET-013 | Hintergrund-Updates höchstens 25 % Bandbreite | Caution | Proven | Klein | Hilft nur, während Windows im Hintergrund Updates lädt. |
 | NET-001 | DNS: Cloudflare | Safe | Proven | Klein | Andere Namensauflösung; Geschwindigkeit hängt vom Anschluss ab. |
 | NET-002 | DNS: Google | Safe | Proven | Klein | Andere Namensauflösung; Geschwindigkeit hängt vom Anschluss ab. |

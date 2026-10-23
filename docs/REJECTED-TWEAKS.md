@@ -59,6 +59,19 @@ Abweichungen vom Mechanismus der Kandidatenliste (Tweak bleibt, aber mit dokumen
 | Defender über `Set-MpPreference` (PowerShell) | Anderer Weg | Die App startet nie PowerShell mit umgangener Ausführungsrichtlinie. DEFN-001 nutzt dieselbe dokumentierte WMI-Klasse `MSFT_MpPreference` (Methode `Set`) direkt. |
 | POWR-001, POWR-002 | Aufgenommen, aber "Umstritten" | Die Einstellungen sind dokumentiert, ein Vorteil für Spiele oder Eingabe nicht. Nur im Experten-Modus. |
 
+## V3: Kandidaten aus Open-Source-Tools (2026-10-23)
+
+Gelesen als Quelltext, nichts heruntergeladen oder ausgeführt: Chris Titus Tech WinUtil (`config/tweaks.json`, 68 Einträge). Was dort für Spiele relevant ist und hier fehlte:
+
+| Kandidat | Ergebnis | Grund |
+|---|---|---|
+| Virtual Machine Platform aus | Aufgenommen als GAME-028 ("Umstritten", Experte) | Microsoft Support "Options to optimize gaming performance in Windows 11" nennt VMP als mögliche Bremse in manchen Konfigurationen. Keine eigene Messung. |
+| Multiplane Overlay aus (`Dwm\OverlayTestMode` = 5, `GraphicsDrivers\DisableOverlays`) | Nicht aufgenommen | Keine offizielle Anleitung von Microsoft oder NVIDIA gefunden; Berichte, dass der Wert ab 24H2 nicht mehr wirkt. Hilft höchstens gegen Flackern, kein Leistungsgewinn. |
+| Energiedrosselung aus (`Power\PowerThrottling\PowerThrottlingOff`) | Nicht aufgenommen | Registry-Wert nicht dokumentiert. Das Spiel im Vordergrund wird nicht gedrosselt; der Wert lässt nur Hintergrundprogramme mehr Strom nutzen. |
+| svchost-Aufteilung aus (`SvcHostSplitThresholdInKB`) | Nicht aufgenommen | Spart nur etwas Arbeitsspeicher, kann laut WinUtil Xbox-Dienste stören; kein Spielevorteil. |
+| IPv4 bevorzugen, Teredo aus (`Tcpip6\DisabledComponents`) | Nicht aufgenommen | IPv6 abschalten ist nach Abschnitt 6.12 ausgeschlossen; Teredo aus kann Xbox-Partychat und Mehrspieler stören. |
+| Dienste auf Manuell (CscService, StorSvc, SharedAccess) | Nicht aufgenommen | Massen-Änderung von Diensten ist ausgeschlossen; kein belegter Spielevorteil. |
+
 ## Bewusst nicht enthalten (Abschnitt 6.12)
 
 | Tweak | Grund |

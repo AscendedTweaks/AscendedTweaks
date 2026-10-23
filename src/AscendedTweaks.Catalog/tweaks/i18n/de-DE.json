@@ -646,5 +646,11 @@
   "tweak.NET-013.side": "Updates laden im Hintergrund länger. Downloads, die du selbst startest, sind nicht begrenzt.",
   "tweak.NET-013.impact": "Hilft nur, während Windows im Hintergrund Updates lädt.",
   "tweak.NET-013.plain.title": "Updates lassen Platz für Spiele",
-  "tweak.NET-013.plain.desc": "Hintergrund-Updates nutzen höchstens ein Viertel deines Internet-Tempos."
+  "tweak.NET-013.plain.desc": "Hintergrund-Updates nutzen höchstens ein Viertel deines Internet-Tempos.",
+  "tweak.GAME-028.name": "Plattform für virtuelle Computer aus (Experte)",
+  "tweak.GAME-028.desc": "Schaltet die Windows-Funktion „Plattform für virtuelle Computer“ aus. Microsoft nennt sie als Funktion, die in manchen Konfigurationen Spieleleistung kosten kann, und empfiehlt, sie beim Spielen auszuschalten. Ändert nur etwas, wenn die Funktion an ist, zum Beispiel nach der Installation von WSL 2 oder Android-Apps.",
+  "tweak.GAME-028.side": "WSL 2, das Windows-Subsystem für Android und Emulatoren, die Hyper-V nutzen, funktionieren nicht mehr, bis du es wieder einschaltest. Ein Neustart ist nötig.",
+  "tweak.GAME-028.impact": "Microsoft nennt eine Wirkung nur für manche Konfigurationen; hier nicht gemessen.",
+  "tweak.GAME-028.plain.title": "Virtuelle Computer aus für Spiele",
+  "tweak.GAME-028.plain.desc": "Schaltet die Unterstützung für virtuelle Computer aus, die manche Spiele bremsen kann."
 }

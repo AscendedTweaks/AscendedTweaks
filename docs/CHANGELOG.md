@@ -4,6 +4,9 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 
 ## [Unreleased]
 
+### Hinzugefügt
+- GAME-028 "Plattform für virtuelle Computer aus" (Experte): DISM `/Disable-Feature`, Neustart nötig; Microsoft nennt VMP als mögliche Bremse für Spiele. Befehle können jetzt weitere Erfolgscodes haben (DISM 3010 = Neustart nötig).
+
 ## [1.1.0] - 2026-10-23
 
 Erste öffentliche Version (V3), nicht signiert. Lizenz MIT.

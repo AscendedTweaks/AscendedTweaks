@@ -1,0 +1,52 @@
+{
+  "id": "GAME-028",
+  "category": "Gaming.Virtualization",
+  "nameKey": "tweak.GAME-028.name",
+  "descriptionKey": "tweak.GAME-028.desc",
+  "sideEffectsKey": "tweak.GAME-028.side",
+  "risk": "Caution",
+  "evidence": "Disputed",
+  "builds": [
+    {
+      "min": 22000,
+      "max": null
+    }
+  ],
+  "editions": [
+    "Home",
+    "Pro",
+    "Enterprise",
+    "Education"
+  ],
+  "scope": "Machine",
+  "requiresAdmin": true,
+  "requiresReboot": true,
+  "detect": {
+    "type": "CommandQueryEquals",
+    "command": "dism.virtualmachineplatform",
+    "value": "Disable"
+  },
+  "apply": [
+    {
+      "type": "Command",
+      "command": "dism.virtualmachineplatform",
+      "value": "Disable"
+    }
+  ],
+  "revert": "restoreFromBackup",
+  "sources": [
+    "Microsoft Support: 'Options to optimize gaming performance in Windows 11' (support.microsoft.com/topic/a255f612-2949-4373-a566-ff6f3f474613): Virtual Machine Platform and memory integrity can affect gaming performance in some scenarios and configurations; gamers can turn them off while playing and back on afterwards.",
+    "Microsoft Learn: 'DISM Operating System Package (.cab or .msu) Servicing Command-Line Options', /Get-FeatureInfo, /Enable-Feature and /Disable-Feature; exit code 3010 = restart required.",
+    "No own measurement, therefore 'Disputed' and only in expert mode. Only changes something if the feature is on (for example after installing WSL 2 or Android apps)."
+  ],
+  "verifiedOn": [],
+  "hiddenByDefault": true,
+  "impact": "Unclear",
+  "impactNote": "tweak.GAME-028.impact",
+  "measuredOn": [],
+  "plainTitleKey": "tweak.GAME-028.plain.title",
+  "plainDescKey": "tweak.GAME-028.plain.desc",
+  "tags": [
+    "fps"
+  ]
+}

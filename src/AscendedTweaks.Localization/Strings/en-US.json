@@ -1080,5 +1080,17 @@
   "tag.updates": "Updates",
   "card.tags": "Tags",
   "cli.skip.alreadyapplied": "already applied, nothing to change",
-  "cli.skip.conflict": "changes the same setting as {other}; reset that one first"
+  "cli.skip.conflict": "changes the same setting as {other}; reset that one first",
+  "bg.title": "Clean up background",
+  "bg.intro": "Programs running in your Windows session, biggest first. Close what you don't need before playing. Nothing is closed automatically; Windows, your antivirus and VPN are protected.",
+  "bg.summary": "{programs} programs with {processes} processes use {memory}.",
+  "bg.protected": "{n} of them are protected: Windows, security programs, helpers of other apps and Ascended Tweaks itself.",
+  "bg.row": "{n} processes · {memory}",
+  "bg.row.one": "1 process · {memory}",
+  "bg.close": "Close",
+  "bg.force": "Force close",
+  "bg.force.title": "Force close {name}?",
+  "bg.force.body.nowindow": "{name} runs without a window, so it cannot be asked to close. Force closing ends it right away; unsaved data in it is lost. It may start again with Windows.",
+  "bg.force.body.running": "{name} is still running after 5 seconds; it may be waiting for you to save. Force closing ends it right away; unsaved data in it is lost.",
+  "bg.empty": "Nothing to close."
 }

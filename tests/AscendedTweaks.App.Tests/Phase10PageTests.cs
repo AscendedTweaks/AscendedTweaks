@@ -153,7 +153,7 @@ public sealed class Phase10PageTests
     [Fact]
     public async Task Large_files_are_grouped_nothing_is_preselected_and_protected_rows_cannot_be_selected()
     {
-        using var formats = new GermanFormats();
+        using var formats = new TestFormats("de-DE");
         var keep = new MemoryKeep();
         var dialogs = new ScriptedDialogs(_ => true);
         var vm = new LargeFilesViewModel(_disks, _localizer, dialogs, keep);

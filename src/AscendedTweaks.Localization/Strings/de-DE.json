@@ -1080,5 +1080,17 @@
   "tag.updates": "Updates",
   "card.tags": "Schlagwörter",
   "cli.skip.alreadyapplied": "bereits angewendet, nichts zu ändern",
-  "cli.skip.conflict": "ändert dieselbe Einstellung wie {other}; zuerst das zurücksetzen"
+  "cli.skip.conflict": "ändert dieselbe Einstellung wie {other}; zuerst das zurücksetzen",
+  "bg.title": "Hintergrund aufräumen",
+  "bg.intro": "Programme in deiner Windows-Sitzung, die größten zuerst. Schließe vor dem Spielen, was du nicht brauchst. Nichts wird automatisch geschlossen; Windows, Virenschutz und VPN sind geschützt.",
+  "bg.summary": "{programs} Programme mit {processes} Prozessen belegen {memory}.",
+  "bg.protected": "{n} davon sind geschützt: Windows, Schutzprogramme, Hilfsprozesse anderer Apps und Ascended Tweaks selbst.",
+  "bg.row": "{n} Prozesse · {memory}",
+  "bg.row.one": "1 Prozess · {memory}",
+  "bg.close": "Schließen",
+  "bg.force": "Beenden erzwingen",
+  "bg.force.title": "{name} wirklich beenden?",
+  "bg.force.body.nowindow": "{name} läuft ohne Fenster und kann deshalb nicht um das Schließen gebeten werden. Erzwingen beendet es sofort; nicht gespeicherte Daten darin gehen verloren. Es kann mit Windows wieder starten.",
+  "bg.force.body.running": "{name} läuft nach 5 Sekunden noch; vielleicht wartet es darauf, dass du speicherst. Erzwingen beendet es sofort; nicht gespeicherte Daten darin gehen verloren.",
+  "bg.empty": "Nichts zu schließen."
 }

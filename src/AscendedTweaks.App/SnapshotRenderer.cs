@@ -204,6 +204,27 @@ internal static class SnapshotRenderer
         public SecurityFacts Read() => new(true, 2, true, true, false, false);
     }
 
+    /// <summary>Fixed programs for "Clean up background"; closing changes nothing.</summary>
+    public sealed class SamplePrograms : IRunningPrograms
+    {
+        public IReadOnlyList<RunningProcess> List() =>
+        [
+            new(11, "browser", @"C:\Program Files\Browser\browser.exe", "Web browser", true, 2_400_000_000),
+            new(12, "browser", @"C:\Program Files\Browser\browser.exe", "Web browser", false, 1_100_000_000),
+            new(13, "launcher", @"C:\Program Files\Launcher\launcher.exe", "Game launcher", false, 680_000_000),
+            new(14, "music", @"C:\Users\Example\AppData\Roaming\Music\music.exe", "Music player", true, 590_000_000),
+            new(15, "explorer", @"C:\Windows\explorer.exe", "Windows Explorer", true, 400_000_000),
+        ];
+
+        public bool RequestClose(int id) => true;
+
+        public void ForceClose(int id)
+        {
+        }
+
+        public bool IsRunning(int id) => false;
+    }
+
     /// <summary>Feste Prozessliste; die zweite Messung hat mehr CPU-Zeit, damit beide Listen gefuellt sind.</summary>
     public sealed class SampleProcesses : IProcessSampler
     {
@@ -338,6 +359,26 @@ internal static class SnapshotRenderer
             File.WriteAllLines(Path.Combine(directory, "preset-plans.txt"), start.Presets.SelectMany(p =>
                 new[] { $"{p.OwnerKey}: {string.Join(", ", p.Levels.Select(l => l.Label))}" }
                     .Concat(p.Plan.Select(r => $"  {r.Id} {r.Action} {r.Text}"))));
+        }
+
+        // "Clean up background" sits below the tweaks on the Gaming page; render the card on its own.
+        shell.SelectedItem = shell.Items.First(i => i.Key == "nav.simple.gaming");
+        Pump();
+        if (shell.CurrentPage is SimpleTweakPageViewModel gamingPage && gamingPage.Extras.OfType<SimpleBackgroundCard>().FirstOrDefault() is { } card)
+        {
+            var cardWindow = new Window
+            {
+                Width = 900,
+                Height = 560,
+                WindowStyle = WindowStyle.None,
+                ShowInTaskbar = false,
+                Background = (Brush)Application.Current.FindResource("Brush.Background"),
+                Content = new System.Windows.Controls.ContentControl { Content = card, Margin = new Thickness(24) },
+            };
+            cardWindow.Show();
+            Pump();
+            Render(cardWindow, 96, Path.Combine(directory, "Dark-background-cleanup.png"));
+            cardWindow.Close();
         }
 
         // Suche und "Mehr anzeigen" auf "Schneller".

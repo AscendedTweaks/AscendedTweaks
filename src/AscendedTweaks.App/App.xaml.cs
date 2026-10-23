@@ -354,9 +354,9 @@ public partial class App : Application
                     workspace,
                     c => c.Tweak.Module is "PERF" or "DISK" or "BROW" || c.Tweak.Category == "Network.Dns",
                     "simple.faster.help",
-                    [new SimpleAutostartCard(new AutostartViewModel(Autostart(), workspace, ProcessSampler ?? new WindowsProcessSampler())), new SimplePingCard(tools)]);
+                    [new SimpleAutostartCard(new AutostartViewModel(Autostart(), workspace, ProcessSampler ?? new WindowsProcessSampler())), BackgroundCard(dialogs, localizer), new SimplePingCard(tools)]);
             }),
-            new("nav.simple.gaming", SymbolRegular.Games24, () => new SimpleTweakPageViewModel("nav.simple.gaming", workspace, c => c.Tweak.Module is "GAME" or "POWR" or "DEFN" || c.Tweak.Category == "Network.Adapter", "simple.gaming.help", [Loaded(GamingChecks(localizer))])),
+            new("nav.simple.gaming", SymbolRegular.Games24, () => new SimpleTweakPageViewModel("nav.simple.gaming", workspace, c => c.Tweak.Module is "GAME" or "POWR" or "DEFN" || c.Tweak.Category == "Network.Adapter", "simple.gaming.help", [Loaded(GamingChecks(localizer)), BackgroundCard(dialogs, localizer)])),
             new("nav.simple.cleanup", SymbolRegular.Broom24, () => new SectionPageViewModel("nav.simple.cleanup",
             [
                 (new SectionItem("cleanup", "simple.cleanup.section.junk"), () =>
@@ -396,6 +396,21 @@ public partial class App : Application
 
     /// <summary>Loading of the page shown first; the main window waits for it behind the loading window.</summary>
     private static Task? FirstPageLoad { get; set; }
+
+    /// <summary>Programs of the user's session, for "Clean up background" (tests and snapshots replace the source).</summary>
+    internal static IRunningPrograms? RunningProgramsSource { get; set; }
+
+    private static SimpleBackgroundCard BackgroundCard(IDialogService dialogs, Localizer localizer)
+    {
+        var cleanup = new BackgroundCleanupViewModel(
+            RunningProgramsSource ?? new WindowsRunningPrograms(),
+            dialogs,
+            localizer,
+            Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+            Environment.ProcessId);
+        _ = cleanup.LoadAsync();
+        return new SimpleBackgroundCard(cleanup);
+    }
 
     private static GamingChecksViewModel Loaded(GamingChecksViewModel checks)
     {
@@ -519,6 +534,7 @@ public partial class App : Application
             PermissionSource = SnapshotRenderer.SamplePermissions;
             AutostartSource = SnapshotRenderer.SampleAutostart;
             ProcessSampler = new SnapshotRenderer.SampleProcesses();
+            RunningProgramsSource = new SnapshotRenderer.SamplePrograms();
             GameScanSource = SnapshotRenderer.SampleGames;
             GameProfiles = new GameProfileStore(Path.Combine(Path.GetTempPath(), "AscendedTweaks.snapshot.games." + Guid.NewGuid().ToString("N") + ".json"));
             SecuritySource = new SnapshotRenderer.SampleSecurity();

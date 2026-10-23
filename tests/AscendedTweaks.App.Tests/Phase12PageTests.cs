@@ -58,7 +58,7 @@ public sealed class Phase12PageTests : IDisposable
     [Fact]
     public async Task System_and_indicators_are_shown_without_an_overall_score()
     {
-        using var formats = new GermanFormats();
+        using var formats = new TestFormats("de-DE");
         var dashboard = Dashboard(new ScriptedDialogs(_ => true));
 
         await dashboard.LoadAsync();

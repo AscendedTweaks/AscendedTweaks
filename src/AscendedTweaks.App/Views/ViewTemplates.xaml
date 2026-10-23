@@ -107,6 +107,39 @@
         </StackPanel>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type vm:SimpleBackgroundCard}">
+        <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+            <StackPanel DataContext="{Binding Cleanup}">
+                <DockPanel Margin="0,0,0,4">
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc perm.reload}" Command="{Binding ReloadCommand}" IsRunning="{Binding IsLoading}" VerticalAlignment="Top" />
+                    <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc bg.title}" VerticalAlignment="Center" />
+                </DockPanel>
+                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc bg.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Summary}" TextWrapping="Wrap" Visibility="{Binding Summary, Converter={StaticResource NullToCollapsed}}" />
+                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ProtectedText}" TextWrapping="Wrap" Margin="0,2,0,8" Visibility="{Binding ProtectedText, Converter={StaticResource NullToCollapsed}}" />
+                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Error}" TextWrapping="Wrap" Visibility="{Binding Error, Converter={StaticResource NullToCollapsed}}" />
+                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc bg.empty}" Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}" />
+                <ItemsControl ItemsSource="{Binding Rows}" Focusable="False">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0" Padding="0,8">
+                                <DockPanel>
+                                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{Binding CloseText}" IsRunning="{Binding IsClosing}"
+                                                    Command="{Binding DataContext.CloseCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                    AutomationProperties.HelpText="{Binding Name}" MinHeight="36" VerticalAlignment="Center" />
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Detail}" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type vm:SimplePingCard}">
         <Border Style="{StaticResource Card}" Margin="0,8,0,0">
             <StackPanel DataContext="{Binding Tools}">

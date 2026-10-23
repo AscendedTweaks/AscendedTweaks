@@ -156,5 +156,8 @@ public sealed record SimplePingCard(NetworkToolsViewModel Tools);
 /// <summary>Kleine Karte "Updates" im Einfach-Modus: Stand und Windows Update öffnen.</summary>
 public sealed record SimpleUpdatesCard(UpdatesOverviewViewModel Updates);
 
+/// <summary>Card "Clean up background": close programs you do not need before playing.</summary>
+public sealed record SimpleBackgroundCard(BackgroundCleanupViewModel Cleanup);
+
 /// <summary>Bereich "Programme beim Start" im Einfach-Modus.</summary>
 public sealed record SimpleAutostartCard(AutostartViewModel Autostart);

@@ -44,6 +44,30 @@ public sealed class ShellTests : IDisposable
     }
 
     [Fact]
+    public void A_language_switch_rebuilds_pages_so_no_text_stays_in_the_old_language()
+    {
+        var created = 0;
+        var localizer = new Localizer(Localizer.German);
+        var items = new[]
+        {
+            new NavItem("nav.dashboard", SymbolRegular.Home24, () => { created++; return new PlaceholderPageViewModel("nav.dashboard", true); }),
+            new NavItem("nav.network", SymbolRegular.Globe24, () => { created++; return new PlaceholderPageViewModel("nav.network", true); }),
+        };
+        var shell = new ShellViewModel(localizer, 26100, items);
+        shell.SelectedItem = items[1];
+        shell.SelectedItem = items[0];
+        var before = shell.CurrentPage;
+        created.Should().Be(2);
+
+        localizer.SetCulture(Localizer.English);
+
+        shell.CurrentPage.Should().NotBeSameAs(before, "the visible page is built again in the new language");
+        created.Should().Be(3);
+        shell.SelectedItem = items[1];
+        created.Should().Be(4, "the cached other page is built again too when it is opened");
+    }
+
+    [Fact]
     public void Navigation_collapses_below_1000_and_can_be_toggled()
     {
         var shell = new ShellViewModel(new Localizer(), 26100, []);

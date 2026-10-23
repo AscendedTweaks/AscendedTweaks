@@ -1051,5 +1051,6 @@
   "check.fix": "Jetzt beheben",
   "check.fix.what": "Ändert: {name}",
   "preview.title": "Design-Vorschau",
-  "preview.body": "Diese Kopie zeigt nur das Design mit Beispieldaten. An deinem PC wird nichts geändert, und sie braucht keinen Helfer und keine Administratorrechte. Zum Anwenden nimm das echte Ascended Tweaks."
+  "preview.body": "Diese Kopie zeigt nur das Design mit Beispieldaten. An deinem PC wird nichts geändert, und sie braucht keinen Helfer und keine Administratorrechte. Zum Anwenden nimm das echte Ascended Tweaks.",
+  "simple.start.yourpc": "Dein PC"
 }

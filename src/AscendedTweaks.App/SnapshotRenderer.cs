@@ -245,6 +245,13 @@ internal static class SnapshotRenderer
     /// Jedes sichtbare Bedienelement braucht einen Namen fuer Screenreader (AutomationProperties.Name oder Inhaltstext).
     /// Listeneintraege duerfen nicht den Typnamen eines ViewModels vorlesen.
     /// </summary>
+    /// <summary>Visible texts that look German while the app runs in English (umlauts or common German words).</summary>
+    internal static SortedSet<string> LanguageFindings { get; } = new(StringComparer.Ordinal);
+
+    private static readonly System.Text.RegularExpressions.Regex GermanText = new(
+        @"[äöüÄÖÜß]|(und|nicht|der|das|den|dem|mit|ist|wird|werden|keine?|nur|oder|auf|bei|von|zu|im|Einstellungen|Wettkampf|Schnell|Sicher|Bereinigung|Datenschutz)",
+        System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+
     private static void Audit(DependencyObject root, string context)
     {
         var page = context.Split('-', 3) is { Length: 3 } parts ? parts[2] : context;
@@ -256,6 +263,12 @@ internal static class SnapshotRenderer
             for (var i = 0; i < VisualTreeHelper.GetChildrenCount(current); i++)
             {
                 stack.Push(VisualTreeHelper.GetChild(current, i));
+            }
+
+            if (AscendedTweaks.Localization.Localizer.Current.Culture == AscendedTweaks.Localization.Localizer.English
+                && current is System.Windows.Controls.TextBlock { IsVisible: true } text && !string.IsNullOrWhiteSpace(text.Text) && GermanText.IsMatch(text.Text))
+            {
+                LanguageFindings.Add($"{page}: {text.Text}");
             }
 
             // Nur Elemente, die per Tastatur erreichbar sind; Teile von Bildlaufleisten und Auswahllisten sind es nicht.
@@ -364,6 +377,7 @@ internal static class SnapshotRenderer
         var lines = new List<string> { $"Checked controls (with repeats across themes and sizes): {_a11yChecked}", $"Findings: {A11yFindings.Count}" };
         lines.AddRange(A11yFindings);
         File.WriteAllLines(Path.Combine(directory, "a11y-report.txt"), lines);
+        File.WriteAllLines(Path.Combine(directory, "language-report.txt"), [$"German-looking texts in English: {LanguageFindings.Count}", .. LanguageFindings]);
     }
 
     public static void Run(ShellWindow window, ShellViewModel shell, IThemeService theme, string directory, FirstStepsViewModel? firstSteps = null)

@@ -135,7 +135,7 @@
         <Setter Property="Effect" Value="{DynamicResource Glow.Soft}" />
     </Style>
 
-    <!-- Start page: hero with the main action and three facts, then large preset tiles. One accent fill: the hero action. -->
+    <!-- Start page, most important first: welcome with the main action, the presets, then facts about the PC. One accent fill: the hero action. -->
     <DataTemplate DataType="{x:Type vm:SimpleStartViewModel}">
         <StackPanel Margin="0,0,0,24">
             <Grid Margin="0,0,0,24">
@@ -144,26 +144,6 @@
                 <StackPanel>
                     <TextBlock Style="{StaticResource Text.Title}" Text="{s:Loc simple.start.hello}" />
                     <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.start.hero}" TextWrapping="Wrap" Margin="0,8,0,0" MaxWidth="640" HorizontalAlignment="Left" />
-                    <UniformGrid Columns="3" Margin="0,24,-12,0" AutomationProperties.Name="{Binding Status}">
-                        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.windows}" />
-                                <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding WindowsText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
-                            </StackPanel>
-                        </Border>
-                        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.ram}" />
-                                <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding RamText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
-                            </StackPanel>
-                        </Border>
-                        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.autostart}" />
-                                <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding AutostartText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
-                            </StackPanel>
-                        </Border>
-                    </UniformGrid>
                     <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
                         <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc simple.start.recommended}" Command="{Binding Recommended.ApplyCommand}"
                                         MinHeight="40" Padding="24,8" Margin="0,0,8,0"
@@ -232,6 +212,28 @@
                     <TextBlock Text="{s:Loc simple.preset.own}" VerticalAlignment="Center" />
                 </StackPanel>
             </c:ActionButton>
+            <!-- Facts about the PC: information, not actions, so they come after the presets. -->
+            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.start.yourpc}" Margin="0,8,0,12" />
+            <UniformGrid Columns="3" Margin="0,0,-12,16" AutomationProperties.Name="{Binding Status}">
+                <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.windows}" />
+                        <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding WindowsText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                    </StackPanel>
+                </Border>
+                <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.ram}" />
+                        <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding RamText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                    </StackPanel>
+                </Border>
+                <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.autostart}" />
+                        <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding AutostartText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
             <ContentControl Content="{Binding Measurement}" Focusable="False" Visibility="{Binding Measurement, Converter={StaticResource NullToCollapsed}}" />
             <Border Style="{StaticResource Banner}" Margin="0,8,0,0">
                 <StackPanel Orientation="Horizontal">

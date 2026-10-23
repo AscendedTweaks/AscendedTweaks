@@ -422,6 +422,14 @@ public partial class App : Application
         }
     }
 
+    /// <summary>Numbers and dates follow the app language (32.0 GB in English, 32,0 GB in German), not the Windows region.</summary>
+    private static void UseFormatsOf(string culture)
+    {
+        var info = System.Globalization.CultureInfo.GetCultureInfo(culture);
+        System.Globalization.CultureInfo.CurrentCulture = info;
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture = info;
+    }
+
     private static void OpenUri(string uri) => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(uri) { UseShellExecute = true })?.Dispose();
 
     protected override async void OnStartup(StartupEventArgs e)
@@ -446,7 +454,24 @@ public partial class App : Application
             ThemeService.TokenFile = PreviewTokens(Path.Combine(AppContext.BaseDirectory, DesignPreviewMarker));
         }
 
+#if DEBUG
+        // Screenshots in a chosen language without touching the saved setting: --lang en|de.
+        var langArgument = Array.IndexOf(e.Args, "--lang");
+        if (langArgument >= 0 && langArgument + 1 < e.Args.Length)
+        {
+            settings.Language = e.Args[langArgument + 1] == "de" ? Localizer.German : Localizer.English;
+        }
+#endif
+
         Localizer.Current = new Localizer(settings.Language);
+        UseFormatsOf(Localizer.Current.Culture);
+        Localizer.Current.PropertyChanged += (_, changed) =>
+        {
+            if (changed.PropertyName == nameof(Localizer.Culture))
+            {
+                UseFormatsOf(Localizer.Current.Culture);
+            }
+        };
         var theme = new ThemeService();
         theme.Apply();
         theme.WatchHighContrast();

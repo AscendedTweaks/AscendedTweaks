@@ -1051,5 +1051,6 @@
   "check.fix": "Fix now",
   "check.fix.what": "Changes: {name}",
   "preview.title": "Design preview",
-  "preview.body": "This copy only shows the design with sample data. Nothing on your PC is changed, and it needs no helper or administrator rights. Use the real Ascended Tweaks to apply settings."
+  "preview.body": "This copy only shows the design with sample data. Nothing on your PC is changed, and it needs no helper or administrator rights. Use the real Ascended Tweaks to apply settings.",
+  "simple.start.yourpc": "Your PC"
 }

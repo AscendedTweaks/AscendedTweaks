@@ -253,5 +253,21 @@ public sealed partial class ShellViewModel : ObservableObject
         OnPropertyChanged(nameof(BannerBadgeText));
         OnPropertyChanged(nameof(BannerTitle));
         OnPropertyChanged(nameof(BannerText));
+        if (e.PropertyName != nameof(Localizer.Culture))
+        {
+            return;
+        }
+
+        // Pages build many texts once (preset names, plans, status lines). After a language switch they are built again, so
+        // nothing stays in the old language. The settings page stays: the switch happens there and it binds its texts live.
+        foreach (var cached in _pages.Where(p => p.Value is not SettingsViewModel).Select(p => p.Key).ToList())
+        {
+            _pages.Remove(cached);
+        }
+
+        if (CurrentPage is not SettingsViewModel && (SelectedItem ?? SelectedFooterItem) is { } current)
+        {
+            Show(current);
+        }
     }
 }

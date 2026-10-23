@@ -68,7 +68,10 @@ internal static class Program
 #if DEBUG
                 RequireSignature = false,
 #else
-                RequireSignature = true,
+                // A signed helper accepts only a client signed by the same publisher. An unsigned build has no publisher to
+                // compare, so it relies on the checks above (launching process, install folder, user) and on the app checking
+                // the helper's SHA-256 before starting it. Without this, every unsigned release refused every client.
+                RequireSignature = Authenticode.IsTrusted(Environment.ProcessPath!),
 #endif
             });
 

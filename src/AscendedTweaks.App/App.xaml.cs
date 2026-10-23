@@ -116,6 +116,24 @@ public partial class App : Application
 
     internal const string DesignPreviewMarker = ".ascendedtweaks-design-preview";
 
+    /// <summary>
+    /// Palette of a design preview copy: the marker may name it in a line "tokens=Tokens.PreviewX.xaml". Only preview token
+    /// files of the app are accepted; anything else falls back to Tokens.Preview.xaml.
+    /// </summary>
+    internal static string PreviewTokens(string marker)
+    {
+        try
+        {
+            var line = File.Exists(marker) ? File.ReadAllLines(marker).FirstOrDefault(l => l.StartsWith("tokens=", StringComparison.Ordinal)) : null;
+            var name = line?["tokens=".Length..].Trim();
+            return name is not null && System.Text.RegularExpressions.Regex.IsMatch(name, @"^Tokens\.Preview[A-Za-z]*\.xaml$") ? name : "Tokens.Preview.xaml";
+        }
+        catch (IOException)
+        {
+            return "Tokens.Preview.xaml";
+        }
+    }
+
     private static GamingChecksViewModel GamingChecks(Localizer localizer)
     {
         var commands = new ProcessCommandRunner();
@@ -410,7 +428,8 @@ public partial class App : Application
     {
         base.OnStartup(e);
 #if DEBUG
-        DesignPreview = e.Args.Contains("--design-preview") || File.Exists(Path.Combine(AppContext.BaseDirectory, DesignPreviewMarker));
+        var marker = Path.Combine(AppContext.BaseDirectory, DesignPreviewMarker);
+        DesignPreview = e.Args.Contains("--design-preview") || File.Exists(marker);
 #endif
         var previewRoot = Path.Combine(Path.GetTempPath(), "AscendedTweaks.DesignPreview");
         _log = new JsonLinesLog(DesignPreview ? Path.Combine(previewRoot, "Logs") : JsonLinesLog.DefaultUserDirectory, "app", TimeProvider.System);
@@ -424,7 +443,7 @@ public partial class App : Application
             settings.Language = new SettingsStore(SettingsStore.DefaultPath).Load().Language;
             settings.FirstStepsCompleted = true;
             settings.PortableChosen = true;
-            ThemeService.TokenFile = "Tokens.Preview.xaml";
+            ThemeService.TokenFile = PreviewTokens(Path.Combine(AppContext.BaseDirectory, DesignPreviewMarker));
         }
 
         Localizer.Current = new Localizer(settings.Language);

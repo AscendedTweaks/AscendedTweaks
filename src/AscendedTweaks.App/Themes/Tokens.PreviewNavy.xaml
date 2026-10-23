@@ -1,0 +1,43 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Design preview only ("navy"): black, navy, slate, light gray and white from the reference image; light steel accent,
+         muted red only for "Expert" and errors. The real app uses Tokens.Dark.xaml. -->
+    <Color x:Key="Color.Background">#0D0D0D</Color>
+    <Color x:Key="Color.Surface">#212A3F</Color>
+    <Color x:Key="Color.Elevated">#2A3550</Color>
+    <Color x:Key="Color.Border">#576072</Color>
+    <Color x:Key="Color.Accent">#C9D3EA</Color>
+    <Color x:Key="Color.OnAccent">#212A3F</Color>
+    <Color x:Key="Color.Success">#BEBEBE</Color>
+    <Color x:Key="Color.Warning">#F2F2F2</Color>
+    <Color x:Key="Color.Danger">#F29A9A</Color>
+    <Color x:Key="Color.TextPrimary">#F2F2F2</Color>
+    <Color x:Key="Color.TextSecondary">#BEBEBE</Color>
+
+    <SolidColorBrush x:Key="Brush.Background" Color="{StaticResource Color.Background}" />
+    <SolidColorBrush x:Key="Brush.Surface" Color="{StaticResource Color.Surface}" />
+    <SolidColorBrush x:Key="Brush.Elevated" Color="{StaticResource Color.Elevated}" />
+    <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}" />
+    <SolidColorBrush x:Key="Brush.Accent" Color="{StaticResource Color.Accent}" />
+    <!-- Selection and icon tiles: 14 % accent (checked by tools/contrast-check as "Auswahl"). -->
+    <SolidColorBrush x:Key="Brush.AccentTint" Color="#576072" />
+    <SolidColorBrush x:Key="Brush.OnAccent" Color="{StaticResource Color.OnAccent}" />
+    <SolidColorBrush x:Key="Brush.Success" Color="{StaticResource Color.Success}" />
+    <SolidColorBrush x:Key="Brush.Warning" Color="{StaticResource Color.Warning}" />
+    <SolidColorBrush x:Key="Brush.Danger" Color="{StaticResource Color.Danger}" />
+    <SolidColorBrush x:Key="Brush.TextPrimary" Color="{StaticResource Color.TextPrimary}" />
+    <SolidColorBrush x:Key="Brush.TextSecondary" Color="{StaticResource Color.TextSecondary}" />
+    <!-- Abdunklung hinter Dialogen (60 Prozent Schwarz). -->
+    <SolidColorBrush x:Key="Brush.Scrim" Color="#000000" Opacity="0.6" />
+
+    <!-- Glow: soft moonlight around the main action, the selected navigation bar and preset symbols. Never on text or cards. -->
+    <DropShadowEffect x:Key="Glow.Accent" Color="{StaticResource Color.Accent}" BlurRadius="24" ShadowDepth="0" Opacity="0.55" />
+    <DropShadowEffect x:Key="Glow.Soft" Color="{StaticResource Color.Accent}" BlurRadius="16" ShadowDepth="0" Opacity="0.5" />
+
+    <!-- Ueberschreibt die Grundfarben von WPF-UI, damit Standard-Steuerelemente zu den Tokens passen. -->
+    <SolidColorBrush x:Key="ApplicationBackgroundBrush" Color="{StaticResource Color.Background}" />
+    <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="{StaticResource Color.TextPrimary}" />
+    <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="{StaticResource Color.TextSecondary}" />
+    <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush" Color="{StaticResource Color.Accent}" />
+    <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="{StaticResource Color.Surface}" />
+</ResourceDictionary>

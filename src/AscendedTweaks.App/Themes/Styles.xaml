@@ -129,9 +129,9 @@
         </Setter>
     </Style>
     <Style x:Key="Button.Primary" TargetType="c:ActionButton" BasedOn="{StaticResource Button.Base}">
-        <Setter Property="Background" Value="{DynamicResource Brush.Accent}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
+        <Setter Property="Background" Value="{DynamicResource Brush.AccentFill}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.AccentFill}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccentFill}" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <!-- Soft accent glow marks the main action; a disabled action does not glow. -->
         <Setter Property="Effect" Value="{DynamicResource Glow.Accent}" />
@@ -274,8 +274,8 @@
                             <Setter TargetName="Bg" Property="Opacity" Value="0.10" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Brush.Accent}" />
-                            <Setter TargetName="Bg" Property="Opacity" Value="0.14" />
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Brush.AccentTint}" />
+                            <Setter TargetName="Bg" Property="Opacity" Value="1" />
                             <Setter TargetName="Indicator" Property="Visibility" Value="Visible" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -309,8 +309,8 @@
                             <Setter TargetName="Bg" Property="Opacity" Value="0.10" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Brush.Accent}" />
-                            <Setter TargetName="Bg" Property="Opacity" Value="0.14" />
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Brush.AccentTint}" />
+                            <Setter TargetName="Bg" Property="Opacity" Value="1" />
                             <Setter TargetName="Indicator" Property="Visibility" Value="Visible" />
                         </Trigger>
                     </ControlTemplate.Triggers>

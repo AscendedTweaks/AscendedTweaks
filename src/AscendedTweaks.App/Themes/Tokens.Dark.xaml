@@ -1,25 +1,32 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!-- Design tokens of the only design (dark): only orange tones and neutral grays, light orange accent. Values live only here, never in page XAML. -->
-    <Color x:Key="Color.Background">#141414</Color>
-    <Color x:Key="Color.Surface">#1E1E1F</Color>
-    <Color x:Key="Color.Elevated">#28282A</Color>
-    <Color x:Key="Color.Border">#3A3A3D</Color>
-    <Color x:Key="Color.Accent">#FFA24D</Color>
-    <Color x:Key="Color.OnAccent">#141414</Color>
-    <Color x:Key="Color.Success">#D9D7D4</Color>
-    <Color x:Key="Color.Warning">#FFC48A</Color>
-    <Color x:Key="Color.Danger">#FF6A3D</Color>
-    <Color x:Key="Color.TextPrimary">#F6F5F3</Color>
-    <Color x:Key="Color.TextSecondary">#B4B2AE</Color>
+    <!-- Design tokens of the only design: gray as the main color (like a chat app), black for edges and shading, white text,
+         blue accents (strong blue buttons, light blue links and toggles, navy selection). Values live only here. -->
+    <Color x:Key="Color.Background">#2B2D31</Color>
+    <Color x:Key="Color.Surface">#313338</Color>
+    <Color x:Key="Color.Elevated">#383A40</Color>
+    <Color x:Key="Color.Border">#1E1F22</Color>
+    <Color x:Key="Color.Accent">#8AB0FF</Color>
+    <Color x:Key="Color.OnAccent">#1E1F22</Color>
+    <Color x:Key="Color.Success">#BEBEBE</Color>
+    <Color x:Key="Color.Warning">#F2F2F2</Color>
+    <Color x:Key="Color.Danger">#F29A9A</Color>
+    <Color x:Key="Color.TextPrimary">#F2F2F2</Color>
+    <Color x:Key="Color.TextSecondary">#BEBEBE</Color>
+    <!-- Buttons: strong blue with white text. Links, focus and toggles use the lighter Color.Accent. -->
+    <Color x:Key="Color.AccentFill">#3D6BE0</Color>
+    <Color x:Key="Color.OnAccentFill">#FFFFFF</Color>
+    <!-- Selected navigation entry, segment and symbol tiles: navy. -->
+    <Color x:Key="Color.AccentTint">#212A3F</Color>
 
     <SolidColorBrush x:Key="Brush.Background" Color="{StaticResource Color.Background}" />
     <SolidColorBrush x:Key="Brush.Surface" Color="{StaticResource Color.Surface}" />
     <SolidColorBrush x:Key="Brush.Elevated" Color="{StaticResource Color.Elevated}" />
     <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}" />
     <SolidColorBrush x:Key="Brush.Accent" Color="{StaticResource Color.Accent}" />
-    <!-- Selection and icon tiles: 14 % accent (checked by tools/contrast-check as "Auswahl"). -->
-    <SolidColorBrush x:Key="Brush.AccentTint" Color="{StaticResource Color.Accent}" Opacity="0.14" />
+    <SolidColorBrush x:Key="Brush.AccentTint" Color="{StaticResource Color.AccentTint}" />
+    <SolidColorBrush x:Key="Brush.AccentFill" Color="{StaticResource Color.AccentFill}" />
+    <SolidColorBrush x:Key="Brush.OnAccentFill" Color="{StaticResource Color.OnAccentFill}" />
     <SolidColorBrush x:Key="Brush.OnAccent" Color="{StaticResource Color.OnAccent}" />
     <SolidColorBrush x:Key="Brush.Success" Color="{StaticResource Color.Success}" />
     <SolidColorBrush x:Key="Brush.Warning" Color="{StaticResource Color.Warning}" />
@@ -29,9 +36,11 @@
     <!-- Abdunklung hinter Dialogen (60 Prozent Schwarz). -->
     <SolidColorBrush x:Key="Brush.Scrim" Color="#000000" Opacity="0.6" />
 
-    <!-- Glow: soft orange light around the main action, the selected navigation bar and preset symbols. Never on text or cards. -->
-    <DropShadowEffect x:Key="Glow.Accent" Color="{StaticResource Color.Accent}" BlurRadius="24" ShadowDepth="0" Opacity="0.55" />
-    <DropShadowEffect x:Key="Glow.Soft" Color="{StaticResource Color.Accent}" BlurRadius="16" ShadowDepth="0" Opacity="0.5" />
+    <!-- Glow: soft blue light around primary buttons, the selected navigation bar and preset symbols. Never on text. -->
+    <DropShadowEffect x:Key="Glow.Accent" Color="{StaticResource Color.AccentFill}" BlurRadius="22" ShadowDepth="0" Opacity="0.6" />
+    <DropShadowEffect x:Key="Glow.Soft" Color="{StaticResource Color.Accent}" BlurRadius="14" ShadowDepth="0" Opacity="0.45" />
+    <!-- Shading: a soft black shadow under the hero and the preset tiles (drawn on an underlay, so text stays crisp). -->
+    <DropShadowEffect x:Key="Shadow.Card" Color="#000000" BlurRadius="18" ShadowDepth="3" Direction="270" Opacity="0.45" />
 
     <!-- Ueberschreibt die Grundfarben von WPF-UI, damit Standard-Steuerelemente zu den Tokens passen. -->
     <SolidColorBrush x:Key="ApplicationBackgroundBrush" Color="{StaticResource Color.Background}" />

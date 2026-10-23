@@ -128,6 +128,9 @@ public sealed class ThemeService : IThemeService
 
         tokens["Brush.Scrim"] = new System.Windows.Media.SolidColorBrush(SystemColors.WindowColor) { Opacity = 0.8 };
         tokens["Brush.AccentTint"] = new System.Windows.Media.SolidColorBrush(SystemColors.HighlightColor) { Opacity = 0.3 };
+        tokens["Brush.AccentFill"] = new System.Windows.Media.SolidColorBrush(SystemColors.HighlightColor);
+        tokens["Brush.OnAccentFill"] = new System.Windows.Media.SolidColorBrush(SystemColors.HighlightTextColor);
+        tokens["Shadow.Card"] = null;
 
         tokens["Glow.Soft"] = null;
         tokens["Glow.Accent"] = null;

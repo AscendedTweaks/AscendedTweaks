@@ -126,7 +126,7 @@
         </Border>
     </DataTemplate>
 
-    <!-- Preset tiles: only orange and neutral tones; every preset uses the orange tint, its symbol glows softly. -->
+    <!-- Preset tiles: navy symbol tile with a light blue symbol that glows softly. -->
     <Style x:Key="PresetTile" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource Brush.AccentTint}" />
     </Style>
@@ -138,7 +138,9 @@
     <!-- Start page: hero with the main action and three facts, then large preset tiles. One accent fill: the hero action. -->
     <DataTemplate DataType="{x:Type vm:SimpleStartViewModel}">
         <StackPanel Margin="0,0,0,24">
-            <Border Style="{StaticResource Card}" Padding="32,24" Margin="0,0,0,24">
+            <Grid Margin="0,0,0,24">
+            <Border CornerRadius="{StaticResource Radius.Large}" Background="{DynamicResource Brush.Surface}" Effect="{DynamicResource Shadow.Card}" />
+            <Border Style="{StaticResource Card}" Padding="32,24" Margin="0">
                 <StackPanel>
                     <TextBlock Style="{StaticResource Text.Title}" Text="{s:Loc simple.start.hello}" />
                     <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.start.hero}" TextWrapping="Wrap" Margin="0,8,0,0" MaxWidth="640" HorizontalAlignment="Left" />
@@ -172,6 +174,7 @@
                                Visibility="{Binding Recommended.ChangesText, Converter={StaticResource NullToCollapsed}}" />
                 </StackPanel>
             </Border>
+            </Grid>
 
             <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.start.presets}" Margin="0,0,0,12" />
             <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Message}" TextWrapping="Wrap" Margin="0,0,0,12" Visibility="{Binding Message, Converter={StaticResource NullToCollapsed}}" />
@@ -183,7 +186,9 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource Card}" Padding="24" Margin="0,0,16,16" MinHeight="200">
+                        <Grid Margin="0,0,16,16">
+                        <Border CornerRadius="{StaticResource Radius.Large}" Background="{DynamicResource Brush.Surface}" Effect="{DynamicResource Shadow.Card}" />
+                        <Border Style="{StaticResource Card}" Padding="24" Margin="0" MinHeight="200">
                             <DockPanel>
                                 <WrapPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
                                     <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{Binding ApplyText}" Command="{Binding ApplyCommand}"
@@ -216,6 +221,7 @@
                                 </DockPanel>
                             </DockPanel>
                         </Border>
+                        </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

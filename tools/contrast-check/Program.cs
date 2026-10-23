@@ -55,7 +55,18 @@ internal static partial class Program
             }
         }
 
-        yield return new Check("OnAccent auf Accent (Primaerschaltflaeche)", t["OnAccent"], t["Accent"], Text);
+        yield return new Check("OnAccent auf Accent (Schalter, Badges)", t["OnAccent"], t["Accent"], Text);
+        if (t.TryGetValue("AccentFill", out var fill))
+        {
+            yield return new Check("OnAccentFill auf AccentFill (Primaerschaltflaeche)", t["OnAccentFill"], fill, Text);
+        }
+
+        if (t.TryGetValue("AccentTint", out var tint))
+        {
+            yield return new Check("TextPrimary auf AccentTint (Auswahl)", t["TextPrimary"], tint, Text);
+            yield return new Check("Accent auf AccentTint (Symbolkachel)", t["Accent"], tint, Graphic);
+        }
+
         yield return new Check("OnAccent auf Accent (Schalterknopf)", t["OnAccent"], t["Accent"], Graphic);
         yield return new Check("TextSecondary auf Surface (Schalter aus)", t["TextSecondary"], t["Surface"], Graphic);
 

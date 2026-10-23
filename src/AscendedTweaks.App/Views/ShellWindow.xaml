@@ -38,13 +38,14 @@
             </Grid.ColumnDefinitions>
 
             <!-- Navigation links, 240 Punkte; unter 1000 Punkten Fensterbreite eingeklappt auf 56 Punkte. -->
-            <Border Grid.Column="0" Width="{Binding NavWidth}" Background="{DynamicResource Brush.Surface}"
-                    BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,1,0" Padding="8">
+            <Border Grid.Column="0" Width="{Binding NavWidth}" Background="{DynamicResource Brush.Background}" Padding="8,8,8,16">
                 <DockPanel LastChildFill="True">
                     <!-- V2: Zurueck und Einstellungen fest am unteren Rand (nur Einfach-Modus). -->
                     <ListBox DockPanel.Dock="Bottom" Style="{StaticResource Nav.List}" ItemsSource="{Binding FooterItems}" SelectedItem="{Binding SelectedFooterItem}"
                              AutomationProperties.Name="{s:Loc nav.footer}" ItemContainerStyle="{Binding ItemContainerStyle, ElementName=NavList}" ItemTemplate="{Binding ItemTemplate, ElementName=NavList}"
                              Margin="0,8,0,0" />
+                    <Border DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource Brush.Border}" Margin="12,8,12,0"
+                            Visibility="{Binding IsExpertMode, Converter={StaticResource InverseBoolToVisibility}}" />
                     <c:ActionButton DockPanel.Dock="Top" Style="{StaticResource Button.Text}" HorizontalAlignment="Left"
                                     Padding="10,8" Margin="0,0,0,8" Command="{Binding ToggleNavCommand}"
                                     ToolTip="{s:Loc nav.toggle}" AutomationProperties.Name="{s:Loc nav.toggle}">
@@ -55,6 +56,7 @@
                              ScrollViewer.VerticalScrollBarVisibility="{Binding IsNavCollapsed, Converter={StaticResource CollapsedScrollBar}}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem" BasedOn="{StaticResource Nav.Item}">
+                                <Setter Property="MinHeight" Value="40" />
                                 <Setter Property="AutomationProperties.Name">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource LocKey}">
@@ -74,9 +76,30 @@
                                             <Binding Source="{x:Static loc:Localizer.Current}" Path="Culture" />
                                         </MultiBinding>
                                     </StackPanel.ToolTip>
-                                    <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="20" Foreground="{DynamicResource Brush.TextPrimary}" />
-                                    <TextBlock Margin="12,0,0,0" Style="{StaticResource Text.Body}" TextWrapping="NoWrap" VerticalAlignment="Center"
+                                    <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="20">
+                                        <ui:SymbolIcon.Style>
+                                            <Style TargetType="ui:SymbolIcon">
+                                                <Setter Property="Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                        <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+                                                        <Setter Property="Filled" Value="True" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ui:SymbolIcon.Style>
+                                    </ui:SymbolIcon>
+                                    <TextBlock Margin="12,0,0,0" TextWrapping="NoWrap" VerticalAlignment="Center"
                                                Visibility="{Binding DataContext.IsNavCollapsed, RelativeSource={RelativeSource AncestorType=ListBox}, Converter={StaticResource InverseBoolToVisibility}}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
                                         <TextBlock.Text>
                                             <MultiBinding Converter="{StaticResource LocKey}">
                                                 <Binding Path="Key" />
@@ -108,36 +131,42 @@
 
                     <DockPanel Margin="0,0,0,16">
                         <!-- V2: Umschalter "Einfach / Experte" oben rechts. -->
-                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center"
-                                    Visibility="{Binding SupportsModes, Converter={StaticResource BoolToVisibility}}" AutomationProperties.Name="{s:Loc mode.title}">
-                            <c:ActionButton Content="{s:Loc mode.simple}" Command="{Binding UseSimpleCommand}" MinHeight="40" Margin="0,0,4,0">
-                                <c:ActionButton.Style>
-                                    <Style TargetType="c:ActionButton" BasedOn="{StaticResource Button.Secondary}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsExpertMode}" Value="False">
-                                                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
-                                                <Setter Property="BorderThickness" Value="2" />
-                                                <Setter Property="FontWeight" Value="SemiBold" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </c:ActionButton.Style>
-                            </c:ActionButton>
-                            <c:ActionButton Content="{s:Loc mode.expert}" Command="{Binding UseExpertCommand}" MinHeight="40">
-                                <c:ActionButton.Style>
-                                    <Style TargetType="c:ActionButton" BasedOn="{StaticResource Button.Secondary}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsExpertMode}" Value="True">
-                                                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
-                                                <Setter Property="BorderThickness" Value="2" />
-                                                <Setter Property="FontWeight" Value="SemiBold" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </c:ActionButton.Style>
-                            </c:ActionButton>
-                        </StackPanel>
-                        <TextBlock Style="{StaticResource Text.Title}" VerticalAlignment="Center">
+                        <Border DockPanel.Dock="Right" VerticalAlignment="Center" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1"
+                                CornerRadius="{StaticResource Radius.Small}" Padding="4" Background="{DynamicResource Brush.Surface}"
+                                Visibility="{Binding SupportsModes, Converter={StaticResource BoolToVisibility}}" AutomationProperties.Name="{s:Loc mode.title}">
+                            <StackPanel Orientation="Horizontal">
+                                <c:ActionButton Content="{s:Loc mode.simple}" Command="{Binding UseSimpleCommand}" MinHeight="32" Margin="0,0,4,0">
+                                    <c:ActionButton.Style>
+                                        <Style TargetType="c:ActionButton" BasedOn="{StaticResource Button.Text}">
+                                            <Setter Property="Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsExpertMode}" Value="False">
+                                                    <Setter Property="Background" Value="{DynamicResource Brush.AccentTint}" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}" />
+                                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </c:ActionButton.Style>
+                                </c:ActionButton>
+                                <c:ActionButton Content="{s:Loc mode.expert}" Command="{Binding UseExpertCommand}" MinHeight="32">
+                                    <c:ActionButton.Style>
+                                        <Style TargetType="c:ActionButton" BasedOn="{StaticResource Button.Text}">
+                                            <Setter Property="Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsExpertMode}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource Brush.AccentTint}" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}" />
+                                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </c:ActionButton.Style>
+                                </c:ActionButton>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Style="{StaticResource Text.Title}" VerticalAlignment="Center"
+                                   Visibility="{Binding CurrentPage.ShowTitle, Converter={StaticResource BoolToVisibility}}">
                             <TextBlock.Text>
                                 <MultiBinding Converter="{StaticResource LocKey}">
                                     <Binding Path="CurrentPage.TitleKey" />

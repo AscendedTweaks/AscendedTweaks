@@ -19,19 +19,19 @@
     <DataTemplate x:Key="SimpleCard" DataType="{x:Type sv:TweakCardViewModel}">
         <Border Style="{StaticResource Card}" Padding="20,16">
             <DockPanel>
-                <ToggleButton DockPanel.Dock="Left" Style="{StaticResource Toggle.Switch}" IsChecked="{Binding IsOn, Mode=TwoWay}" IsEnabled="{Binding IsToggleEnabled}"
-                              ToolTip="{Binding ToggleToolTip}" ToolTipService.ShowOnDisabled="True" VerticalAlignment="Top" Margin="0,4,16,0"
+                <ToggleButton DockPanel.Dock="Right" Style="{StaticResource Toggle.Switch}" IsChecked="{Binding IsOn, Mode=TwoWay}" IsEnabled="{Binding IsToggleEnabled}"
+                              ToolTip="{Binding ToggleToolTip}" ToolTipService.ShowOnDisabled="True" VerticalAlignment="Top" Margin="24,4,0,0"
                               AutomationProperties.Name="{Binding PlainTitle}" AutomationProperties.HelpText="{Binding PlainDescription}" />
                 <StackPanel>
                     <DockPanel>
-                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,0,0">
-                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ImpactText}" Margin="0,0,12,0" VerticalAlignment="Center" ToolTip="{Binding ImpactNote}" />
-                            <ui:SymbolIcon Symbol="{Binding RiskPlainSymbol}" FontSize="16" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
-                            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding RiskPlainText}" Margin="4,0,0,0" VerticalAlignment="Center" />
-                        </StackPanel>
                         <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding PlainTitle}" TextWrapping="Wrap" />
                     </DockPanel>
                     <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding PlainDescription}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <ui:SymbolIcon Symbol="{Binding RiskPlainSymbol}" FontSize="16" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
+                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding RiskPlainText}" Margin="8,0,16,0" VerticalAlignment="Center" />
+                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ImpactText}" VerticalAlignment="Center" ToolTip="{Binding ImpactNote}" />
+                    </StackPanel>
                     <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding ToggleToolTip}" TextWrapping="Wrap" Margin="0,4,0,0"
                                Visibility="{Binding ToggleToolTip, Converter={StaticResource NullToCollapsed}}" />
                     <Expander Margin="0,8,0,0" AutomationProperties.Name="{s:Loc simple.technical}" sv:A11y.NameParts="True">
@@ -126,14 +126,45 @@
         </Border>
     </DataTemplate>
 
+    <!-- Start page: hero with the main action and three facts, then large preset tiles. One accent fill: the hero action. -->
     <DataTemplate DataType="{x:Type vm:SimpleStartViewModel}">
         <StackPanel Margin="0,0,0,24">
-            <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{s:Loc simple.start.hello}" Margin="0,0,0,4" />
-            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Status}" TextWrapping="Wrap" Margin="0,0,0,8" />
-            <ContentControl Content="{Binding Help}" Focusable="False" Margin="0,0,0,16" />
-            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.start.presets}" Margin="0,0,0,8" />
-            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Message}" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="{Binding Message, Converter={StaticResource NullToCollapsed}}" />
-            <ItemsControl ItemsSource="{Binding Presets}" Focusable="False">
+            <Border Style="{StaticResource Card}" Padding="32,24" Margin="0,0,0,24">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Text.Title}" Text="{s:Loc simple.start.hello}" />
+                    <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.start.hero}" TextWrapping="Wrap" Margin="0,8,0,0" MaxWidth="640" HorizontalAlignment="Left" />
+                    <UniformGrid Columns="3" Margin="0,24,-12,0" AutomationProperties.Name="{Binding Status}">
+                        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.windows}" />
+                                <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding WindowsText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.ram}" />
+                                <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding RamText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Small}" Padding="16,12" Margin="0,0,12,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.autostart}" />
+                                <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding AutostartText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                    <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
+                        <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc simple.start.recommended}" Command="{Binding Recommended.ApplyCommand}"
+                                        MinHeight="40" Padding="24,8" Margin="0,0,8,0"
+                                        Visibility="{Binding Recommended, Converter={StaticResource NullToCollapsed}}" AutomationProperties.HelpText="{Binding Recommended.Name}" />
+                        <ContentControl Content="{Binding Help}" Focusable="False" VerticalAlignment="Top" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.start.presets}" Margin="0,0,0,12" />
+            <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Message}" TextWrapping="Wrap" Margin="0,0,0,12" Visibility="{Binding Message, Converter={StaticResource NullToCollapsed}}" />
+            <ItemsControl ItemsSource="{Binding Presets}" Focusable="False" Margin="0,0,-16,0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />
@@ -141,37 +172,40 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource Card}" Margin="0,0,12,12" MinHeight="160">
+                        <Border Style="{StaticResource Card}" Padding="24" Margin="0,0,16,16" MinHeight="200">
                             <DockPanel>
-                                <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+                                <DockPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
                                     <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc simple.preset.undo}" Command="{Binding UndoCommand}" MinHeight="40"
                                                     Visibility="{Binding IsOwned, Converter={StaticResource BoolToVisibility}}" AutomationProperties.HelpText="{Binding Name}" />
                                     <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc simple.preset.apply}" Command="{Binding ApplyCommand}"
                                                     HorizontalAlignment="Left" MinHeight="40" AutomationProperties.HelpText="{Binding Name}" />
                                 </DockPanel>
                                 <ListBox DockPanel.Dock="Bottom" Style="{StaticResource Segment.List}" ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel, Mode=TwoWay}"
-                                         AutomationProperties.Name="{s:Loc level.title}" Margin="0,8,0,0" Visibility="{Binding HasLevels, Converter={StaticResource BoolToVisibility}}">
+                                         AutomationProperties.Name="{s:Loc level.title}" Margin="0,12,0,0" Visibility="{Binding HasLevels, Converter={StaticResource BoolToVisibility}}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Label}" />
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="24" Foreground="{DynamicResource Brush.TextSecondary}" Margin="0,0,12,0" VerticalAlignment="Center" />
-                                        <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Left" Width="48" Height="48" CornerRadius="{StaticResource Radius.Large}" Background="{DynamicResource Brush.AccentTint}"
+                                            VerticalAlignment="Top" Margin="0,0,16,0">
+                                        <ui:SymbolIcon Symbol="{Binding Symbol}" FontSize="24" Foreground="{DynamicResource Brush.Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding Name}" TextWrapping="Wrap" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Description}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Summary}" TextWrapping="Wrap" Margin="0,8,0,0" />
                                     </StackPanel>
-                                    <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Description}" TextWrapping="Wrap" Margin="0,4,0,0" />
-                                    <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Summary}" Margin="0,8,0,0" />
-                                </StackPanel>
+                                </DockPanel>
                             </DockPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
             <c:ActionButton Style="{StaticResource Button.Text}" Command="{Binding CreateOwnCommand}" HorizontalAlignment="Left" MinHeight="40" AutomationProperties.Name="{s:Loc simple.preset.own}"
-                            Visibility="{Binding CanCreateOwn, Converter={StaticResource BoolToVisibility}}">
+                            Visibility="{Binding CanCreateOwn, Converter={StaticResource BoolToVisibility}}" Margin="0,0,0,16">
                 <StackPanel Orientation="Horizontal">
                     <ui:SymbolIcon Symbol="Add16" FontSize="16" Margin="0,0,8,0" />
                     <TextBlock Text="{s:Loc simple.preset.own}" VerticalAlignment="Center" />
@@ -179,7 +213,10 @@
             </c:ActionButton>
             <ContentControl Content="{Binding Measurement}" Focusable="False" Visibility="{Binding Measurement, Converter={StaticResource NullToCollapsed}}" />
             <Border Style="{StaticResource Banner}" Margin="0,8,0,0">
-                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc banner.honesty}" TextWrapping="Wrap" />
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="Info16" FontSize="16" Foreground="{DynamicResource Brush.Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc banner.honesty}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                </StackPanel>
             </Border>
         </StackPanel>
     </DataTemplate>
@@ -416,14 +453,13 @@
         <Border Style="{StaticResource Card}" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ToggleButton Grid.Column="0" Style="{StaticResource Toggle.Switch}" VerticalAlignment="Top" Margin="0,2,16,0"
+                <ToggleButton Grid.Column="1" Style="{StaticResource Toggle.Switch}" VerticalAlignment="Top" Margin="24,2,0,0"
                               IsChecked="{Binding IsOn, Mode=TwoWay}" IsEnabled="{Binding IsToggleEnabled}" ToolTip="{Binding ToggleToolTip}"
                               AutomationProperties.Name="{Binding Name}" AutomationProperties.HelpText="{Binding Description}" />
-                <StackPanel Grid.Column="1">
+                <StackPanel Grid.Column="0">
                     <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{Binding Name}" />
                     <TextBlock Style="{StaticResource Text.Secondary}" Text="{Binding Description}" Margin="0,4,0,8"
                                LineHeight="20" LineStackingStrategy="BlockLineHeight" MaxHeight="40" TextTrimming="WordEllipsis" />
@@ -442,9 +478,9 @@
                         <c:Badge Tone="Accent" Symbol="History16" Text="{s:Loc card.pending}" Filled="True" Margin="0,0,8,4"
                                  Visibility="{Binding IsPending, Converter={StaticResource BoolToVisibility}}" />
                     </WrapPanel>
+                    <c:ActionButton Style="{StaticResource Button.Text}" HorizontalAlignment="Left" Margin="-16,4,0,0" Content="{s:Loc card.details}"
+                                    Command="{Binding ShowDetailsCommand}" AutomationProperties.HelpText="{Binding Name}" />
                 </StackPanel>
-                <c:ActionButton Grid.Column="2" Style="{StaticResource Button.Text}" VerticalAlignment="Top" Content="{s:Loc card.details}"
-                                Command="{Binding ShowDetailsCommand}" AutomationProperties.HelpText="{Binding Name}" />
             </Grid>
         </Border>
     </DataTemplate>

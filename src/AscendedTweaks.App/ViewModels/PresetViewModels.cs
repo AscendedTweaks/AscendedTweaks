@@ -265,6 +265,15 @@ public sealed partial class SimpleStartViewModel : PageViewModel
     [ObservableProperty]
     private string? _message;
 
+    [ObservableProperty]
+    private string? _windowsText;
+
+    [ObservableProperty]
+    private string? _ramText;
+
+    [ObservableProperty]
+    private string? _autostartText;
+
     public SimpleStartViewModel(
         TweakWorkspace workspace,
         ISystemInfoSource system,
@@ -301,6 +310,12 @@ public sealed partial class SimpleStartViewModel : PageViewModel
 
     public bool CanCreateOwn => _ownPresets is not null && !_workspace.IsReadOnly;
 
+    /// <summary>The start page has its own hero heading.</summary>
+    public override bool ShowTitle => false;
+
+    /// <summary>Main action of the hero: the "Safe and fast" preset, which opens the preview like every preset.</summary>
+    public PresetCardViewModel? Recommended => Presets.FirstOrDefault(p => p.Profile.Key == "safe");
+
     public async Task LoadAsync()
     {
         await _workspace.RefreshAsync().ConfigureAwait(true);
@@ -310,6 +325,9 @@ public sealed partial class SimpleStartViewModel : PageViewModel
         Status = autostarts is { } n
             ? _localizer.Format("simple.start.status", ("windows", windows), ("ram", ram), ("n", n))
             : _localizer.Format("simple.start.status.noautostart", ("windows", windows), ("ram", ram));
+        WindowsText = windows;
+        RamText = ram;
+        AutostartText = autostarts?.ToString(System.Globalization.CultureInfo.CurrentCulture) ?? _localizer["anticheat.value.unknown"];
         await LoadPresetsAsync().ConfigureAwait(true);
     }
 
@@ -335,6 +353,8 @@ public sealed partial class SimpleStartViewModel : PageViewModel
         {
             Presets.Add(card);
         }
+
+        OnPropertyChanged(nameof(Recommended));
     }
 
     /// <summary>Plan je Stufe: Die Stufen-Regel waehlt die Eintraege, der bestehende ProfilePlanner prueft Zustand und Verfuegbarkeit.</summary>

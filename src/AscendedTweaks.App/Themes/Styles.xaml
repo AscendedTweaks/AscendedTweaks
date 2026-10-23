@@ -258,7 +258,7 @@
                         <Border x:Name="Bg" CornerRadius="{StaticResource Radius.Small}" Background="Transparent" />
                         <Rectangle x:Name="Indicator" Width="3" Height="16" RadiusX="1.5" RadiusY="1.5" HorizontalAlignment="Left"
                                    Fill="{DynamicResource Brush.Accent}" Visibility="Collapsed" />
-                        <ContentPresenter Margin="12,8" />
+                        <ContentPresenter Margin="12,8" VerticalAlignment="Center" />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <!-- Getoente Flaeche statt "Erhoeht": im hellen Theme sind Flaeche und Erhoeht beide weiss. -->

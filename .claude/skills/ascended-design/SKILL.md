@@ -20,6 +20,7 @@ Never write a hex color in a page, template or control. Use the brushes from `Th
 | `Brush.Elevated` | #1F2430 | #FFFFFF + border | Dialogs, side panel, hover |
 | `Brush.Border` | #2B3240 | #D5DBE5 | Borders, dividers |
 | `Brush.Accent` | #4D8BFF | #2E6DDD | Primary action, focus, links |
+| `Brush.AccentTint` | 14 % accent | 14 % accent | Selected segment, icon tiles |
 | `Brush.OnAccent` | #0F1218 | #FFFFFF | Text and icons on accent fills |
 | `Brush.Success` | #35C98A | #188155 | Risk "Safe", success |
 | `Brush.Warning` | #FFB020 | #A06400 | Risk "Caution", notices |
@@ -62,8 +63,17 @@ Card descriptions stop after two lines with an ellipsis; the full text is in the
 
 ## 4. Components
 
-- **Tweak card**: min height 96, padding 16, radius 12, Surface with Border. Toggle, name, short description, risk badge,
-  impact badge, "More details", chips "Restart required" / "Admin required".
+- **Tweak card**: min height 96, padding 16, radius 12, Surface with Border. Text on the left (name, short description,
+  risk and impact badges, chips "Restart required" / "Admin required", then "More details" as a text button),
+  toggle on the right with 24 gap, like Windows 11 Settings. Simple-mode cards follow the same layout.
+- **Start page**: a hero card (padding 32 x 24) with the 28 pt welcome title, one sentence, three fact tiles
+  (bordered, radius 8, caption plus 17 pt value) and the only accent button of the page. The shell hides the page
+  title there (`ShowTitle` false). Preset tiles: two columns, padding 24, min height 200, symbol 24 in a 48 x 48
+  `Brush.AccentTint` tile with radius 12, secondary "Review and apply" button.
+- **Navigation**: sits on `Brush.Background` without its own surface; entries at least 40 high; the selected entry
+  has the accent tint, the accent bar, a filled accent icon and SemiBold text; a 1-point divider above the footer.
+- **Mode switch** (Simple / Expert): one bordered segmented control on Surface; the active segment is `Brush.AccentTint`
+  with SemiBold text, never an accent fill.
 - **Buttons** (`Button.Primary`, `Button.Secondary`, `Button.Text`, `Button.Danger`): states normal, hover, pressed, focus,
   disabled, running (spinner, text stays visible).
 - **Inputs**: radius 8, Border, accent frame on focus, error text below in Danger with a symbol.

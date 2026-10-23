@@ -23,6 +23,9 @@ public abstract partial class PageViewModel : ObservableObject
 
     /// <summary>Dashboard und Tweak-Seiten zeigen dauerhaft den Ehrlichkeitshinweis (Regel S9).</summary>
     public bool ShowHonestyBanner { get; }
+
+    /// <summary>False when the page has its own large heading (start page hero), so the shell hides the page title.</summary>
+    public virtual bool ShowTitle => true;
 }
 
 public sealed class PlaceholderPageViewModel : PageViewModel

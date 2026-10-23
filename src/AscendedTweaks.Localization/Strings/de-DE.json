@@ -1042,5 +1042,10 @@
   "cli.args.value": "{arg} erwartet einen Wert.",
   "cli.hidden": " (standardmäßig ausgeblendet)",
   "cli.skip.desktoponly": "nur für Desktop-PCs (Akku erkannt)",
-  "cli.args.module.value": "--module erwartet PRIV, PERF, GAME, UI, DEB, NET, DISK oder UPD."
+  "cli.args.module.value": "--module erwartet PRIV, PERF, GAME, UI, DEB, NET, DISK oder UPD.",
+  "simple.start.hero": "Wähle ein Preset, prüfe vorher jede Änderung in der Vorschau und mach alles mit einem Klick rückgängig.",
+  "simple.start.stat.windows": "System",
+  "simple.start.stat.ram": "Arbeitsspeicher",
+  "simple.start.stat.autostart": "Starten mit Windows",
+  "simple.start.recommended": "Empfohlene Einstellungen ansehen"
 }

@@ -1042,5 +1042,10 @@
   "cli.args.value": "{arg} needs a value.",
   "cli.hidden": " (hidden by default)",
   "cli.skip.desktoponly": "desktop PCs only (battery detected)",
-  "cli.args.module.value": "--module expects PRIV, PERF, GAME, UI, DEB, NET, DISK or UPD."
+  "cli.args.module.value": "--module expects PRIV, PERF, GAME, UI, DEB, NET, DISK or UPD.",
+  "simple.start.hero": "Pick a preset, check every change in the preview first, and undo anything with one click.",
+  "simple.start.stat.windows": "System",
+  "simple.start.stat.ram": "Memory",
+  "simple.start.stat.autostart": "Start with Windows",
+  "simple.start.recommended": "Review recommended settings"
 }

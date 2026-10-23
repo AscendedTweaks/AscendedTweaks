@@ -2,7 +2,7 @@
 import glob, json, subprocess, wave
 import numpy as np
 SR = 48000
-T = {'end': 14.0}
+T = {'end': 12.0}
 DL = '../dl'
 def load(path):
     raw = subprocess.run(['ffmpeg','-loglevel','error','-i',path,'-ac','2','-ar',str(SR),'-f','s16le','-'],capture_output=True,check=True).stdout
@@ -31,9 +31,9 @@ def type_ticks(start, n, step, db):
         put(keys[i % 3], start + i * step + rng.uniform(-.008, .008), db + rng.uniform(-2, 1))
 
 # Only a soft swell into the end card and the spoken line.
-put(sfx('cardSlide6'), 9.85, -14)
-put(thump, 10.0, -8)
-put(load('../voice2/outro-line.wav'), 10.44, 0)
+put(sfx('cardSlide6'), 7.85, -14)
+put(thump, 8.0, -8)
+put(load('../voice2/outro-line.wav'), 8.44, 0)
 mix = np.tanh(mix * 1.05); mix = mix / np.max(np.abs(mix)) * .89
 with wave.open('mix.wav','wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes((mix.T*32767).astype('<i2').tobytes())

@@ -73,15 +73,15 @@ window.setTime = t => {
   const sc = .5, drift = 6 * Math.sin(t * .7);
   L.style.left = (424 + drift - 865 * sc) + 'px'; L.style.top = (960 - 355 * sc + 3 * Math.sin(t * .5)) + 'px';
   R.style.left = (679 - drift - 182 * sc) + 'px'; R.style.top = (960 - 365 * sc - 3 * Math.sin(t * .5 + 1)) + 'px';
-  // End card after 10 s, timed to the spoken line (word starts at 10.5, 12.07, 13.0).
-  const o = ease(Math.min(1, Math.max(0, (t - 10) / .9)));
-  if (t > 10) {
-    const a0 = -Math.PI / 5 + 2 * Math.PI; logo.rotation.y = a0 + (2 * Math.PI - a0) * o; logo.rotation.x *= 1 - o;
+  // End card right when the music ends (8 s), timed to the spoken line (word starts at 8.5, 10.07, 11.0).
+  const OUT = 8, o = ease(Math.min(1, Math.max(0, (t - OUT) / .9)));
+  if (t > OUT) {
+    const a0 = -Math.PI / 5 + 2 * Math.PI * (OUT / 10); logo.rotation.y = a0 + (2 * Math.PI - a0) * o; logo.rotation.x *= 1 - o;
     logo.position.y = 4 * Math.sin(t * .8) * (1 - o) + 125 * o; logo.scale.setScalar(S * (1 + .58 * o));
     L.style.left = (parseFloat(L.style.left) - 160 * o) + 'px'; R.style.left = (parseFloat(R.style.left) + 160 * o) + 'px';
   }
   L.style.opacity = R.style.opacity = 1 - o;
-  [['eWord', 10.45], ['eTag', 12.0], ['eBio', 12.95]].forEach(([id, s0]) => {
+  [['eWord', 8.45], ['eTag', 10.0], ['eBio', 10.95]].forEach(([id, s0]) => {
     const p = ease(Math.min(1, Math.max(0, (t - s0) / .45))), el = document.getElementById(id);
     el.style.opacity = p; el.style.transform = `translateY(${30 * (1 - p)}px)`; el.style.filter = `blur(${10 * (1 - p)}px)`;
   });

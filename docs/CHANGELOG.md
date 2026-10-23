@@ -4,18 +4,7 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 
 ## [Unreleased]
 
-### Hinzugefügt
-- GAME-022 "Höchste Bildwiederholrate": stellt den Hauptbildschirm mit einem Klick auf die höchste Rate der aktuellen Auflösung (neuer Aktionstyp `DisplayRefreshRate`, Erkennung `DisplayRefreshIsHighest`); "Jetzt beheben" im Gaming-Check "Bildwiederholrate" nutzt ihn. In den Presets Gaming und Wettkampf.
-- Schlagwörter: Jeder Tweak trägt ein bis drei Schlagwörter aus einer festen Liste (zum Beispiel "FPS", "Verzögerung", "Ping"), als Chips auf den Karten. Sie nennen den Bereich, nie einen gemessenen Gewinn; der Linter prüft sie.
-- GAME-025 "Spiel bleibt bei Anrufen laut" (Experte), GAME-026 "Tastenkürzel für Maustasten aus", GAME-027 "Game-Bar-Aufnahmen aus, auch bei Home" (Experte), NET-013 "Hintergrund-Updates höchstens 25 % Bandbreite".
-- Das Release-ZIP heißt immer `AscendedTweaks.zip` (ohne Version), damit `https://github.com/AscendedTweaks/AscendedTweaks/releases/latest/download/AscendedTweaks.zip` dauerhaft funktioniert; README und Website verlinken direkt darauf.
-- Kurzes Ladefenster beim Start; Arbeitsspeicher in ganzen GB; Autostart-Kachel mit Erklärung und Link zur Liste.
-- GAME-023 "Zeigergeschwindigkeit auf Standard (1:1)" und GAME-024 "Schnellere Tastenwiederholung" (SystemParametersInfo `MouseSpeed`, `KeyboardDelay`, `KeyboardSpeed`).
-
-### Behoben
-- DNS-Tweaks meldeten auf Adaptern ohne IPv6 "Windows oder ein anderes Programm blockiert die Änderung" und setzten alles zurück; erwartet werden jetzt nur die Adressen, die der Adapter aufnehmen kann.
-
-## [1.1.0] - noch nicht veröffentlicht
+## [1.1.0] - 2026-10-23
 
 Erste öffentliche Version (V3), nicht signiert. Lizenz MIT.
 
@@ -23,12 +12,26 @@ Erste öffentliche Version (V3), nicht signiert. Lizenz MIT.
 - V3-2: Eigenes Symbol (`assets/icon`, `tools/make-icon.ps1`) für EXE-Dateien, Fenster, Titelleiste und Installer.
 - V3-3: Englische `README.md`, `LICENSE` (MIT), GitHub-Workflows für Build und Tests, Release mit Prüfsummen und Build-Attestierung sowie GitHub Pages.
 - V3-4: Website in `site/` (statisch, ohne Cookies und ohne Anfragen an fremde Server).
+- GAME-022 "Höchste Bildwiederholrate": stellt den Hauptbildschirm mit einem Klick auf die höchste Rate der aktuellen Auflösung (neuer Aktionstyp `DisplayRefreshRate`, Erkennung `DisplayRefreshIsHighest`); "Jetzt beheben" im Gaming-Check "Bildwiederholrate" nutzt ihn. In den Presets Gaming und Wettkampf.
+- Schlagwörter: Jeder Tweak trägt ein bis drei Schlagwörter aus einer festen Liste (zum Beispiel "FPS", "Verzögerung", "Ping"), als Chips auf den Karten. Sie nennen den Bereich, nie einen gemessenen Gewinn; der Linter prüft sie.
+- GAME-025 "Spiel bleibt bei Anrufen laut" (Experte), GAME-026 "Tastenkürzel für Maustasten aus", GAME-027 "Game-Bar-Aufnahmen aus, auch bei Home" (Experte), NET-013 "Hintergrund-Updates höchstens 25 % Bandbreite".
+- Das Release-ZIP heißt immer `AscendedTweaks.zip` (ohne Version), damit `https://github.com/AscendedTweaks/AscendedTweaks/releases/latest/download/AscendedTweaks.zip` dauerhaft funktioniert; README und Website verlinken direkt darauf.
+- Kurzes Ladefenster beim Start; Arbeitsspeicher in ganzen GB; Autostart-Kachel mit Erklärung und Link zur Liste.
+- GAME-023 "Zeigergeschwindigkeit auf Standard (1:1)" und GAME-024 "Schnellere Tastenwiederholung" (SystemParametersInfo `MouseSpeed`, `KeyboardDelay`, `KeyboardSpeed`).
+- "Wird angewendet…" unten rechts, solange eine Änderung läuft.
 
 ### Geändert
+- Neues Design: nur dunkel, Grau als Grundfarbe mit schwarzen Schatten, weiße Schrift, blaue Knöpfe und Akzente; Startseite mit dem Wichtigsten oben.
+- Ein Klick wendet an, wo es sicher ist; die Karte sagt vorher, was sich ändert. Löschen behält die Vorschau.
+- Wechsel zwischen Alternativen (zum Beispiel von Google- zu Cloudflare-DNS) mit einem Klick: die alte Wahl wird zuerst zurückgesetzt.
 - V3-1: Die App startet immer auf Englisch; die Sprache wird in "First steps", im Installationsdialog oder in den Einstellungen gewählt. Fehlermeldungen von Engine und Helfer sind englisch.
 
 ### Behoben
 - Die App beendete sich, wenn der Helfer beim Anwenden einen Fehler meldete oder die Administratorabfrage abgelehnt wurde (zum Beispiel beim Ändern des DNS-Servers); der Fehler steht jetzt im Ergebnisfenster.
+- DNS-Tweaks meldeten auf Adaptern ohne IPv6 "Windows oder ein anderes Programm blockiert die Änderung" und setzten alles zurück; erwartet werden jetzt nur die Adressen, die der Adapter aufnehmen kann.
+- Der Helfer lehnte in unsignierten Builds jede Verbindung ab ("helper refused the connection").
+- Nach einem Sprachwechsel blieben Texte in der alten Sprache stehen; Seiten werden jetzt neu aufgebaut.
+- Konnte ein Tweak nicht starten (zum Beispiel ein Konflikt), kam keine Meldung; jetzt steht der Grund im Ergebnis.
 
 ## [1.1.0-rc.1] - 2026-10-20
 

@@ -14,7 +14,12 @@ public sealed class AppxIntegrationTests
         var appx = new WindowsAppxAccess();
         var installed = appx.ListForCurrentUser();
 
-        installed.Should().Contain(p => p.Name == "Microsoft.WindowsStore" && p.IsMicrosoft, "der Store ist auf jedem unterstuetzten Windows installiert");
+        // The app supports Windows 10 and 11, which ship the Store. Windows Server (the GitHub build machine) has none.
+        if (IsClientWindows())
+        {
+            installed.Should().Contain(p => p.Name == "Microsoft.WindowsStore" && p.IsMicrosoft, "der Store ist auf jedem unterstuetzten Windows installiert");
+        }
+
         installed.Should().Contain(p => p.IsFramework);
 
         // Wiederherstellungsweg (a): Neuregistrierung per Paketfamilie. Fuer ein bereits installiertes Paket aendert das nichts.
@@ -24,5 +29,11 @@ public sealed class AppxIntegrationTests
             appx.RegisterByFamilyName(candidate.FamilyName).Should().Be(AppxRestoreOutcome.Registered);
             appx.ListForCurrentUser().Should().Contain(p => p.FullName == candidate.FullName);
         }
+    }
+
+    private static bool IsClientWindows()
+    {
+        using var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+        return key?.GetValue("InstallationType") as string == "Client";
     }
 }

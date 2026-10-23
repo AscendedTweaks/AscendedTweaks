@@ -6,7 +6,7 @@ Format nach dem Aufbau der DESIGN.md-Dateien aus voltagent/awesome-design-md (ne
 
 - Freundliches, lebendiges Windows-11-Fluent-Design. Es gibt nur das dunkle Design (seit 2026-10-23 kein heller Modus mehr); der Windows-Hochkontrast nutzt weiter die Systemfarben.
 - Wirkung: sachlich, hochwertig, aufgeräumt, vertrauenswürdig. Ein Werkzeug, das erklärt, nicht eines, das drängt.
-- Fröhliche Preset-Farben und ein weicher Glow an wenigen Stellen (siehe .claude/skills/ascended-design), aber kein Hacker-Look, keine Neonränder, keine Blau-Lila-Verläufe, keine Scareware-Optik, keine Fortschrittsbalken ohne echten Fortschritt.
+- Nur Orangetöne und neutrale Grautöne, ein weicher oranger Glow an wenigen Stellen (siehe .claude/skills/ascended-design), aber kein Hacker-Look, keine Neonränder, keine Blau-Lila-Verläufe, keine Scareware-Optik, keine Fortschrittsbalken ohne echten Fortschritt.
 - Dichte: mittel. Jede Tweak-Karte zeigt nur das Nötige, Details stehen im Seitenpanel.
 - Ehrlichkeitshinweis ist Teil der Gestaltung: Dashboard und Kopfzeile jeder Tweak-Seite zeigen dauerhaft `banner.honesty`.
 
@@ -22,19 +22,19 @@ Tokens werden ausschließlich über Ressourcen-Schlüssel verwendet, nie als Hex
 | `Color.Surface` | #1E1E1F | Karten |
 | `Color.Elevated` | #28282A | Dialoge, Seitenpanel |
 | `Color.Border` | #3A3A3D | Ränder, Trennlinien |
-| `Color.Accent` | #FF7A50 | Primäraktion, Fokusrahmen, Links (Koralle) |
-| `Color.Success` | #5BD47E | Risiko "Sicher", Erfolg |
-| `Color.Warning` | #FFC93C | Risiko "Vorsicht", Hinweise |
-| `Color.Danger` | #FF5F73 | Risiko "Experte", Fehler |
+| `Color.Accent` | #FFA24D | Primäraktion, Fokusrahmen, Links (helles Orange) |
+| `Color.Success` | #D9D7D4 | Risiko "Sicher", Erfolg (helles Grau) |
+| `Color.Warning` | #FFC48A | Risiko "Vorsicht", Hinweise (Pfirsich-Orange) |
+| `Color.Danger` | #FF6A3D | Risiko "Experte", Fehler (Rot-Orange) |
 | `Color.TextPrimary` | #F6F5F3 | Fließtext, Überschriften |
 | `Color.TextSecondary` | #B4B2AE | Beschreibungen, Metadaten |
 | `Color.OnAccent` | #141414 | Schrift und Symbole auf Akzentflächen |
 
-Preset-Farben (nur Symbole und Kacheln der Presets): Mint #4FD6A4, Sky #5DB9FF, Coral #FF7A50, Sun #FFC93C, Lilac #B9A0FF, Rose #FF7EB8, Teal #35D0C6.
+Nur Orangetöne und Grau/Schwarz/Weiß, keine weiteren Farben. Alle Preset-Kacheln in Orange.
 
 ### Kontrast
 
-`tools/contrast-check` prüft im Build alle Text- und Statusfarben auf Hintergrund, Fläche und Erhöht (4,5:1), OnAccent auf Akzent und getönte Flächen als Alpha-Mischung (Auswahl 14 % Akzent, Hover 10 % TextSecondary, gefüllte Badges 15 % Tonfarbe; Text 4,5:1, Symbole 3:1). Preset-Symbole erreichen auf ihrer 16-%-Kachel mindestens 5,0:1.
+`tools/contrast-check` prüft im Build alle Text- und Statusfarben auf Hintergrund, Fläche und Erhöht (4,5:1), OnAccent auf Akzent und getönte Flächen als Alpha-Mischung (Auswahl 14 % Akzent, Hover 10 % TextSecondary, gefüllte Badges 15 % Tonfarbe; Text 4,5:1, Symbole 3:1). Preset-Symbole erreichen auf ihrer Orange-Kachel 6,1:1.
 
 ### Risiko- und Wirkungs-Badges
 
@@ -125,7 +125,7 @@ Kontrast: Der Einfach-Modus verwendet nur vorhandene Token-Paare (Text und Text-
 
 ## 9. Agent Prompt Guide
 
-Kurzreferenz: Hintergrund #141414, Fläche #1E1E1F, Erhöht #28282A, Rand #3A3A3D, Akzent #FF7A50 (Schrift darauf #141414), Erfolg #5BD47E, Warnung #FFC93C, Gefahr #FF5F73, Text #F6F5F3 / #B4B2AE. Nur dunkles Design.
+Kurzreferenz: Hintergrund #141414, Fläche #1E1E1F, Erhöht #28282A, Rand #3A3A3D, Akzent #FFA24D (Schrift darauf #141414), Erfolg #D9D7D4, Warnung #FFC48A, Gefahr #FF6A3D, Text #F6F5F3 / #B4B2AE. Nur dunkles Design.
 
 Vorlagen für UI-Aufgaben:
 - "Baue die Komponente X nach docs/DESIGN.md Abschnitt 4. Nutze nur Tokens aus Abschnitt 2, Abstände aus Abschnitt 5, alle Zustände aus Abschnitt 4, Texte über Lokalisierungsschlüssel."

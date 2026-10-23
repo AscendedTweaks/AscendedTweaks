@@ -7,7 +7,8 @@ description: Design rules for the Ascended Tweaks WPF app (colors, type scale, s
 
 A friendly, lively Windows 11 tool that explains instead of pushing. Factual, high quality, tidy, trustworthy.
 There is only one design: dark. No light mode, no "follow Windows" option; Windows high contrast still uses system colors.
-Palette: clean neutral dark, one coral accent, cheerful preset colors and a soft glow on a few elements.
+Palette: only orange tones plus gray, black and white; a light orange accent and a soft orange glow on a few elements.
+No other hues (no green, blue, purple, pink, teal), also not for status or presets.
 Never the generic "AI app" look: no navy plus electric blue, no blue-violet gradients, no neon outlines, no glass effects.
 If the UI and these rules disagree, fix the UI.
 
@@ -22,21 +23,20 @@ Never write a hex color in a page, template or control. Use the brushes from `Th
 | `Brush.Surface` | #1E1E1F | Cards |
 | `Brush.Elevated` | #28282A | Dialogs, side panel |
 | `Brush.Border` | #3A3A3D | Borders, dividers |
-| `Brush.Accent` | #FF7A50 | Primary action, focus, links (coral) |
+| `Brush.Accent` | #FFA24D | Primary action, focus, links, toggles on (light orange) |
 | `Brush.AccentTint` | 14 % accent | Selected segment and navigation entry |
 | `Brush.OnAccent` | #141414 | Text and icons on accent fills |
-| `Brush.Success` | #5BD47E | Risk "Safe", success |
-| `Brush.Warning` | #FFC93C | Risk "Caution", notices |
-| `Brush.Danger` | #FF5F73 | Risk "Expert", errors |
+| `Brush.Success` | #D9D7D4 | Risk "Safe", success (light gray) |
+| `Brush.Warning` | #FFC48A | Risk "Caution", notices (peach orange) |
+| `Brush.Danger` | #FF6A3D | Risk "Expert", errors (deep red-orange) |
 | `Brush.TextPrimary` | #F6F5F3 | Body text, headings |
 | `Brush.TextSecondary` | #B4B2AE | Descriptions, metadata |
 
-Preset colors (`Brush.Hue.X`, tile `Brush.Hue.X.Tint` at 16 %, glow `Glow.Hue.X`): Mint #4FD6A4 (safe), Sky #5DB9FF (gaming),
-Coral #FF7A50 (competitive), Sun #FFC93C (laptop), Lilac #B9A0FF (privacy), Rose #FF7EB8 (cleanup), Teal #35D0C6 (office).
-They color only preset symbols and their tiles, never text, and never carry meaning on their own.
+Risk levels differ by tone (gray, peach, red-orange) and always by symbol and text, never by color alone.
+All preset tiles use the orange tint `Brush.AccentTint` with an orange symbol (`PresetTile`, `PresetSymbol`).
 
-Glow (`Glow.Accent`, `Glow.Hue.X`, soft drop shadow without offset) only on: primary buttons (not when disabled), the
-selected navigation bar and preset symbols. Never on text, cards, borders or several competing elements in one area.
+Glow (`Glow.Accent`, and the smaller `Glow.Soft` for symbols; orange drop shadow without offset) only on: primary
+buttons (not when disabled), the selected navigation bar and preset symbols. Never on text, cards, borders or several competing elements in one area.
 
 - One accent fill per screen: the main action. Everything else is outline, text or neutral.
 - Color is never the only signal: risk badges always have text and a symbol.
@@ -78,8 +78,8 @@ Card descriptions stop after two lines with an ellipsis; the full text is in the
   toggle on the right with 24 gap, like Windows 11 Settings. Simple-mode cards follow the same layout.
 - **Start page**: a hero card (padding 32 x 24) with the 28 pt welcome title, one sentence, three fact tiles
   (bordered, radius 8, caption plus 17 pt value) and the only accent button of the page. The shell hides the page
-  title there (`ShowTitle` false). Preset tiles: two columns, padding 24, min height 200, symbol 24 in a 48 x 48 tile with radius 12 in
-  the preset color (`PresetTile`, `PresetSymbol` styles), secondary "Review and apply" button.
+  title there (`ShowTitle` false). Preset tiles: two columns, padding 24, min height 200, symbol 24 in a 48 x 48 orange-tinted tile with
+  radius 12 (`PresetTile`, `PresetSymbol` styles), secondary "Review and apply" button.
 - **Navigation**: sits on `Brush.Background` without its own surface; entries at least 40 high; the selected entry
   has the accent tint, the accent bar, a filled accent icon and SemiBold text; a 1-point divider above the footer.
 - **Mode switch** (Simple / Expert): one bordered segmented control on Surface; the active segment is `Brush.AccentTint`

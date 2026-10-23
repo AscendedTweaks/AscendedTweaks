@@ -126,66 +126,13 @@
         </Border>
     </DataTemplate>
 
-    <!-- Preset tile colors: safe Mint, gaming Sky, competitive Coral, laptop Sun, privacy Lilac, cleanup Rose, office Teal; own presets use the accent. -->
+    <!-- Preset tiles: only orange and neutral tones; every preset uses the orange tint, its symbol glows softly. -->
     <Style x:Key="PresetTile" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource Brush.AccentTint}" />
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="safe">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Mint.Tint}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="gaming">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Sky.Tint}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="competitive">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Coral.Tint}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="laptop">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Sun.Tint}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="privacy">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Lilac.Tint}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="cleanup">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Rose.Tint}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="office">
-                <Setter Property="Background" Value="{DynamicResource Brush.Hue.Teal.Tint}" />
-            </DataTrigger>
-        </Style.Triggers>
     </Style>
     <Style x:Key="PresetSymbol" TargetType="ui:SymbolIcon">
         <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
-        <Setter Property="Effect" Value="{DynamicResource Glow.Accent}" />
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="safe">
-                <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Mint}" />
-                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Mint}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="gaming">
-                <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Sky}" />
-                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Sky}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="competitive">
-                <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Coral}" />
-                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Coral}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="laptop">
-                <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Sun}" />
-                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Sun}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="privacy">
-                <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Lilac}" />
-                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Lilac}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="cleanup">
-                <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Rose}" />
-                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Rose}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Profile.Key}" Value="office">
-                <Setter Property="Foreground" Value="{DynamicResource Brush.Hue.Teal}" />
-                <Setter Property="Effect" Value="{DynamicResource Glow.Hue.Teal}" />
-            </DataTrigger>
-        </Style.Triggers>
+        <Setter Property="Effect" Value="{DynamicResource Glow.Soft}" />
     </Style>
 
     <!-- Start page: hero with the main action and three facts, then large preset tiles. One accent fill: the hero action. -->

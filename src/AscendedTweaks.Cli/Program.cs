@@ -674,9 +674,17 @@ internal static class Program
 
             foreach (var excluded in plan.Excluded)
             {
-                Console.WriteLine($"  {excluded.TweakId}: {excluded.Outcome} - {excluded.Reason}");
+                Console.WriteLine(Text.L.Format("cli.skipped", ("id", excluded.TweakId), ("reason", ReasonOf(excluded))));
             }
         }
+
+        /// <summary>Reasons the command line can name in the chosen language; the others come from the engine in English.</summary>
+        private static string ReasonOf(PreflightEntry entry) => entry.Outcome switch
+        {
+            PreflightOutcome.AlreadyApplied => Text.L["cli.skip.alreadyapplied"],
+            PreflightOutcome.Conflict when entry.ConflictWith is { } other => Text.L.Format("cli.skip.conflict", ("other", other)),
+            _ => entry.Reason,
+        };
 
         private static int Report(BatchResult result)
         {

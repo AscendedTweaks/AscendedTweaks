@@ -139,6 +139,7 @@ public sealed class TweakService : IDisposable
         }
 
         var committed = new List<BatchResult>();
+        var skipped = new List<PreflightEntry>();
         foreach (var scope in Order)
         {
             var plan = plans[scope];
@@ -161,6 +162,14 @@ public sealed class TweakService : IDisposable
                     ProceedWithoutRestorePoint = true,
                 }).ToResult(_catalog);
 
+            // The helper checks again with administrator rights and can find that nothing is left to change (for example
+            // a feature that only it can read is already off). That is not a failure: keep the other parts, report the reason.
+            skipped.AddRange(result.Plan.Excluded);
+            if (result.Outcome == BatchOutcome.NothingToDo)
+            {
+                continue;
+            }
+
             if (result.Outcome != BatchOutcome.Committed)
             {
                 // Dieser Teil hat sich selbst zurueckgenommen; die bereits abgeschlossenen Teile ebenfalls zuruecknehmen.
@@ -178,15 +187,40 @@ public sealed class TweakService : IDisposable
             committed.Add(result);
         }
 
+        var final = WithSkipped(preview, skipped);
+        if (committed.Count == 0)
+        {
+            return new BatchResult { Outcome = BatchOutcome.NothingToDo, Plan = final, RestorePoint = restorePoint };
+        }
+
         return new BatchResult
         {
             Outcome = BatchOutcome.Committed,
-            Plan = preview,
+            Plan = final,
             RestorePoint = restorePoint,
             BatchId = committed[0].BatchId,
             AppliedTweaks = committed.SelectMany(c => c.AppliedTweaks).ToList(),
             BackupSetPath = JoinPaths(committed.Select(c => c.BackupSetPath)),
             RebootRequired = committed.Any(c => c.RebootRequired),
+        };
+    }
+
+    /// <summary>The preview with the tweaks the engines skipped themselves moved from "ready" to "excluded", each once.</summary>
+    private static BatchPlan WithSkipped(BatchPlan preview, IEnumerable<PreflightEntry> skipped)
+    {
+        var known = preview.Excluded.Select(e => e.TweakId).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var added = skipped.Where(e => known.Add(e.TweakId)).ToList();
+        if (added.Count == 0)
+        {
+            return preview;
+        }
+
+        var ids = added.Select(e => e.TweakId).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        return new BatchPlan
+        {
+            Ready = preview.Ready.Where(t => !ids.Contains(t.Id)).ToList(),
+            Excluded = [.. preview.Excluded, .. added],
+            Items = preview.Items.Where(i => !ids.Contains(i.TweakId)).ToList(),
         };
     }
 

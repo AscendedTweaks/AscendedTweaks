@@ -7,6 +7,10 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 ### Hinzugefügt
 - GAME-028 "Plattform für virtuelle Computer aus" (Experte): DISM `/Disable-Feature`, Neustart nötig; Microsoft nennt VMP als mögliche Bremse für Spiele. Befehle können jetzt weitere Erfolgscodes haben (DISM 3010 = Neustart nötig).
 
+### Behoben
+- Fand der Helfer mit Administratorrechten, dass nichts mehr zu ändern ist (zum Beispiel "Plattform für virtuelle Computer" schon aus), wurden die bereits angewendeten Benutzer-Tweaks desselben Durchlaufs zurückgenommen, und die App zeigte "Fehlgeschlagen". Jetzt bleibt der Rest angewendet, und der Tweak steht als "Bereits angewendet" im Ergebnis.
+- Die Kommandozeile nennt übersprungene Tweaks mit Grund in der gewählten Sprache ("Übersprungen: GAME-025 (bereits angewendet, nichts zu ändern)").
+
 ## [1.1.0] - 2026-10-23
 
 Erste öffentliche Version (V3), nicht signiert. Lizenz MIT.

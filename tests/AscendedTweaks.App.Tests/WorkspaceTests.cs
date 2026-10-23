@@ -92,6 +92,36 @@ internal sealed class DirectHelper : IHelperChannel
     }
 }
 
+/// <summary>Helper that finds, with administrator rights, that nothing is left to change (like a Windows feature that is already off).</summary>
+internal sealed class AlreadyAppliedHelper(IHelperChannel inner) : IHelperChannel
+{
+    public BatchResultDto ApplyTweaks(ApplyTweaksRequest request) => new()
+    {
+        Outcome = BatchOutcome.NothingToDo,
+        Excluded = request.Ids.Select(id => new PreflightEntry(id, PreflightOutcome.AlreadyApplied, "Already applied.")).ToList(),
+    };
+
+    public RevertTweakResponse RevertTweak(RevertTweakRequest request) => inner.RevertTweak(request);
+
+    public TweakStatus Capture(string tweakId) => inner.Capture(tweakId);
+
+    public RestorePointResult CreateRestorePoint(string name) => inner.CreateRestorePoint(name);
+
+    public IReadOnlyList<string> RecoverInterrupted(string batchId, TweakScope scope) => inner.RecoverInterrupted(batchId, scope);
+
+    public CleanupScan ScanCleanup(string categoryId) => inner.ScanCleanup(categoryId);
+
+    public CleanupResult RunCleanup(string categoryId, CleanupMode mode) => inner.RunCleanup(categoryId, mode);
+
+    public IReadOnlyList<AscendedTweaks.Engine.Debloat.RemovedApp> RemoveApps(IReadOnlyList<string> names, bool deprovision) => inner.RemoveApps(names, deprovision);
+
+    public AscendedTweaks.Engine.Tools.MaintenanceResult RunMaintenance(AscendedTweaks.Engine.Tools.MaintenanceAction action, char? drive) => inner.RunMaintenance(action, drive);
+
+    public IReadOnlyList<AscendedTweaks.Engine.Tools.DiskHealth> ReadDiskHealth() => inner.ReadDiskHealth();
+
+    public void Dispose() => inner.Dispose();
+}
+
 public sealed class WorkspaceTests : IDisposable
 {
     private const string P = TestTweaks.Base;
@@ -445,6 +475,25 @@ public sealed class WorkspaceTests : IDisposable
         _h.Registry.GetValue(RegHive.HKLM, @"SOFTWARE\AscendedTweaksTest", "M").Should().Be(RegistryData.DWord(0));
         _h.RestorePoints.Calls.Should().Be(1);
         _dialogs.Last<ResultDialogViewModel>()!.Rows.Should().HaveCount(2).And.OnlyContain(r => r.Ok);
+    }
+
+    [Fact]
+    public async Task Helper_finding_nothing_to_change_keeps_the_user_part_and_says_why()
+    {
+        // Seen on a real PC: "Virtual Machine Platform" was already off, which only the helper can read. The user tweaks
+        // must stay applied, and the machine tweak must show "already applied", not "failed".
+        _service = CreateService(inner => new AlreadyAppliedHelper(inner));
+        _workspace = CreateWorkspace();
+        await _workspace.RefreshAsync();
+        _workspace.Card("PRIV-901").IsOn = true;
+        _workspace.Card("PERF-901").IsOn = true;
+
+        await _workspace.ApplyCommand.ExecuteAsync(null);
+
+        _h.Registry.GetValue(RegHive.HKCU, P, "A").Should().Be(RegistryData.DWord(0), "the user part is not rolled back");
+        var rows = _dialogs.Last<ResultDialogViewModel>()!.Rows;
+        rows.Should().HaveCount(2).And.OnlyContain(r => r.Ok);
+        rows.Should().ContainSingle(r => r.Message == "Bereits angewendet.");
     }
 
     [Fact]
@@ -902,7 +951,7 @@ public sealed class WorkspaceTests : IDisposable
         });
     }
 
-    private TweakService CreateService()
+    private TweakService CreateService(Func<IHelperChannel, IHelperChannel>? wrapHelper = null)
     {
         var machineRoot = Path.Combine(_h.StateRoot, "Machine");
         var catalog = new CompositeCatalog(_catalog);
@@ -914,7 +963,7 @@ public sealed class WorkspaceTests : IDisposable
             new TweakEngine(catalog, _h.Executors, new StateStore(Path.Combine(_h.StateRoot, "User"), new FakeTime()), _h.Environment, new NoRestorePointService(), new FakeTime()),
             Machine(new NoRestorePointService(), false),
             Machine(new NoRestorePointService(), false),
-            () => new DirectHelper(handler),
+            () => wrapHelper is null ? new DirectHelper(handler) : wrapHelper(new DirectHelper(handler)),
             new FakeTime());
     }
 

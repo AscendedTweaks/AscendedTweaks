@@ -11,7 +11,7 @@ T = {
     'logo': W[53], 'anything': W[55], 'link': W[57], 'end': W[59] + 1.6,
 }
 # (first, last, blue words, mode)
-GROUPS = [(0, 5, set(), 'big'), (6, 15, {6, 7, 15}, 'cap'), (16, 25, {16, 17, 24, 25}, 'cap'), (26, 30, {26, 27}, 'cap'),
+GROUPS = [(0, 5, {4}, 'big'), (6, 15, {6, 7, 15}, 'cap'), (16, 25, {16, 17, 24, 25}, 'cap'), (26, 30, {26, 27}, 'cap'),
           (31, 42, {38, 39, 41, 42}, 'cap'), (43, 52, {52}, 'cap'), (53, 59, set(), 'none')]
 TEXT = {4: 'AscendedTweaks', 5: None, 29: 'AscendedTweaks', 30: None, 53: 'AscendedTweaks', 54: None, 18: 'Right-click', 19: None,
         15: 'Download', 24: 'Extract', 38: 'More', 41: 'Run'}

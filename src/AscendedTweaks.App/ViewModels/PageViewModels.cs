@@ -11,7 +11,6 @@ public sealed record Choice<T>(T Value, string LabelKey);
 public sealed partial class SettingsViewModel : PageViewModel
 {
     private readonly Localizer _localizer;
-    private readonly IThemeService _theme;
     private readonly SettingsStore _store;
     private readonly AppSettings _settings;
     private bool _loading;
@@ -20,24 +19,19 @@ public sealed partial class SettingsViewModel : PageViewModel
     private Choice<string>? _selectedLanguage;
 
     [ObservableProperty]
-    private Choice<ThemeChoice>? _selectedTheme;
-
-    [ObservableProperty]
     private bool _expertMode;
 
     private readonly Action<bool>? _expertModeChanged;
 
-    public SettingsViewModel(Localizer localizer, IThemeService theme, SettingsStore store, AppSettings settings, Action<bool>? expertModeChanged = null)
+    public SettingsViewModel(Localizer localizer, SettingsStore store, AppSettings settings, Action<bool>? expertModeChanged = null)
         : base("nav.settings", showHonestyBanner: false)
     {
         _expertModeChanged = expertModeChanged;
         _localizer = localizer;
-        _theme = theme;
         _store = store;
         _settings = settings;
         _loading = true;
         SelectedLanguage = Languages.FirstOrDefault(l => l.Value == settings.Language) ?? Languages.Single(l => l.Value == Localizer.English);
-        SelectedTheme = Themes.FirstOrDefault(t => t.Value == settings.Theme) ?? Themes[0];
         ExpertMode = settings.ExpertMode;
         _loading = false;
     }
@@ -46,13 +40,6 @@ public sealed partial class SettingsViewModel : PageViewModel
     [
         new(Localizer.English, "settings.language.en"),
         new(Localizer.German, "settings.language.de"),
-    ];
-
-    public IReadOnlyList<Choice<ThemeChoice>> Themes { get; } =
-    [
-        new(ThemeChoice.Dark, "settings.theme.dark"),
-        new(ThemeChoice.Light, "settings.theme.light"),
-        new(ThemeChoice.System, "settings.theme.system"),
     ];
 
     partial void OnSelectedLanguageChanged(Choice<string>? value)
@@ -80,18 +67,6 @@ public sealed partial class SettingsViewModel : PageViewModel
         _expertModeChanged?.Invoke(value);
     }
 
-    partial void OnSelectedThemeChanged(Choice<ThemeChoice>? value)
-    {
-        if (_loading || value is null)
-        {
-            return;
-        }
-
-        _theme.Apply(value.Value);
-        _settings.Theme = value.Value;
-        _store.Save(_settings);
-    }
-
     /// <summary>Der Modus wurde im Kopf der App umgeschaltet: Schalter nachziehen, ohne erneut zu speichern.</summary>
     public void SyncExpertMode(bool expert)
     {
@@ -106,12 +81,11 @@ public sealed partial class SettingsViewModel : PageViewModel
     /// <summary>"Immer behalten"-Liste der grossen Dateien (V2 Abschnitt 6.3): ansehen und Eintraege entfernen.</summary>
     public KeepListViewModel? KeepList { get; init; }
 
-    /// <summary>"Alle Einstellungen der App zuruecksetzen": Sprache, Design und Expertenmodus auf Standard. Angewendete Tweaks bleiben unveraendert.</summary>
+    /// <summary>"Alle Einstellungen der App zuruecksetzen": Sprache und Expertenmodus auf Standard. Angewendete Tweaks bleiben unveraendert.</summary>
     public void ResetToDefaults()
     {
         var defaults = new AppSettings();
         SelectedLanguage = Languages.First(l => l.Value == defaults.Language);
-        SelectedTheme = Themes.First(t => t.Value == defaults.Theme);
         ExpertMode = defaults.ExpertMode;
     }
 }

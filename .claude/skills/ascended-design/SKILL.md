@@ -5,30 +5,38 @@ description: Design rules for the Ascended Tweaks WPF app (colors, type scale, s
 
 # Ascended Tweaks design rules
 
-A calm Windows 11 Fluent tool that explains instead of pushing. Factual, high quality, tidy, trustworthy.
-Palette: warm graphite neutrals with one signal-orange accent, like a measuring instrument. Never the generic
-"AI app" look: no navy plus electric blue, no blue-violet gradients, no neon, no glass effects.
-Dark is the default, Light is optional, "System" follows Windows. If the UI and these rules disagree, fix the UI.
+A friendly, lively Windows 11 tool that explains instead of pushing. Factual, high quality, tidy, trustworthy.
+There is only one design: dark. No light mode, no "follow Windows" option; Windows high contrast still uses system colors.
+Palette: clean neutral dark, one coral accent, cheerful preset colors and a soft glow on a few elements.
+Never the generic "AI app" look: no navy plus electric blue, no blue-violet gradients, no neon outlines, no glass effects.
+If the UI and these rules disagree, fix the UI.
 
 ## 1. Colors: tokens only
 
-Never write a hex color in a page, template or control. Use the brushes from `Themes/Tokens.Dark.xaml` and
-`Themes/Tokens.Light.xaml` through `{DynamicResource Brush.X}` so theme switches apply live.
+Never write a hex color in a page, template or control. Use the brushes from `Themes/Tokens.Dark.xaml` through
+`{DynamicResource Brush.X}`, so high contrast mode can swap them.
 
-| Brush | Dark | Light | Role |
-| --- | --- | --- | --- |
-| `Brush.Background` | #131211 | #F5F3EF | Window background |
-| `Brush.Surface` | #1B1A18 | #FFFFFF | Cards, navigation |
-| `Brush.Elevated` | #242220 | #FFFFFF + border | Dialogs, side panel, hover |
-| `Brush.Border` | #36332F | #DCD7CE | Borders, dividers |
-| `Brush.Accent` | #F0883E | #B4500F | Primary action, focus, links |
-| `Brush.AccentTint` | 14 % accent | 14 % accent | Selected segment, icon tiles |
-| `Brush.OnAccent` | #131211 | #FFFFFF | Text and icons on accent fills |
-| `Brush.Success` | #6FC48A | #2C7A44 | Risk "Safe", success |
-| `Brush.Warning` | #E8C547 | #8A6300 | Risk "Caution", notices |
-| `Brush.Danger` | #F2666B | #C0323B | Risk "Expert", errors |
-| `Brush.TextPrimary` | #EFECE7 | #1D1B18 | Body text, headings |
-| `Brush.TextSecondary` | #A8A29A | #5C564E | Descriptions, metadata |
+| Brush | Value | Role |
+| --- | --- | --- |
+| `Brush.Background` | #141414 | Window background, navigation |
+| `Brush.Surface` | #1E1E1F | Cards |
+| `Brush.Elevated` | #28282A | Dialogs, side panel |
+| `Brush.Border` | #3A3A3D | Borders, dividers |
+| `Brush.Accent` | #FF7A50 | Primary action, focus, links (coral) |
+| `Brush.AccentTint` | 14 % accent | Selected segment and navigation entry |
+| `Brush.OnAccent` | #141414 | Text and icons on accent fills |
+| `Brush.Success` | #5BD47E | Risk "Safe", success |
+| `Brush.Warning` | #FFC93C | Risk "Caution", notices |
+| `Brush.Danger` | #FF5F73 | Risk "Expert", errors |
+| `Brush.TextPrimary` | #F6F5F3 | Body text, headings |
+| `Brush.TextSecondary` | #B4B2AE | Descriptions, metadata |
+
+Preset colors (`Brush.Hue.X`, tile `Brush.Hue.X.Tint` at 16 %, glow `Glow.Hue.X`): Mint #4FD6A4 (safe), Sky #5DB9FF (gaming),
+Coral #FF7A50 (competitive), Sun #FFC93C (laptop), Lilac #B9A0FF (privacy), Rose #FF7EB8 (cleanup), Teal #35D0C6 (office).
+They color only preset symbols and their tiles, never text, and never carry meaning on their own.
+
+Glow (`Glow.Accent`, `Glow.Hue.X`, soft drop shadow without offset) only on: primary buttons (not when disabled), the
+selected navigation bar and preset symbols. Never on text, cards, borders or several competing elements in one area.
 
 - One accent fill per screen: the main action. Everything else is outline, text or neutral.
 - Color is never the only signal: risk badges always have text and a symbol.
@@ -70,8 +78,8 @@ Card descriptions stop after two lines with an ellipsis; the full text is in the
   toggle on the right with 24 gap, like Windows 11 Settings. Simple-mode cards follow the same layout.
 - **Start page**: a hero card (padding 32 x 24) with the 28 pt welcome title, one sentence, three fact tiles
   (bordered, radius 8, caption plus 17 pt value) and the only accent button of the page. The shell hides the page
-  title there (`ShowTitle` false). Preset tiles: two columns, padding 24, min height 200, symbol 24 in a 48 x 48
-  `Brush.AccentTint` tile with radius 12, secondary "Review and apply" button.
+  title there (`ShowTitle` false). Preset tiles: two columns, padding 24, min height 200, symbol 24 in a 48 x 48 tile with radius 12 in
+  the preset color (`PresetTile`, `PresetSymbol` styles), secondary "Review and apply" button.
 - **Navigation**: sits on `Brush.Background` without its own surface; entries at least 40 high; the selected entry
   has the accent tint, the accent bar, a filled accent icon and SemiBold text; a 1-point divider above the footer.
 - **Mode switch** (Simple / Expert): one bordered segmented control on Surface; the active segment is `Brush.AccentTint`
@@ -109,6 +117,6 @@ Card descriptions stop after two lines with an ellipsis; the full text is in the
    off-grid spacing, odd radii, small click targets, hard-coded text and font overrides. Expected result: 0 findings.
 2. Build and render: `dotnet build AscendedTweaks.sln`, then
    `src/AscendedTweaks.App/bin/Debug/net8.0-windows10.0.19041.0/AscendedTweaks.App.exe --snapshot <folder>`.
-   It renders every page in Dark and Light at 100 % and 200 % and writes `a11y-report.txt` (expected: 0 findings).
+   It renders every page at 100 % and 200 %, narrow and in high contrast, and writes `a11y-report.txt` (expected: 0 findings).
    Look at the PNGs of every page you touched. The snapshots use the language saved in the user's settings.
 3. Run the quality gate: `powershell -ExecutionPolicy Bypass -File build.ps1` (includes the contrast check).

@@ -104,26 +104,38 @@ public sealed class ShellTests : IDisposable
     {
         var store = new SettingsStore(Path.Combine(_dir, "settings.json"));
         var settings = store.Load();
-        var theme = new FakeTheme();
         var localizer = new Localizer();
-        var vm = new SettingsViewModel(localizer, theme, store, settings);
+        var vm = new SettingsViewModel(localizer, store, settings);
 
-        theme.Applied.Should().BeEmpty("das Laden darf nichts aendern");
-        File.Exists(store.Path).Should().BeFalse();
+        File.Exists(store.Path).Should().BeFalse("loading changes nothing");
 
-        vm.SelectedTheme = vm.Themes.Single(t => t.Value == ThemeChoice.Light);
         vm.SelectedLanguage = vm.Languages.Single(l => l.Value == Localizer.German);
 
-        theme.Applied.Should().Equal(ThemeChoice.Light);
         localizer.Culture.Should().Be(Localizer.German);
         var reloaded = store.Load();
-        reloaded.Theme.Should().Be(ThemeChoice.Light);
         reloaded.Language.Should().Be(Localizer.German);
 
         // V3 2.2 (e): the next start uses the saved language.
         var nextStart = new Localizer(reloaded.Language);
         nextStart.Culture.Should().Be(Localizer.German);
-        new SettingsViewModel(nextStart, theme, store, reloaded).SelectedLanguage!.Value.Should().Be(Localizer.German);
+        new SettingsViewModel(nextStart, store, reloaded).SelectedLanguage!.Value.Should().Be(Localizer.German);
+    }
+
+    [Fact]
+    public void Settings_from_versions_with_a_light_theme_still_load()
+    {
+        Directory.CreateDirectory(_dir);
+        var path = Path.Combine(_dir, "settings.json");
+        File.WriteAllText(path, """{ "language": "de-DE", "theme": "Light", "expertMode": true, "onboardingCompleted": true }""");
+        var store = new SettingsStore(path);
+
+        var settings = store.Load();
+
+        settings.Language.Should().Be(Localizer.German, "an old theme value must not reset the other settings");
+        settings.ExpertMode.Should().BeTrue();
+        settings.FirstStepsCompleted.Should().BeTrue();
+        store.Save(settings);
+        File.ReadAllText(path).Should().NotContain("theme", "the dark design is the only one; the old value is dropped");
     }
 
     [Fact]
@@ -135,7 +147,6 @@ public sealed class ShellTests : IDisposable
 
         var settings = new SettingsStore(path).Load();
 
-        settings.Theme.Should().Be(ThemeChoice.Dark);
         settings.Language.Should().Be(Localizer.English);
         settings.FirstStepsCompleted.Should().BeFalse();
     }
@@ -158,7 +169,7 @@ public sealed class ShellTests : IDisposable
         Program.Ratio(Program.Parse("000000"), Program.Parse("FFFFFF")).Should().BeApproximately(21, 0.01);
         Program.Ratio(Program.Parse("777777"), Program.Parse("FFFFFF")).Should().BeApproximately(4.48, 0.01);
 
-        foreach (var theme in new[] { "Dark", "Light" })
+        foreach (var theme in new[] { "Dark" })
         {
             var tokens = Program.ReadTokens(Path.Combine(FindThemes(), $"Tokens.{theme}.xaml"));
             tokens.Should().ContainKeys("Background", "Surface", "Elevated", "Border", "Accent", "OnAccent", "Success", "Warning", "Danger", "TextPrimary", "TextSecondary");
@@ -180,16 +191,4 @@ public sealed class ShellTests : IDisposable
         throw new DirectoryNotFoundException();
     }
 
-    private sealed class FakeTheme : IThemeService
-    {
-        public List<ThemeChoice> Applied { get; } = [];
-
-        public ThemeChoice Current { get; private set; }
-
-        public void Apply(ThemeChoice choice)
-        {
-            Current = choice;
-            Applied.Add(choice);
-        }
-    }
 }

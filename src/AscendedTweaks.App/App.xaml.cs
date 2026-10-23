@@ -130,7 +130,6 @@ public partial class App : Application
 
     internal static IReadOnlyList<NavItem> CreateNavItems(
         Localizer localizer,
-        IThemeService theme,
         SettingsStore store,
         AppSettings settings,
         TweakWorkspace workspace,
@@ -245,7 +244,7 @@ public partial class App : Application
             }),
             new("nav.settings", SymbolRegular.Settings24, () =>
             {
-                var preferences = new SettingsViewModel(localizer, theme, store, settings, expert => ExpertModeChanged?.Invoke(expert))
+                var preferences = new SettingsViewModel(localizer, store, settings, expert => ExpertModeChanged?.Invoke(expert))
                 {
                     KeepList = new KeepListViewModel(new KeepListStore(KeepListPath ?? KeepListStore.DefaultPath)),
                 };
@@ -399,7 +398,7 @@ public partial class App : Application
         var settings = store.Load();
         Localizer.Current = new Localizer(settings.Language);
         var theme = new ThemeService();
-        theme.Apply(settings.Theme);
+        theme.Apply();
         theme.WatchHighContrast();
 
         if (!e.Args.Contains("--snapshot"))
@@ -457,7 +456,7 @@ public partial class App : Application
             OneDriveCheckSource = () => new OneDriveStatus(true, @"C:\Users\Example\AppData\Local\Microsoft\OneDrive\25.1\OneDriveSetup.exe", [OneDriveBlock.KnownFolderMove], ["Desktop", "Personal"], 0);
         }
 #endif
-        var expertItems = CreateNavItems(Localizer.Current, theme, store, settings, workspace, dialogs);
+        var expertItems = CreateNavItems(Localizer.Current, store, settings, workspace, dialogs);
         var (simpleItems, footerItems) = CreateSimpleNavItems(Localizer.Current, workspace, dialogs, expertItems);
         var shell = new ShellViewModel(Localizer.Current, environment.Build, expertItems, workspace, dialogs, simpleItems, footerItems, settings.ExpertMode);
         GamingNavigator = jump => NavigateTo(shell, jump);
@@ -486,7 +485,7 @@ public partial class App : Application
         if (snapshot >= 0 && snapshot + 1 < e.Args.Length)
         {
             await workspace.RefreshAsync().ConfigureAwait(true);
-            var sample = new FirstStepsViewModel(workspace, new AppSettings(), new SettingsStore(Path.Combine(Path.GetTempPath(), "AscendedTweaks.snapshot.settings.json")), new SettingsViewModel(Localizer.Current, theme, store, settings));
+            var sample = new FirstStepsViewModel(workspace, new AppSettings(), new SettingsStore(Path.Combine(Path.GetTempPath(), "AscendedTweaks.snapshot.settings.json")), new SettingsViewModel(Localizer.Current, store, settings));
             SnapshotRenderer.Run(window, shell, theme, e.Args[snapshot + 1], sample);
             Shutdown();
             return;
@@ -498,7 +497,7 @@ public partial class App : Application
 
         if (!settings.FirstStepsCompleted)
         {
-            var preferences = new SettingsViewModel(Localizer.Current, theme, store, settings);
+            var preferences = new SettingsViewModel(Localizer.Current, store, settings);
             await dialogs.ShowAsync(new FirstStepsViewModel(workspace, settings, store, preferences)).ConfigureAwait(true);
         }
 

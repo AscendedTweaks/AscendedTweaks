@@ -171,11 +171,10 @@ public sealed class SimpleModeTests : IDisposable
     }
 
     [Fact]
-    public void First_steps_has_three_steps_and_first_start_follows_windows()
+    public void First_steps_has_three_steps_and_first_start_is_simple()
     {
         FirstStepsViewModel.Steps.Should().Be(3);
         var settings = AppSettings.FirstStart();
-        settings.Theme.Should().Be(ThemeChoice.System);
         settings.ExpertMode.Should().BeFalse();
         settings.Language.Should().Be(Localizer.English, "V3: English on first start, regardless of Windows");
         new SettingsStore(Path.Combine(Path.GetTempPath(), "AscendedTweaks.Tests", Guid.NewGuid().ToString("N"), "settings.json")).Load().ExpertMode.Should().BeFalse("erster Start ist Einfach");

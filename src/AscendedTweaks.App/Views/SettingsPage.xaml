@@ -28,17 +28,6 @@
                           ItemTemplate="{StaticResource ChoiceTemplate}" AutomationProperties.LabeledBy="{Binding ElementName=LanguageLabel}" AutomationProperties.Name="{s:Loc settings.language}" />
             </Grid>
         </Border>
-        <Border Style="{StaticResource Card}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="240" />
-                </Grid.ColumnDefinitions>
-                <TextBlock x:Name="ThemeLabel" Style="{StaticResource Text.BodyStrong}" Text="{s:Loc settings.theme}" VerticalAlignment="Center" />
-                <ComboBox Grid.Column="1" ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}"
-                          ItemTemplate="{StaticResource ChoiceTemplate}" AutomationProperties.LabeledBy="{Binding ElementName=ThemeLabel}" AutomationProperties.Name="{s:Loc settings.theme}" />
-            </Grid>
-        </Border>
         <Border Style="{StaticResource Card}" Visibility="{Binding ShowExpertMode, ElementName=Root, Converter={StaticResource BoolToVisibility}}">
             <Grid>
                 <Grid.ColumnDefinitions>

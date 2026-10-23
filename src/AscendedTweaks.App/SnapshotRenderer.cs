@@ -293,9 +293,9 @@ internal static class SnapshotRenderer
             }
         }
 
-        foreach (var choice in new[] { ThemeChoice.Dark, ThemeChoice.Light })
+        foreach (var choice in new[] { "Dark" })
         {
-            theme.Apply(choice);
+            theme.Apply();
             foreach (var (name, width, height, dpi) in Sizes)
             {
                 window.Width = width;
@@ -335,7 +335,7 @@ internal static class SnapshotRenderer
         {
             faster.Query = "Start";
             Pump();
-            Render(window, 96, Path.Combine(directory, "Light-100-faster-search.png"));
+            Render(window, 96, Path.Combine(directory, "Dark-100-faster-search.png"));
             faster.Query = string.Empty;
         }
 
@@ -381,9 +381,9 @@ internal static class SnapshotRenderer
         shell.ApplyMode(true);
         shell.Workspace?.SetExpertMode(false);
 
-        foreach (var choice in new[] { ThemeChoice.Dark, ThemeChoice.Light })
+        foreach (var choice in new[] { "Dark" })
         {
-            theme.Apply(choice);
+            theme.Apply();
             foreach (var (name, width, height, dpi) in Sizes)
             {
                 window.Width = width;
@@ -570,12 +570,12 @@ internal static class SnapshotRenderer
         ((FrameworkElement)window.Content).UpdateLayout();
         var scroller = FindScrollViewers(window).Where(v => v.ScrollableHeight > 0).OrderByDescending(v => v.ScrollableHeight).FirstOrDefault();
         scroller?.ScrollToEnd();
-        Render(window, 96, Path.Combine(directory, "Light-settings-about.png"));
+        Render(window, 96, Path.Combine(directory, "Dark-settings-about.png"));
         scroller?.ScrollToHome();
 
         // Hochkontrast mit den aktuellen Systemfarben (Abschnitt 8.6).
         ThemeService.HighContrastOverride = true;
-        theme.Apply(ThemeChoice.Dark);
+        theme.Apply();
         foreach (var key in new[] { "nav.dashboard", "nav.privacy" })
         {
             shell.SelectedItem = shell.Items.First(i => i.Key == key);
@@ -583,7 +583,7 @@ internal static class SnapshotRenderer
         }
 
         ThemeService.HighContrastOverride = null;
-        theme.Apply(ThemeChoice.Dark);
+        theme.Apply();
 
         RenderSimpleMode(window, shell, theme, Path.Combine(directory, "v2"));
 

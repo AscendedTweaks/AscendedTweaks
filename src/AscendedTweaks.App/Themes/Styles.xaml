@@ -133,6 +133,13 @@
         <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
         <Setter Property="FontWeight" Value="SemiBold" />
+        <!-- Soft accent glow marks the main action; a disabled action does not glow. -->
+        <Setter Property="Effect" Value="{DynamicResource Glow.Accent}" />
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Effect" Value="{x:Null}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="Button.Secondary" TargetType="c:ActionButton" BasedOn="{StaticResource Button.Base}">
         <Setter Property="Background" Value="Transparent" />
@@ -257,7 +264,7 @@
                     <Grid>
                         <Border x:Name="Bg" CornerRadius="{StaticResource Radius.Small}" Background="Transparent" />
                         <Rectangle x:Name="Indicator" Width="3" Height="16" RadiusX="1.5" RadiusY="1.5" HorizontalAlignment="Left"
-                                   Fill="{DynamicResource Brush.Accent}" Visibility="Collapsed" />
+                                   Fill="{DynamicResource Brush.Accent}" Effect="{DynamicResource Glow.Accent}" Visibility="Collapsed" />
                         <ContentPresenter Margin="12,8" VerticalAlignment="Center" />
                     </Grid>
                     <ControlTemplate.Triggers>

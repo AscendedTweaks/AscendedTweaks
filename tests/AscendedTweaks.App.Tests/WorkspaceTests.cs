@@ -351,7 +351,7 @@ public sealed class WorkspaceTests : IDisposable
     public async Task First_steps_requires_consent_and_saves_completion()
     {
         var store = new SettingsStore(Path.Combine(_h.StateRoot, "settings.json"));
-        var firstSteps = new FirstStepsViewModel(_workspace, _settings, store, new SettingsViewModel(_localizer, new NoTheme(), store, _settings));
+        var firstSteps = new FirstStepsViewModel(_workspace, _settings, store, new SettingsViewModel(_localizer, store, _settings));
 
         firstSteps.NextCommand.Execute(null);
         firstSteps.Step.Should().Be(2);
@@ -380,7 +380,7 @@ public sealed class WorkspaceTests : IDisposable
     {
         _settings.Language = Localizer.German;
         var store = new SettingsStore(Path.Combine(_h.StateRoot, "settings.json"));
-        var firstSteps = new FirstStepsViewModel(_workspace, _settings, store, new SettingsViewModel(_localizer, new NoTheme(), store, _settings));
+        var firstSteps = new FirstStepsViewModel(_workspace, _settings, store, new SettingsViewModel(_localizer, store, _settings));
         var changed = new List<string?>();
         firstSteps.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
         firstSteps.StepText.Should().Be("Schritt 1 von 3");
@@ -771,12 +771,4 @@ public sealed class WorkspaceTests : IDisposable
         return new TweakWorkspace(_catalog, _service, _localizer, _settings, _dialogs, new SyncInvoker(), _restarter, readOnly: false);
     }
 
-    private sealed class NoTheme : IThemeService
-    {
-        public ThemeChoice Current => ThemeChoice.Dark;
-
-        public void Apply(ThemeChoice choice)
-        {
-        }
-    }
 }

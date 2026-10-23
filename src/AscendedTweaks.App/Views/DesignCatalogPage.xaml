@@ -83,8 +83,8 @@
                             <TextBlock Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Danger}" Text="{s:Loc catalog.input.error}" />
                         </StackPanel>
                         <ComboBox SelectedIndex="0" AutomationProperties.Name="{s:Loc catalog.inputs}">
-                            <ComboBoxItem Content="{s:Loc settings.theme.dark}" />
-                            <ComboBoxItem Content="{s:Loc settings.theme.light}" />
+                            <ComboBoxItem Content="{s:Loc settings.language.en}" />
+                            <ComboBoxItem Content="{s:Loc settings.language.de}" />
                         </ComboBox>
                     </StackPanel>
                     <ListBox Grid.Column="2" ItemsSource="{Binding ListItems}" SelectedIndex="1" MaxHeight="180"

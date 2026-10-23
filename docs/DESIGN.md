@@ -4,9 +4,9 @@ Format nach dem Aufbau der DESIGN.md-Dateien aus voltagent/awesome-design-md (ne
 
 ## 1. Visual Theme & Atmosphere
 
-- Ruhiges Windows-11-Fluent-Design. Dunkel ist Standard, Hell ist optional, "System" folgt der Windows-Einstellung.
+- Freundliches, lebendiges Windows-11-Fluent-Design. Es gibt nur das dunkle Design (seit 2026-10-23 kein heller Modus mehr); der Windows-Hochkontrast nutzt weiter die Systemfarben.
 - Wirkung: sachlich, hochwertig, aufgeräumt, vertrauenswürdig. Ein Werkzeug, das erklärt, nicht eines, das drängt.
-- Nicht bunt, kein Hacker-Look, keine Neonfarben, keine Scareware-Optik, keine Fortschrittsbalken ohne echten Fortschritt.
+- Fröhliche Preset-Farben und ein weicher Glow an wenigen Stellen (siehe .claude/skills/ascended-design), aber kein Hacker-Look, keine Neonränder, keine Blau-Lila-Verläufe, keine Scareware-Optik, keine Fortschrittsbalken ohne echten Fortschritt.
 - Dichte: mittel. Jede Tweak-Karte zeigt nur das Nötige, Details stehen im Seitenpanel.
 - Ehrlichkeitshinweis ist Teil der Gestaltung: Dashboard und Kopfzeile jeder Tweak-Seite zeigen dauerhaft `banner.honesty`.
 
@@ -14,41 +14,27 @@ Format nach dem Aufbau der DESIGN.md-Dateien aus voltagent/awesome-design-md (ne
 
 Tokens werden ausschließlich über Ressourcen-Schlüssel verwendet, nie als Hex-Wert im XAML.
 
-### Dunkel (Standard)
+### Dunkel (einziges Design)
 
 | Token | Hex | Rolle |
 |---|---|---|
-| `Color.Background` | #131211 | Fensterhintergrund |
-| `Color.Surface` | #1B1A18 | Karten, Navigation |
-| `Color.Elevated` | #242220 | Dialoge, Seitenpanel, Hover-Fläche |
-| `Color.Border` | #36332F | Ränder, Trennlinien |
-| `Color.Accent` | #F0883E | Primäraktion, Fokusrahmen, Links |
-| `Color.Success` | #6FC48A | Risiko "Sicher", Erfolg |
-| `Color.Warning` | #E8C547 | Risiko "Vorsicht", Hinweise |
-| `Color.Danger` | #F2666B | Risiko "Experte", Fehler |
-| `Color.TextPrimary` | #EFECE7 | Fließtext, Überschriften |
-| `Color.TextSecondary` | #A8A29A | Beschreibungen, Metadaten |
-| `Color.OnAccent` | #131211 | Schrift und Symbole auf Akzentflächen |
+| `Color.Background` | #141414 | Fensterhintergrund, Navigation |
+| `Color.Surface` | #1E1E1F | Karten |
+| `Color.Elevated` | #28282A | Dialoge, Seitenpanel |
+| `Color.Border` | #3A3A3D | Ränder, Trennlinien |
+| `Color.Accent` | #FF7A50 | Primäraktion, Fokusrahmen, Links (Koralle) |
+| `Color.Success` | #5BD47E | Risiko "Sicher", Erfolg |
+| `Color.Warning` | #FFC93C | Risiko "Vorsicht", Hinweise |
+| `Color.Danger` | #FF5F73 | Risiko "Experte", Fehler |
+| `Color.TextPrimary` | #F6F5F3 | Fließtext, Überschriften |
+| `Color.TextSecondary` | #B4B2AE | Beschreibungen, Metadaten |
+| `Color.OnAccent` | #141414 | Schrift und Symbole auf Akzentflächen |
 
-### Hell
-
-| Token | Hex | Rolle |
-|---|---|---|
-| `Color.Background` | #F5F3EF | Fensterhintergrund |
-| `Color.Surface` | #FFFFFF | Karten, Navigation |
-| `Color.Elevated` | #FFFFFF mit Rand `Color.Border` | Dialoge, Seitenpanel |
-| `Color.Border` | #DCD7CE | Ränder |
-| `Color.Accent` | #B4500F | Primäraktion, Fokus |
-| `Color.Success` | #2C7A44 | Risiko "Sicher" |
-| `Color.Warning` | #8A6300 | Risiko "Vorsicht" |
-| `Color.Danger` | #C0323B | Risiko "Experte" |
-| `Color.TextPrimary` | #1D1B18 | Fließtext |
-| `Color.TextSecondary` | #5C564E | Beschreibungen |
-| `Color.OnAccent` | #FFFFFF | Schrift und Symbole auf Akzentflächen |
+Preset-Farben (nur Symbole und Kacheln der Presets): Mint #4FD6A4, Sky #5DB9FF, Coral #FF7A50, Sun #FFC93C, Lilac #B9A0FF, Rose #FF7EB8, Teal #35D0C6.
 
 ### Kontrast
 
-Farbschema seit 2026-10-23: warmes Graphit mit Signal-Orange (bewusst nicht der verbreitete Look aus Marineblau und elektrischem Blau). `tools/contrast-check` prüft im Build 102 Paare: alle Text- und Statusfarben auf Hintergrund, Fläche und Erhöht (4,5:1), OnAccent auf Akzent, und getönte Flächen als Alpha-Mischung (Auswahl 14 % Akzent, Hover 10 % TextSecondary, gefüllte Badges 15 % Tonfarbe; Text 4,5:1, Symbole 3:1). Niedrigste Werte: Akzent als Text im hellen Theme 4,63:1, Gefahr auf Erhöht im dunklen Theme 5,20:1.
+`tools/contrast-check` prüft im Build alle Text- und Statusfarben auf Hintergrund, Fläche und Erhöht (4,5:1), OnAccent auf Akzent und getönte Flächen als Alpha-Mischung (Auswahl 14 % Akzent, Hover 10 % TextSecondary, gefüllte Badges 15 % Tonfarbe; Text 4,5:1, Symbole 3:1). Preset-Symbole erreichen auf ihrer 16-%-Kachel mindestens 5,0:1.
 
 ### Risiko- und Wirkungs-Badges
 
@@ -73,7 +59,7 @@ Kartenbeschreibung höchstens zwei Zeilen, danach Auslassung; der volle Text ste
 
 - **Tweak-Karte**: Mindesthöhe 96, Innenabstand 16, Radius 12, Fläche `Color.Surface`, Rand `Color.Border`. Inhalt: Schalter, Name, Kurzbeschreibung, Risiko-Badge, Wirkungs-Badge, Link "Mehr Details", Chips "Neustart nötig" bzw. "Admin nötig" (Schild-Symbol).
 - **Schalter**: Zustände aus, an, Hover, Fokus, Deaktiviert, Teilweise (Mixed, Strich-Symbol), Nicht verfügbar (deaktiviert, Tooltip `unavailable.tooltip` mit Begründung).
-- **Listen und Navigation**: Auswahl mit 14 % Akzent getönt plus Akzentstrich links, Hover mit 10 % TextSecondary. Grund: Im hellen Theme sind Fläche und Erhöht beide weiß, eine Auswahl über "Erhöht" wäre unsichtbar.
+- **Listen und Navigation**: Auswahl mit 14 % Akzent getönt plus Akzentstrich links, Hover mit 10 % TextSecondary.
 - **Buttons**: Primär (Akzentfläche), Sekundär (Umriss), Text, Gefahr (Umriss `Color.Danger`). Zustände Normal, Hover, Gedrückt, Fokus, Deaktiviert, Laufend (Spinner, Text bleibt sichtbar). Radius 8.
 - **Eingaben**: Radius 8, Rand `Color.Border`, Fokus mit Akzentrahmen, Fehlertext unter dem Feld in `Color.Danger` mit Symbol.
 - **Seitenpanel "Mehr Details"**: 420 breit, rechts, `Color.Elevated`. Inhalt: Beschreibung, "Was funktioniert danach nicht mehr", technische Details (Pfad, aktueller und neuer Wert), Quellen, Neustart-/Admin-Hinweis, Schaltfläche "Zurücksetzen".
@@ -93,7 +79,7 @@ Kartenbeschreibung höchstens zwei Zeilen, danach Auslassung; der volle Text ste
 ## 6. Depth & Elevation
 
 - Drei Ebenen: Hintergrund, Fläche, Erhöht. Tiefe entsteht vor allem über Flächenfarbe und Rand, nicht über starke Schatten.
-- Schatten nur für Dialoge und Seitenpanel, weich und kurz (Fluent-Standard), im hellen Theme zusätzlich Rand.
+- Schatten nur für Dialoge und Seitenpanel, weich und kurz (Fluent-Standard). Glow nur an Primärschaltflächen, dem aktiven Navigationsstrich und Preset-Symbolen.
 - Animationen 200 ms, Ease-Out, nur Opazität und Versatz bis 8 Punkte. Ist in Windows "Animationseffekte" aus, gibt es keine Animation.
 
 ## 7. Do's and Don'ts
@@ -139,7 +125,7 @@ Kontrast: Der Einfach-Modus verwendet nur vorhandene Token-Paare (Text und Text-
 
 ## 9. Agent Prompt Guide
 
-Kurzreferenz: Hintergrund #131211, Fläche #1B1A18, Erhöht #242220, Rand #36332F, Akzent #F0883E (Schrift darauf #131211), Erfolg #6FC48A, Warnung #E8C547, Gefahr #F2666B, Text #EFECE7 / #A8A29A. Hell: #F5F3EF, #FFFFFF, #DCD7CE, Akzent #B4500F, Erfolg #2C7A44, Warnung #8A6300, Gefahr #C0323B, Text #1D1B18 / #5C564E.
+Kurzreferenz: Hintergrund #141414, Fläche #1E1E1F, Erhöht #28282A, Rand #3A3A3D, Akzent #FF7A50 (Schrift darauf #141414), Erfolg #5BD47E, Warnung #FFC93C, Gefahr #FF5F73, Text #F6F5F3 / #B4B2AE. Nur dunkles Design.
 
 Vorlagen für UI-Aufgaben:
 - "Baue die Komponente X nach docs/DESIGN.md Abschnitt 4. Nutze nur Tokens aus Abschnitt 2, Abstände aus Abschnitt 5, alle Zustände aus Abschnitt 4, Texte über Lokalisierungsschlüssel."

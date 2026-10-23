@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 namespace AscendedTweaks.Tools.ContrastCheck;
 
 /// <summary>
-/// Prueft alle Text-auf-Flaeche-Paare beider Themes gegen WCAG 2.x (4,5:1 fuer Text, 3:1 fuer Symbole und Bedienelemente).
+/// Prueft alle Text-auf-Flaeche-Paare des dunklen Designs (das einzige Design) gegen WCAG 2.x (4,5:1 fuer Text, 3:1 fuer Symbole und Bedienelemente).
 /// Getoente Flaechen (Auswahl, Hover, gefuellte Badges) werden als Alpha-Mischung berechnet.
-/// Aufruf: contrast-check [Ordner mit Tokens.*.xaml]. Exit 0 = alle Paare bestanden, 1 = mindestens ein Paar zu schwach.
+/// Aufruf: contrast-check [Ordner mit Tokens.Dark.xaml]. Exit 0 = alle Paare bestanden, 1 = mindestens ein Paar zu schwach.
 /// </summary>
 internal static partial class Program
 {
@@ -22,12 +22,12 @@ internal static partial class Program
         var directory = args.Length > 0 ? args[0] : FindThemes();
         if (directory is null)
         {
-            Console.Error.WriteLine("Ordner mit Tokens.Dark.xaml/Tokens.Light.xaml nicht gefunden.");
+            Console.Error.WriteLine("Ordner mit Tokens.Dark.xaml nicht gefunden.");
             return 2;
         }
 
         var failures = 0;
-        foreach (var theme in new[] { "Dark", "Light" })
+        foreach (var theme in new[] { "Dark" })
         {
             var tokens = ReadTokens(Path.Combine(directory, $"Tokens.{theme}.xaml"));
             foreach (var check in Checks(tokens))

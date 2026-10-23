@@ -5,18 +5,10 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using AscendedTweaks.Core;
 using AscendedTweaks.Localization;
-using Microsoft.Win32;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace AscendedTweaks.App.Services;
-
-public enum ThemeChoice
-{
-    Dark,
-    Light,
-    System,
-}
 
 /// <summary>Einstellungen der App pro Benutzer (%LOCALAPPDATA%\AscendedTweaks\settings.json).</summary>
 public sealed class AppSettings
@@ -24,7 +16,13 @@ public sealed class AppSettings
     /// <summary>Always English until the user picks a language in First steps or Settings (V3 section 2.1).</summary>
     public string Language { get; set; } = Localizer.English;
 
-    public ThemeChoice Theme { get; set; } = ThemeChoice.Dark;
+    /// <summary>
+    /// Ascended Tweaks only has the dark design. Older settings files still contain "theme"; it is read so that such a file
+    /// stays valid (unknown fields are refused) and dropped on the next save.
+    /// </summary>
+    [System.Text.Json.Serialization.JsonPropertyName("theme")]
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public string? LegacyTheme { get; set; }
 
     public bool ExpertMode { get; set; }
 
@@ -35,11 +33,10 @@ public sealed class AppSettings
     /// <summary>V2 Abschnitt 7.3: einmal "Nur ausprobieren (portabel)" gewaehlt; die Frage kommt dann nicht wieder.</summary>
     public bool PortableChosen { get; set; }
 
-    /// <summary>First start: English regardless of the Windows language (V3), theme from Windows, simple mode.</summary>
+    /// <summary>First start: English regardless of the Windows language (V3), simple mode.</summary>
     public static AppSettings FirstStart() => new()
     {
         Language = Localizer.English,
-        Theme = ThemeChoice.System,
         ExpertMode = false,
     };
 }
@@ -73,33 +70,25 @@ public sealed class SettingsStore
     public void Save(AppSettings settings)
     {
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Path)!);
+        settings.LegacyTheme = null;
         File.WriteAllText(Path, JsonSerializer.Serialize(settings, Options));
     }
 }
 
 public interface IThemeService
 {
-    ThemeChoice Current { get; }
-
-    void Apply(ThemeChoice choice);
+    /// <summary>Applies the dark design, or the Windows high contrast colors while high contrast is on.</summary>
+    void Apply();
 }
 
-/// <summary>Schaltet WPF-UI und die eigenen Design-Tokens zwischen Hell und Dunkel um.</summary>
+/// <summary>Applies the dark design tokens (the only design) or, in Windows high contrast, the system colors.</summary>
 public sealed class ThemeService : IThemeService
 {
     private const int TokenDictionaryIndex = 2;
 
-    public ThemeChoice Current { get; private set; } = ThemeChoice.Dark;
-
-    public static bool SystemUsesLightTheme()
+    public static ResourceDictionary LoadTokens()
     {
-        using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-        return key?.GetValue("AppsUseLightTheme") is int value && value == 1;
-    }
-
-    public static ResourceDictionary LoadTokens(bool light)
-    {
-        return new ResourceDictionary { Source = new Uri($"pack://application:,,,/AscendedTweaks.App;component/Themes/Tokens.{(light ? "Light" : "Dark")}.xaml") };
+        return new ResourceDictionary { Source = new Uri("pack://application:,,,/AscendedTweaks.App;component/Themes/Tokens.Dark.xaml") };
     }
 
     /// <summary>Nur fuer Screenshots: Hochkontrast erzwingen, ohne die Windows-Einstellung zu aendern.</summary>
@@ -135,6 +124,17 @@ public sealed class ThemeService : IThemeService
         }
 
         tokens["Brush.Scrim"] = new System.Windows.Media.SolidColorBrush(SystemColors.WindowColor) { Opacity = 0.8 };
+        tokens["Brush.AccentTint"] = new System.Windows.Media.SolidColorBrush(SystemColors.HighlightColor) { Opacity = 0.3 };
+
+        // Preset colors and glow follow the contrast theme: symbols in the text color, plain tiles, no glow.
+        foreach (var hue in new[] { "Mint", "Sky", "Coral", "Sun", "Lilac", "Rose", "Teal" })
+        {
+            tokens[$"Brush.Hue.{hue}"] = new System.Windows.Media.SolidColorBrush(SystemColors.WindowTextColor);
+            tokens[$"Brush.Hue.{hue}.Tint"] = System.Windows.Media.Brushes.Transparent;
+            tokens[$"Glow.Hue.{hue}"] = null;
+        }
+
+        tokens["Glow.Accent"] = null;
         tokens["ApplicationBackgroundBrush"] = new System.Windows.Media.SolidColorBrush(SystemColors.WindowColor);
         tokens["TextFillColorPrimaryBrush"] = new System.Windows.Media.SolidColorBrush(SystemColors.WindowTextColor);
         tokens["TextFillColorSecondaryBrush"] = new System.Windows.Media.SolidColorBrush(SystemColors.WindowTextColor);
@@ -150,14 +150,13 @@ public sealed class ThemeService : IThemeService
         {
             if (e.PropertyName == nameof(SystemParameters.HighContrast))
             {
-                Application.Current.Dispatcher.BeginInvoke(() => Apply(Current));
+                Application.Current.Dispatcher.BeginInvoke(Apply);
             }
         };
     }
 
-    public void Apply(ThemeChoice choice)
+    public void Apply()
     {
-        Current = choice;
         if (HighContrast)
         {
             ApplicationThemeManager.Apply(ApplicationTheme.HighContrast, WindowBackdropType.None, false);
@@ -165,11 +164,9 @@ public sealed class ThemeService : IThemeService
             return;
         }
 
-        var light = choice == ThemeChoice.Light || (choice == ThemeChoice.System && SystemUsesLightTheme());
-        var theme = light ? ApplicationTheme.Light : ApplicationTheme.Dark;
-        ApplicationThemeManager.Apply(theme, WindowBackdropType.None, false);
-        var tokens = LoadTokens(light);
-        ApplicationAccentColorManager.Apply((System.Windows.Media.Color)tokens["Color.Accent"], theme, false);
+        ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.None, false);
+        var tokens = LoadTokens();
+        ApplicationAccentColorManager.Apply((System.Windows.Media.Color)tokens["Color.Accent"], ApplicationTheme.Dark, false);
 
         // Die Token-Dictionary liegt an fester Stelle hinter den WPF-UI-Dictionaries und ueberschreibt deren Grundfarben.
         var merged = Application.Current.Resources.MergedDictionaries;

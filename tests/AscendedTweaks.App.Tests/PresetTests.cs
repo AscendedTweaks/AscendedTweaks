@@ -116,6 +116,31 @@ public sealed class PresetTests : IDisposable
         start.Presets[0].Summary.Should().Be("Alles schon eingestellt, nichts zu tun.");
     }
 
+    [Theory]
+    [InlineData(34_243_710_976L, "32 GB")]
+    [InlineData(17_045_651_456L, "16 GB")]
+    [InlineData(8L << 30, "8 GB")]
+    public void Memory_is_shown_in_whole_gigabytes(long bytes, string expected)
+    {
+        // Windows reports a little less than installed (31.9 GB for 32 GB of memory).
+        SimpleStartViewModel.MemorySize(bytes).Should().Be(expected);
+    }
+
+    [Fact]
+    public async Task Autostart_tile_says_programs_and_opens_the_list()
+    {
+        var dialogs = new ScriptedDialogs(_ => true);
+        var start = new SimpleStartViewModel(Workspace(dialogs), new FakeSystem(), () => [], [], hasBattery: false, dialogs, _ownership);
+        var opened = 0;
+        start.OpenAutostart = () => opened++;
+
+        await start.LoadAsync();
+        start.ShowAutostartCommand.Execute(null);
+
+        start.AutostartText.Should().Be("0 Programme");
+        opened.Should().Be(1);
+    }
+
     [Fact]
     public async Task Result_dialog_undo_takes_back_exactly_this_run()
     {

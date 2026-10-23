@@ -1042,7 +1042,7 @@
   "simple.start.hero": "Wende ein Preset mit einem Klick an. Jede Änderung wird vorher gesichert und lässt sich mit einem Klick rückgängig machen.",
   "simple.start.stat.windows": "System",
   "simple.start.stat.ram": "Arbeitsspeicher",
-  "simple.start.stat.autostart": "Starten mit Windows",
+  "simple.start.stat.autostart": "Autostart",
   "simple.start.recommended": "Empfohlene Einstellungen anwenden",
   "simple.preset.review": "Ansehen und aufräumen",
   "simple.preset.preview": "Änderungen ansehen",
@@ -1056,5 +1056,10 @@
   "activity.applying": "Wird angewendet…",
   "activity.resetting": "Wird zurückgesetzt…",
   "result.alreadyapplied": "Bereits angewendet.",
-  "result.conflict": "Ändert dieselbe Einstellung wie „{name}“. Schalte das zuerst aus."
+  "result.conflict": "Ändert dieselbe Einstellung wie „{name}“. Schalte das zuerst aus.",
+  "simple.start.stat.autostart.value": "{n} Programme",
+  "simple.start.stat.autostart.one": "1 Programm",
+  "simple.start.stat.autostart.hint": "Öffnen sich von selbst, wenn Windows startet. Weniger heißt schnellerer Start.",
+  "simple.start.stat.autostart.show": "Liste zeigen",
+  "splash.loading": "Wird geladen…"
 }

@@ -179,7 +179,7 @@ public partial class App : Application
                     SystemInfoSource ?? new WindowsSystemInfo(commands, Environment.SystemDirectory),
                     SecuritySource ?? new WindowsSecurityFacts(),
                     AutostartSource ?? new AutostartInventory(new WindowsRegistryAccess(), new WindowsAutostartSources(commands, Environment.SystemDirectory), new WindowsSignatureVerifier()).Read);
-                _ = dashboard.LoadAsync();
+                FirstPageLoad ??= dashboard.LoadAsync();
                 return dashboard;
             }),
             new("nav.performance", SymbolRegular.TopSpeed24, () =>
@@ -342,7 +342,8 @@ public partial class App : Application
                         MeasurementViewModel.LastBootFromUptime,
                         localizer,
                         TimeProvider.System));
-                _ = start.LoadAsync();
+                start.OpenAutostart = () => GamingNavigator?.Invoke(GamingJump.Autostart);
+                FirstPageLoad ??= start.LoadAsync();
                 return start;
             }),
             new("nav.simple.faster", SymbolRegular.TopSpeed24, () =>
@@ -392,6 +393,9 @@ public partial class App : Application
         };
         return (main, footer);
     }
+
+    /// <summary>Loading of the page shown first; the main window waits for it behind the loading window.</summary>
+    private static Task? FirstPageLoad { get; set; }
 
     private static GamingChecksViewModel Loaded(GamingChecksViewModel checks)
     {
@@ -490,6 +494,9 @@ public partial class App : Application
             ShutdownMode = ShutdownMode.OnMainWindowClose;
         }
 
+        // Short loading window until the first page is ready, instead of a window that fills in slowly.
+        var splash = e.Args.Contains("--snapshot") ? null : StartupSplash.Show(ProductInfo.Name, Localizer.Current["splash.loading"]);
+
         var environment = new WindowsSystemEnvironment();
         var embedded = CatalogLoader.LoadEmbedded();
         var catalog = new CompositeCatalog(embedded);
@@ -570,8 +577,17 @@ public partial class App : Application
         }
 #endif
 
-        window.Show();
-        await workspace.RefreshAsync().ConfigureAwait(true);
+        try
+        {
+            await Task.WhenAny(Task.WhenAll(workspace.RefreshAsync(), FirstPageLoad ?? Task.CompletedTask), Task.Delay(TimeSpan.FromSeconds(15))).ConfigureAwait(true);
+        }
+        finally
+        {
+            window.Show();
+            window.Activate();
+            splash?.Close();
+        }
+
         if (DesignPreview)
         {
             await dialogs.ShowAsync(new ResultDialogViewModel(Localizer.Current["preview.title"], Localizer.Current["preview.body"], [], false)).ConfigureAwait(true);

@@ -307,6 +307,16 @@ public sealed partial class SimpleStartViewModel : PageViewModel
     [ObservableProperty]
     private string? _autostartText;
 
+    /// <summary>Opens the list of programs that start with Windows (set by the app; null in tests).</summary>
+    public Action? OpenAutostart { get; set; }
+
+    [RelayCommand]
+    private void ShowAutostart() => OpenAutostart?.Invoke();
+
+    /// <summary>Whole gigabytes, like the label on the memory: Windows reports a little less than installed (31.9 instead of 32).</summary>
+    public static string MemorySize(long bytes) =>
+        string.Create(System.Globalization.CultureInfo.CurrentCulture, $"{Math.Round(bytes / (double)(1L << 30), MidpointRounding.AwayFromZero):0} GB");
+
     public SimpleStartViewModel(
         TweakWorkspace workspace,
         ISystemInfoSource system,
@@ -354,13 +364,18 @@ public sealed partial class SimpleStartViewModel : PageViewModel
         await _workspace.RefreshAsync().ConfigureAwait(true);
         var (info, autostarts) = await Task.Run(() => (_system.Read(), CountAutostarts())).ConfigureAwait(true);
         var windows = info.Windows?.Edition ?? "Windows";
-        var ram = info.Ram is { } r ? CleanupPageViewModel.Size(r.TotalBytes) : _localizer["anticheat.value.unknown"];
+        var ram = info.Ram is { } r ? MemorySize(r.TotalBytes) : _localizer["anticheat.value.unknown"];
         Status = autostarts is { } n
             ? _localizer.Format("simple.start.status", ("windows", windows), ("ram", ram), ("n", n))
             : _localizer.Format("simple.start.status.noautostart", ("windows", windows), ("ram", ram));
         WindowsText = windows;
         RamText = ram;
-        AutostartText = autostarts?.ToString(System.Globalization.CultureInfo.CurrentCulture) ?? _localizer["anticheat.value.unknown"];
+        AutostartText = autostarts switch
+        {
+            null => _localizer["anticheat.value.unknown"],
+            1 => _localizer["simple.start.stat.autostart.one"],
+            { } count => _localizer.Format("simple.start.stat.autostart.value", ("n", count)),
+        };
         await LoadPresetsAsync().ConfigureAwait(true);
     }
 

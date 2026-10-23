@@ -1042,7 +1042,7 @@
   "simple.start.hero": "Apply a preset with one click. Every change is backed up first and can be undone with one click.",
   "simple.start.stat.windows": "System",
   "simple.start.stat.ram": "Memory",
-  "simple.start.stat.autostart": "Start with Windows",
+  "simple.start.stat.autostart": "Autostart",
   "simple.start.recommended": "Apply recommended settings",
   "simple.preset.review": "Review and clean up",
   "simple.preset.preview": "Show changes",
@@ -1056,5 +1056,10 @@
   "activity.applying": "Applying…",
   "activity.resetting": "Resetting…",
   "result.alreadyapplied": "Already applied.",
-  "result.conflict": "Changes the same setting as \"{name}\". Turn that off first."
+  "result.conflict": "Changes the same setting as \"{name}\". Turn that off first.",
+  "simple.start.stat.autostart.value": "{n} programs",
+  "simple.start.stat.autostart.one": "1 program",
+  "simple.start.stat.autostart.hint": "Open by themselves when Windows starts. Fewer means a faster start.",
+  "simple.start.stat.autostart.show": "Show list",
+  "splash.loading": "Loading…"
 }

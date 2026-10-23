@@ -231,6 +231,9 @@
                     <StackPanel>
                         <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.autostart}" />
                         <TextBlock Style="{StaticResource Text.Simple.Title}" Text="{Binding AutostartText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,4,0,0" />
+                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc simple.start.stat.autostart.hint}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                        <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc simple.start.stat.autostart.show}" Command="{Binding ShowAutostartCommand}"
+                                        HorizontalAlignment="Left" Margin="-8,4,0,0" Padding="8,4" />
                     </StackPanel>
                 </Border>
             </UniformGrid>

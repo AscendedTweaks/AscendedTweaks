@@ -1093,5 +1093,5 @@
   "bg.force.body.nowindow": "{name} runs without a window, so it cannot be asked to close. Force closing ends it right away; unsaved data in it is lost. It may start again with Windows.",
   "bg.force.body.running": "{name} is still running after 5 seconds; it may be waiting for you to save. Force closing ends it right away; unsaved data in it is lost.",
   "bg.empty": "Nothing to close.",
-  "hold.hint": "Hold to confirm"
+  "hold.hint": "hold to confirm"
 }

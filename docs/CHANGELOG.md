@@ -4,6 +4,9 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 
 ## [Unreleased]
 
+### Geändert
+- Gedrückt halten nur noch bei "Alles rückgängig" (Zurück-Seite und Wiederherstellung); das Ergebnisfenster nach einem Preset braucht wieder nur einen Klick. Der Hinweis "gedrückt halten" steht klein im Knopf statt darunter, die Füllung läuft als flüssige Animation und dunkelt ab, statt den Text aufzuhellen.
+
 ## [1.1.1] - 2026-10-24
 
 Nicht signiert.

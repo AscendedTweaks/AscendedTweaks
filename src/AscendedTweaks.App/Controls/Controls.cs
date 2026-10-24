@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
+using System.Windows.Media.Animation;
 using Wpf.Ui.Controls;
 
 namespace AscendedTweaks.App.Controls;
@@ -62,61 +62,30 @@ public sealed class Badge : Control
     }
 }
 
-/// <summary>Schaltflaeche mit Zustand "Laufend" (Spinner, keine weiteren Klicks).</summary>
 /// <summary>
-/// Press-and-hold timing for buttons with far-reaching effects ("Undo everything"): progress from 0 to 1 over the hold
-/// time, done once it reaches 1; letting go before resets it. Separate from the control so it can be tested without a window.
+/// Button with a "running" state (spinner, no further clicks). With <see cref="HoldDuration"/> it only triggers after
+/// being held (mouse, Space or Enter), for actions that reset everything; the template part PART_HoldFill grows smoothly
+/// while held and shrinks back when let go early.
 /// </summary>
-public sealed class HoldGesture
-{
-    private readonly TimeSpan _duration;
-    private DateTime? _start;
-
-    public HoldGesture(TimeSpan duration) => _duration = duration;
-
-    public bool IsHolding => _start is not null;
-
-    public void Start(DateTime now) => _start = now;
-
-    public void Cancel() => _start = null;
-
-    /// <summary>Progress at <paramref name="now"/>, 0 when not holding; ends the hold when it reaches 1.</summary>
-    public double Progress(DateTime now, out bool completed)
-    {
-        completed = false;
-        if (_start is not { } start)
-        {
-            return 0;
-        }
-
-        var progress = _duration <= TimeSpan.Zero ? 1 : Math.Clamp((now - start) / _duration, 0, 1);
-        if (progress >= 1)
-        {
-            completed = true;
-            _start = null;
-        }
-
-        return progress;
-    }
-}
-
+[TemplatePart(Name = HoldFillPart, Type = typeof(FrameworkElement))]
 public sealed class ActionButton : System.Windows.Controls.Button
 {
+    public const string HoldFillPart = "PART_HoldFill";
+
     public static readonly DependencyProperty IsRunningProperty =
         DependencyProperty.Register(nameof(IsRunning), typeof(bool), typeof(ActionButton), new PropertyMetadata(false));
 
-    /// <summary>When set, the button only triggers after being held this long (mouse, Space or Enter); a short press does nothing.</summary>
     public static readonly DependencyProperty HoldDurationProperty =
         DependencyProperty.Register(nameof(HoldDuration), typeof(TimeSpan), typeof(ActionButton), new PropertyMetadata(TimeSpan.Zero));
 
-    private static readonly DependencyPropertyKey HoldProgressKey =
-        DependencyProperty.RegisterReadOnly(nameof(HoldProgress), typeof(double), typeof(ActionButton), new PropertyMetadata(0.0));
+    /// <summary>Small second line inside the button ("Hold to confirm"); hidden when empty.</summary>
+    public static readonly DependencyProperty HoldHintProperty =
+        DependencyProperty.Register(nameof(HoldHint), typeof(string), typeof(ActionButton), new PropertyMetadata(null));
 
-    public static readonly DependencyProperty HoldProgressProperty = HoldProgressKey.DependencyProperty;
-
-    private HoldGesture? _hold;
-    private DispatcherTimer? _timer;
+    private static readonly TimeSpan ShrinkTime = TimeSpan.FromMilliseconds(180);
+    private FrameworkElement? _fill;
     private bool _pressed;
+    private bool _holding;
     private bool _completing;
 
     public bool IsRunning
@@ -131,10 +100,19 @@ public sealed class ActionButton : System.Windows.Controls.Button
         set => SetValue(HoldDurationProperty, value);
     }
 
-    /// <summary>0 to 1 while held; the template fills the button with it.</summary>
-    public double HoldProgress => (double)GetValue(HoldProgressProperty);
+    public string? HoldHint
+    {
+        get => (string?)GetValue(HoldHintProperty);
+        set => SetValue(HoldHintProperty, value);
+    }
 
     private bool UsesHold => HoldDuration > TimeSpan.Zero;
+
+    public override void OnApplyTemplate()
+    {
+        base.OnApplyTemplate();
+        _fill = GetTemplateChild(HoldFillPart) as FrameworkElement;
+    }
 
     protected override void OnClick()
     {
@@ -188,7 +166,7 @@ public sealed class ActionButton : System.Windows.Controls.Button
         if (UsesHold && e.Key is Key.Space or Key.Enter)
         {
             e.Handled = true;
-            if (!e.IsRepeat && IsEnabled && !IsRunning && _hold?.IsHolding != true)
+            if (!e.IsRepeat && IsEnabled && !IsRunning && !_holding)
             {
                 _pressed = true;
                 StartHold();
@@ -221,45 +199,63 @@ public sealed class ActionButton : System.Windows.Controls.Button
         CancelHold();
     }
 
+    /// <summary>Grows the fill from where it is to the full width in the time that is left; the animation drives the click.</summary>
     private void StartHold()
     {
-        _hold = new HoldGesture(HoldDuration);
-        _hold.Start(DateTime.UtcNow);
-        _timer ??= new DispatcherTimer(TimeSpan.FromMilliseconds(16), DispatcherPriority.Input, OnHoldTick, Dispatcher);
-        _timer.Start();
-    }
-
-    private void OnHoldTick(object? sender, EventArgs e)
-    {
-        if (_hold is null)
+        _holding = true;
+        if (_fill is null || ActualWidth <= 0)
         {
             return;
         }
 
-        var progress = _hold.Progress(DateTime.UtcNow, out var completed);
-        SetValue(HoldProgressKey, progress);
-        if (!completed)
+        var from = double.IsNaN(_fill.Width) ? 0 : _fill.ActualWidth;
+        var remaining = TimeSpan.FromTicks((long)(HoldDuration.Ticks * Math.Clamp(1 - (from / ActualWidth), 0, 1)));
+        var grow = new DoubleAnimation(from, ActualWidth, new Duration(remaining)) { FillBehavior = FillBehavior.HoldEnd };
+        grow.Completed += (_, _) =>
         {
-            return;
-        }
+            if (!_holding)
+            {
+                return;
+            }
 
-        _timer?.Stop();
-        _completing = true;
-        try
-        {
-            OnClick();
-        }
-        finally
-        {
-            _completing = false;
-            SetValue(HoldProgressKey, 0.0);
-        }
+            _holding = false;
+            _completing = true;
+            try
+            {
+                OnClick();
+            }
+            finally
+            {
+                _completing = false;
+                Shrink();
+            }
+        };
+        _fill.BeginAnimation(WidthProperty, grow, HandoffBehavior.SnapshotAndReplace);
     }
 
     private void CancelHold()
     {
-        _hold?.Cancel();
-        _timer?.Stop();
-        SetValue(HoldProgressKey, 0.0);
+        if (!_holding)
+        {
+            return;
+        }
+
+        _holding = false;
+        Shrink();
+    }
+
+    private void Shrink()
+    {
+        if (_fill is null)
+        {
+            return;
+        }
+
+        var shrink = new DoubleAnimation(_fill.ActualWidth, 0, new Duration(ShrinkTime))
+        {
+            EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut },
+            FillBehavior = FillBehavior.HoldEnd,
+        };
+        _fill.BeginAnimation(WidthProperty, shrink, HandoffBehavior.SnapshotAndReplace);
     }
 }

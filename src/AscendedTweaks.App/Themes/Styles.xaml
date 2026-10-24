@@ -111,17 +111,17 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
                         <Border x:Name="Overlay" CornerRadius="{StaticResource Radius.Small}" Background="{TemplateBinding Foreground}" Opacity="0" />
-                        <!-- Hold to confirm: fills from the left while the button is held. -->
-                        <Border x:Name="HoldFill" CornerRadius="{StaticResource Radius.Small}" Background="{TemplateBinding Foreground}" Opacity="0.28"
-                                RenderTransformOrigin="0,0.5" IsHitTestVisible="False">
-                            <Border.RenderTransform>
-                                <ScaleTransform ScaleX="{Binding HoldProgress, RelativeSource={RelativeSource TemplatedParent}}" />
-                            </Border.RenderTransform>
-                        </Border>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}">
-                            <ui:ProgressRing x:Name="Spinner" Width="16" Height="16" IsIndeterminate="True" Visibility="Collapsed"
-                                             Margin="0,0,8,0" Foreground="{TemplateBinding Foreground}" />
-                            <ContentPresenter RecognizesAccessKey="True" VerticalAlignment="Center" />
+                        <!-- Hold to confirm: a darker layer grows from the left while the button is held (animated by the control). -->
+                        <Border x:Name="PART_HoldFill" Width="0" HorizontalAlignment="Left" CornerRadius="{StaticResource Radius.Small}"
+                                Background="#000000" Opacity="0.28" IsHitTestVisible="False" />
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <ui:ProgressRing x:Name="Spinner" Width="16" Height="16" IsIndeterminate="True" Visibility="Collapsed"
+                                                 Margin="0,0,8,0" Foreground="{TemplateBinding Foreground}" />
+                                <ContentPresenter RecognizesAccessKey="True" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock x:Name="Hint" Text="{TemplateBinding HoldHint}" FontSize="10" FontWeight="Normal" Opacity="0.75"
+                                       HorizontalAlignment="Center" Margin="0,1,0,0" Foreground="{TemplateBinding Foreground}" />
                         </StackPanel>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -133,6 +133,9 @@
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.45" />
+                        </Trigger>
+                        <Trigger Property="HoldHint" Value="{x:Null}">
+                            <Setter TargetName="Hint" Property="Visibility" Value="Collapsed" />
                         </Trigger>
                         <Trigger Property="IsRunning" Value="True">
                             <Setter TargetName="Spinner" Property="Visibility" Value="Visible" />

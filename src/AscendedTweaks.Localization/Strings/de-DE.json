@@ -1092,5 +1092,6 @@
   "bg.force.title": "{name} wirklich beenden?",
   "bg.force.body.nowindow": "{name} läuft ohne Fenster und kann deshalb nicht um das Schließen gebeten werden. Erzwingen beendet es sofort; nicht gespeicherte Daten darin gehen verloren. Es kann mit Windows wieder starten.",
   "bg.force.body.running": "{name} läuft nach 5 Sekunden noch; vielleicht wartet es darauf, dass du speicherst. Erzwingen beendet es sofort; nicht gespeicherte Daten darin gehen verloren.",
-  "bg.empty": "Nichts zu schließen."
+  "bg.empty": "Nichts zu schließen.",
+  "hold.hint": "Zum Bestätigen gedrückt halten"
 }

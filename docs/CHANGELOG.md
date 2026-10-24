@@ -5,10 +5,12 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 ## [Unreleased]
 
 ### Hinzugefügt
+- "Alles rückgängig" (Zurück-Seite, Wiederherstellung, Ergebnisfenster) muss 1,2 Sekunden gedrückt gehalten werden (Maus, Leertaste oder Eingabe); der Knopf füllt sich dabei, früheres Loslassen bricht ab. Bildschirmleser lösen weiter direkt aus.
 - Karte "Hintergrund aufräumen" auf den Seiten Gaming und Schneller: Programme der eigenen Windows-Sitzung nach Arbeitsspeicher, zusammengefasst pro Programm, jedes mit eigenem "Schließen" (wie das X im Fenster; erzwingen nur nach Rückfrage). Nichts wird automatisch geschlossen, nichts ist vorausgewählt; Windows, Virenschutz und VPN, Hilfsprozesse anderer Apps und Ascended Tweaks selbst sind geschützt. Kein "RAM bereinigen" (Abschnitt 6.12).
 - GAME-028 "Plattform für virtuelle Computer aus" (Experte): DISM `/Disable-Feature`, Neustart nötig; Microsoft nennt VMP als mögliche Bremse für Spiele. Befehle können jetzt weitere Erfolgscodes haben (DISM 3010 = Neustart nötig).
 
 ### Behoben
+- DEB-027 "Widgets abschalten" gilt nur noch bis Build 26199: Windows verweigert auf Build 26200 das Schreiben der Richtlinie auch für Administratoren, der Durchlauf brach ab.
 - Fand der Helfer mit Administratorrechten, dass nichts mehr zu ändern ist (zum Beispiel "Plattform für virtuelle Computer" schon aus), wurden die bereits angewendeten Benutzer-Tweaks desselben Durchlaufs zurückgenommen, und die App zeigte "Fehlgeschlagen". Jetzt bleibt der Rest angewendet, und der Tweak steht als "Bereits angewendet" im Ergebnis.
 - Die Kommandozeile nennt übersprungene Tweaks mit Grund in der gewählten Sprache ("Übersprungen: GAME-025 (bereits angewendet, nichts zu ändern)").
 

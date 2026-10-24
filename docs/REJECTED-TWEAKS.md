@@ -26,7 +26,7 @@ Phase 7:
 |---|---|---|
 | GAME-014 | Xbox-Hintergrunddienste auf Manuell | Kein Effekt: `XblAuthManager`, `XblGameSave`, `XboxNetApiSvc` und `XboxGipSvc` stehen bereits standardmäßig auf "Manuell" (Host gelesen, Build 26200). Placebo. |
 
-Phase 9: keiner abgelehnt. Einschränkung: UI-005 (Widgets-Symbol) ist auf Build 26200 nicht umsetzbar, weil Windows den Schreibzugriff blockiert; der Tweak gilt nur bis Build 22631, darüber hilft DEB-027.
+Phase 9: keiner abgelehnt. Einschränkung: UI-005 (Widgets-Symbol) ist auf Build 26200 nicht umsetzbar, weil Windows den Schreibzugriff blockiert; der Tweak gilt nur bis Build 22631, darüber hilft DEB-027. Nachtrag 2026-10-24: Auch DEB-027 (Richtlinie `Dsh\AllowNewsAndInterests`) blockiert Windows auf Build 26200 (Zugriff verweigert, auch für Administratoren); DEB-027 gilt deshalb nur bis Build 26199.
 
 Abweichungen vom Mechanismus der Kandidatenliste (Tweak bleibt, aber mit dokumentiertem Weg):
 

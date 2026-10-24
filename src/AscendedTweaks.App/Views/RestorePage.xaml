@@ -31,8 +31,11 @@
         </Border>
 
         <WrapPanel Margin="0,0,0,16">
-            <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc restore.undoall}" Command="{Binding UndoAllCommand}"
-                            IsRunning="{Binding IsBusy}" IsEnabled="{Binding HasApplied}" Margin="0,0,8,8" />
+            <StackPanel Margin="0,0,8,8">
+                <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc restore.undoall}" Command="{Binding UndoAllCommand}"
+                                IsRunning="{Binding IsBusy}" IsEnabled="{Binding HasApplied}" HoldDuration="0:0:1.2" AutomationProperties.HelpText="{s:Loc hold.hint}" />
+                <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc hold.hint}" Margin="0,4,0,0" />
+            </StackPanel>
             <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc restore.openrestorepoint}" Command="{Binding OpenRestorePointCommand}" Margin="0,0,8,8" />
             <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc restore.openfolder}" Command="{Binding OpenBackupFolderCommand}" Margin="0,0,8,8" />
         </WrapPanel>

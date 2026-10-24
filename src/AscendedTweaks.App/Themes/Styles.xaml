@@ -111,6 +111,13 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}" />
                         <Border x:Name="Overlay" CornerRadius="{StaticResource Radius.Small}" Background="{TemplateBinding Foreground}" Opacity="0" />
+                        <!-- Hold to confirm: fills from the left while the button is held. -->
+                        <Border x:Name="HoldFill" CornerRadius="{StaticResource Radius.Small}" Background="{TemplateBinding Foreground}" Opacity="0.28"
+                                RenderTransformOrigin="0,0.5" IsHitTestVisible="False">
+                            <Border.RenderTransform>
+                                <ScaleTransform ScaleX="{Binding HoldProgress, RelativeSource={RelativeSource TemplatedParent}}" />
+                            </Border.RenderTransform>
+                        </Border>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}">
                             <ui:ProgressRing x:Name="Spinner" Width="16" Height="16" IsIndeterminate="True" Visibility="Collapsed"
                                              Margin="0,0,8,0" Foreground="{TemplateBinding Foreground}" />

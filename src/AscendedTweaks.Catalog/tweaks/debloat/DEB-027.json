@@ -9,7 +9,7 @@
   "builds": [
     {
       "min": 22000,
-      "max": null
+      "max": 26199
     }
   ],
   "editions": [
@@ -41,7 +41,8 @@
   "revert": "restoreFromBackup",
   "sources": [
     "Microsoft Learn: NewsAndInterests Policy CSP, AllowNewsAndInterests (0 = not allowed), group policy 'Allow widgets' under Software\\Policies\\Microsoft\\Dsh (Windows 11).",
-    "The description only promises that widgets are turned off, not a speed gain."
+    "The description only promises that widgets are turned off, not a speed gain.",
+    "Host 2026-10-24, build 26200: as administrator, Windows creates the key SOFTWARE\\Policies\\Microsoft\\Dsh but refuses the value AllowNewsAndInterests (access denied), also refuses deleting the key again; therefore only up to build 26199 (like UI-005, which Windows blocks from 26200 too)."
   ],
   "verifiedOn": [],
   "hiddenByDefault": false,

@@ -325,7 +325,8 @@
         <StackPanel Margin="0,0,0,24">
             <ContentControl Content="{Binding Help}" Focusable="False" Margin="0,0,0,8" />
             <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc restore.undoall}" Command="{Binding UndoAllCommand}" HorizontalAlignment="Left"
-                            MinHeight="44" Padding="20,8" Margin="0,0,0,16" IsEnabled="{Binding HasItems}" />
+                            MinHeight="44" Padding="20,8" IsEnabled="{Binding HasItems}" HoldDuration="0:0:1.2" AutomationProperties.HelpText="{s:Loc hold.hint}" />
+            <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc hold.hint}" Margin="0,4,0,16" />
             <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.back.list}" Margin="0,0,0,8" />
             <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.back.empty}" Visibility="{Binding HasItems, Converter={StaticResource InverseBoolToVisibility}}" />
             <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
@@ -1809,7 +1810,9 @@
                     <!-- V2: Nach einem Preset gross "Alles wieder rueckgaengig", klein "Fertig". -->
                     <DockPanel Visibility="{Binding HasUndo, Converter={StaticResource BoolToVisibility}}">
                         <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Text}" Content="{s:Loc result.done}" Command="{Binding DoneCommand}" IsDefault="True" MinHeight="40" />
-                        <c:ActionButton Style="{StaticResource Button.Primary}" Content="{Binding UndoText}" Command="{Binding UndoCommand}" HorizontalAlignment="Left" MinHeight="44" Padding="20,8" />
+                        <c:ActionButton Style="{StaticResource Button.Primary}" Content="{Binding UndoText}" Command="{Binding UndoCommand}" HorizontalAlignment="Left" MinHeight="44" Padding="20,8"
+                                        HoldDuration="0:0:1.2" AutomationProperties.HelpText="{s:Loc hold.hint}" />
+                        <TextBlock Style="{StaticResource Text.Caption}" Text="{s:Loc hold.hint}" Margin="0,4,0,0" />
                     </DockPanel>
                 </StackPanel>
                 <ScrollViewer MaxHeight="420" VerticalScrollBarVisibility="Auto">

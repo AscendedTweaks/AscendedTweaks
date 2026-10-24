@@ -4,6 +4,10 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-10-24
+
+Nicht signiert.
+
 ### Hinzugefügt
 - "Alles rückgängig" (Zurück-Seite, Wiederherstellung, Ergebnisfenster) muss 1,2 Sekunden gedrückt gehalten werden (Maus, Leertaste oder Eingabe); der Knopf füllt sich dabei, früheres Loslassen bricht ab. Bildschirmleser lösen weiter direkt aus.
 - Karte "Hintergrund aufräumen" auf den Seiten Gaming und Schneller: Programme der eigenen Windows-Sitzung nach Arbeitsspeicher, zusammengefasst pro Programm, jedes mit eigenem "Schließen" (wie das X im Fenster; erzwingen nur nach Rückfrage). Nichts wird automatisch geschlossen, nichts ist vorausgewählt; Windows, Virenschutz und VPN, Hilfsprozesse anderer Apps und Ascended Tweaks selbst sind geschützt. Kein "RAM bereinigen" (Abschnitt 6.12).

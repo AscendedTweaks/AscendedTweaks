@@ -1093,5 +1093,10 @@
   "bg.force.body.nowindow": "{name} läuft ohne Fenster und kann deshalb nicht um das Schließen gebeten werden. Erzwingen beendet es sofort; nicht gespeicherte Daten darin gehen verloren. Es kann mit Windows wieder starten.",
   "bg.force.body.running": "{name} läuft nach 5 Sekunden noch; vielleicht wartet es darauf, dass du speicherst. Erzwingen beendet es sofort; nicht gespeicherte Daten darin gehen verloren.",
   "bg.empty": "Nichts zu schließen.",
-  "hold.hint": "gedrückt halten"
+  "hold.hint": "gedrückt halten",
+  "deb.DEB-028.name": "Xbox Game Bar",
+  "deb.DEB-028.desc": "Das Overlay hinter Win+G (Widgets, Aufnahme, Xbox-Party). Spielmodus und Spiele wie Fortnite funktionieren weiter; Win+G öffnet dann nichts mehr. Lässt sich im Microsoft Store wieder installieren.",
+  "apps.edge.title": "Microsoft Edge deinstallieren",
+  "apps.edge.body": "In der EU bietet Windows selbst unter Einstellungen > Apps > Installierte Apps bei Microsoft Edge \"Deinstallieren\" an. Nur so bleibt alles sauber; die WebView2-Laufzeit, die andere Apps brauchen, bleibt erhalten. Edge lässt sich über microsoft.com/edge wieder installieren.",
+  "apps.edge.open": "Installierte Apps öffnen"
 }

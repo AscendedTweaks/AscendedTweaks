@@ -155,14 +155,24 @@ public sealed partial class AppsViewModel : ObservableObject
     [ObservableProperty]
     private string? _error;
 
-    public AppsViewModel(IAppManager apps, IDialogService dialogs, Localizer localizer, int build, bool readOnly)
+    private readonly Action<string>? _openUri;
+
+    public AppsViewModel(IAppManager apps, IDialogService dialogs, Localizer localizer, int build, bool readOnly, Action<string>? openUri = null)
     {
         _apps = apps;
         _dialogs = dialogs;
         _localizer = localizer;
         _build = build;
         IsReadOnly = readOnly;
+        _openUri = openUri;
     }
+
+    /// <summary>
+    /// Edge is not removed by the app: in the EU (EEA) Windows itself offers "Uninstall" for Microsoft Edge under Settings &gt;
+    /// Apps, and only that keeps Windows search, links and updates working. The WebView2 runtime other apps need stays.
+    /// </summary>
+    [RelayCommand]
+    private void OpenEdgeUninstall() => _openUri?.Invoke("ms-settings:appsfeatures");
 
     public ObservableCollection<AppGroupViewModel> Groups { get; } = [];
 

@@ -996,6 +996,16 @@
             <Border Style="{StaticResource Banner}" BorderBrush="{DynamicResource Brush.Warning}">
                 <TextBlock Style="{StaticResource Text.Body}" Text="{s:Loc debloat.intro}" TextWrapping="Wrap" />
             </Border>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <DockPanel>
+                    <c:ActionButton DockPanel.Dock="Right" Style="{StaticResource Button.Secondary}" Content="{s:Loc apps.edge.open}" Command="{Binding OpenEdgeUninstallCommand}"
+                                    VerticalAlignment="Center" Margin="16,0,0,0" />
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc apps.edge.title}" />
+                        <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc apps.edge.body}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
             <WrapPanel Margin="0,0,0,8">
                 <c:ActionButton Style="{StaticResource Button.Danger}" Content="{s:Loc debloat.remove}" Command="{Binding RemoveCommand}" IsEnabled="{Binding CanRemove}" IsRunning="{Binding IsBusy}" Margin="0,0,16,8" />
                 <CheckBox IsChecked="{Binding Deprovision, Mode=TwoWay}" Content="{s:Loc debloat.deprovision}" VerticalAlignment="Center" Margin="0,0,16,8" />

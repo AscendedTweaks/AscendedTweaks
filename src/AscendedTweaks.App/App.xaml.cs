@@ -217,7 +217,7 @@ public partial class App : Application
             new("nav.cleanup", SymbolRegular.Broom24, () => new CleanupPageViewModel(CleanupSource ?? new TweakServiceCleanup(workspace.Service), dialogs, localizer, workspace.IsReadOnly)),
             new("nav.debloat", SymbolRegular.Apps24, () => new DebloatPageViewModel(
                 workspace,
-                () => new AppsViewModel(AppManagerFor(workspace), dialogs, localizer, Environment.OSVersion.Version.Build, workspace.IsReadOnly),
+                () => new AppsViewModel(AppManagerFor(workspace), dialogs, localizer, Environment.OSVersion.Version.Build, workspace.IsReadOnly, OpenUri),
                 () => new OneDriveViewModel(
                     OneDriveCheckSource ?? new OneDriveCheck(new WindowsOneDriveEnvironment(new WindowsSignatureVerifier())).Check,
                     () => DesignPreview && OneDriveCheckSource is { } sample
@@ -367,7 +367,7 @@ public partial class App : Application
                     return new SimpleCleanupView(junk);
                 }),
                 (new SectionItem("large", "simple.cleanup.section.large"), () => new LargeFilesViewModel(DiskToolsSource ?? new DiskTools(workspace.Service), localizer, dialogs, new KeepListStore(KeepListPath ?? KeepListStore.DefaultPath), OpenUri)),
-                (new SectionItem("apps", "simple.cleanup.section.apps"), () => new AppsViewModel(AppManagerFor(workspace), dialogs, localizer, Environment.OSVersion.Version.Build, workspace.IsReadOnly)),
+                (new SectionItem("apps", "simple.cleanup.section.apps"), () => new AppsViewModel(AppManagerFor(workspace), dialogs, localizer, Environment.OSVersion.Version.Build, workspace.IsReadOnly, OpenUri)),
             ])),
             new("nav.simple.privacy", SymbolRegular.ShieldLock24, () =>
             {

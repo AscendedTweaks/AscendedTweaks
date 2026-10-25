@@ -1093,5 +1093,10 @@
   "bg.force.body.nowindow": "{name} runs without a window, so it cannot be asked to close. Force closing ends it right away; unsaved data in it is lost. It may start again with Windows.",
   "bg.force.body.running": "{name} is still running after 5 seconds; it may be waiting for you to save. Force closing ends it right away; unsaved data in it is lost.",
   "bg.empty": "Nothing to close.",
-  "hold.hint": "hold to confirm"
+  "hold.hint": "hold to confirm",
+  "deb.DEB-028.name": "Xbox Game Bar",
+  "deb.DEB-028.desc": "The overlay behind Win+G (widgets, recording, Xbox party). Game Mode and games such as Fortnite keep working; Win+G then opens nothing. Can be installed again from the Microsoft Store.",
+  "apps.edge.title": "Uninstall Microsoft Edge",
+  "apps.edge.body": "In the EU, Windows itself offers \"Uninstall\" for Microsoft Edge under Settings > Apps > Installed apps. That is the only clean way; the WebView2 runtime that other apps need stays. You can install Edge again from microsoft.com/edge.",
+  "apps.edge.open": "Open installed apps"
 }

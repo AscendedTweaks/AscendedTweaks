@@ -55,7 +55,7 @@ public interface IAppxAccess
 
 public sealed record DebloatApp(string Id, IReadOnlyList<string> PackageNames, AppGroup Group, RiskLevel Risk, int MinBuild = 19045);
 
-/// <summary>Kandidaten DEB-001 bis DEB-026 und die Sperrliste (Abschnitt 6.6).</summary>
+/// <summary>Kandidaten DEB-001 bis DEB-026, DEB-028 (DEB-027 ist der Widgets-Tweak) und die Sperrliste (Abschnitt 6.6).</summary>
 public static partial class DebloatCatalog
 {
     public static readonly IReadOnlyList<DebloatApp> Apps =
@@ -86,6 +86,7 @@ public static partial class DebloatCatalog
         new("DEB-024", ["Microsoft.WindowsAlarms"], AppGroup.Other, RiskLevel.Safe),
         new("DEB-025", ["Microsoft.WindowsSoundRecorder"], AppGroup.Media, RiskLevel.Safe),
         new("DEB-026", ["Microsoft.Windows.DevHome"], AppGroup.DeveloperAi, RiskLevel.Safe),
+        new("DEB-028", ["Microsoft.XboxGamingOverlay"], AppGroup.Games, RiskLevel.Caution),
     ];
 
     /// <summary>

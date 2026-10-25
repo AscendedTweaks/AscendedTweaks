@@ -356,7 +356,7 @@ public partial class App : Application
                     "simple.faster.help",
                     [new SimpleAutostartCard(new AutostartViewModel(Autostart(), workspace, ProcessSampler ?? new WindowsProcessSampler())), BackgroundCard(dialogs, localizer), new SimplePingCard(tools)]);
             }),
-            new("nav.simple.gaming", SymbolRegular.Games24, () => new SimpleTweakPageViewModel("nav.simple.gaming", workspace, c => c.Tweak.Module is "GAME" or "POWR" or "DEFN" || c.Tweak.Category == "Network.Adapter", "simple.gaming.help", [Loaded(GamingChecks(localizer)), BackgroundCard(dialogs, localizer)])),
+            new("nav.simple.gaming", SymbolRegular.Games24, () => new SimpleTweakPageViewModel("nav.simple.gaming", workspace, c => c.Tweak.Module is "GAME" or "POWR" or "DEFN" || c.Tweak.Category == "Network.Adapter", "simple.gaming.help", [Loaded(GamingChecks(localizer)), BackgroundCard(dialogs, localizer)], PlayCard(localizer))),
             new("nav.simple.cleanup", SymbolRegular.Broom24, () => new SectionPageViewModel("nav.simple.cleanup",
             [
                 (new SectionItem("cleanup", "simple.cleanup.section.junk"), () =>
@@ -399,6 +399,28 @@ public partial class App : Application
 
     /// <summary>Programs of the user's session, for "Clean up background" (tests and snapshots replace the source).</summary>
     internal static IRunningPrograms? RunningProgramsSource { get; set; }
+
+    /// <summary>Where the "Ready to play" preset is stored (tests and snapshots use their own file).</summary>
+    internal static string? PlayPresetPath { get; set; }
+
+    private static SimplePlayCard PlayCard(Localizer localizer)
+    {
+        var programs = RunningProgramsSource ?? new WindowsRunningPrograms();
+        var launcher = PlayLauncherSource ?? new WindowsProgramLauncher();
+        var windows = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+        return new SimplePlayCard(new PlayViewModel(
+            new PlayStarter(programs, launcher, windows, Environment.ProcessId),
+            new PlayPresetStore(PlayPresetPath ?? PlayPresetStore.DefaultPath),
+            launcher,
+            GameScanSource ?? new GameLibrary(new WindowsGameFileSystem(), WindowsGameFileSystem.EpicManifestFolder, WindowsGameFileSystem.SteamRoot()).Scan,
+            programs.List,
+            localizer,
+            windows,
+            Environment.ProcessId));
+    }
+
+    /// <summary>Starts music and games for "Ready to play" (snapshots replace it so nothing starts).</summary>
+    internal static IProgramLauncher? PlayLauncherSource { get; set; }
 
     private static SimpleBackgroundCard BackgroundCard(IDialogService dialogs, Localizer localizer)
     {
@@ -535,6 +557,8 @@ public partial class App : Application
             AutostartSource = SnapshotRenderer.SampleAutostart;
             ProcessSampler = new SnapshotRenderer.SampleProcesses();
             RunningProgramsSource = new SnapshotRenderer.SamplePrograms();
+            PlayLauncherSource = new SnapshotRenderer.NoLauncher();
+            PlayPresetPath = Path.Combine(Path.GetTempPath(), "AscendedTweaks.snapshot.play." + Guid.NewGuid().ToString("N") + ".json");
             GameScanSource = SnapshotRenderer.SampleGames;
             GameProfiles = new GameProfileStore(Path.Combine(Path.GetTempPath(), "AscendedTweaks.snapshot.games." + Guid.NewGuid().ToString("N") + ".json"));
             SecuritySource = new SnapshotRenderer.SampleSecurity();

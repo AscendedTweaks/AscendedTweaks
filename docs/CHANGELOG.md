@@ -4,6 +4,10 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 
 ## [Unreleased]
 
+### Hinzugefügt
+- Karte "Bereit zum Spielen" oben auf der Gaming-Seite: ein Klick schließt die übrigen Programme, startet die Musik und dann das Spiel. Das Preset wird pro Benutzer gespeichert und ist leer voreingestellt (kein Spiel, keine Musik). Fest behalten und nicht entfernbar: Windows, Virenschutz und VPN, Grafik- und Audiotreiber, Anti-Cheat, Spiele-Launcher, das Spiel und Ascended Tweaks; Hilfsprozesse behaltener Programme laufen mit. Programme mit Fenster werden nur gebeten zu schließen und bleiben offen, wenn sie ablehnen; nur fensterlose Reste werden beendet.
+- Musik wahlweise als Spotify-Suche (ohne Einrichtung) oder als eigener Befehl mit Anleitung zur Einrichtung einer Spotify-Kommandozeile; "Musik testen" führt nur den Musik-Schritt aus.
+
 ## [1.1.2] - 2026-10-25
 
 Nicht signiert.

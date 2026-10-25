@@ -204,6 +204,18 @@ internal static class SnapshotRenderer
         public SecurityFacts Read() => new(true, 2, true, true, false, false);
     }
 
+    /// <summary>"Ready to play" in screenshots starts nothing.</summary>
+    public sealed class NoLauncher : IProgramLauncher
+    {
+        public void Open(string target)
+        {
+        }
+
+        public void Start(string program, string arguments)
+        {
+        }
+    }
+
     /// <summary>Fixed programs for "Clean up background"; closing changes nothing.</summary>
     public sealed class SamplePrograms : IRunningPrograms
     {
@@ -379,6 +391,26 @@ internal static class SnapshotRenderer
             Pump();
             Render(cardWindow, 96, Path.Combine(directory, "Dark-background-cleanup.png"));
             cardWindow.Close();
+        }
+
+        // "Ready to play" with the editor open (music as own command, so the tutorial shows).
+        if (shell.CurrentPage is SimpleTweakPageViewModel playPage && playPage.Top is SimplePlayCard play)
+        {
+            play.Play.SelectedMusic = play.Play.MusicOptions.First(m => m.Mode == MusicMode.Command);
+            play.Play.ToggleEditingCommand.Execute(null);
+            var playWindow = new Window
+            {
+                Width = 900,
+                Height = 900,
+                WindowStyle = WindowStyle.None,
+                ShowInTaskbar = false,
+                Background = (Brush)Application.Current.FindResource("Brush.Background"),
+                Content = new System.Windows.Controls.ContentControl { Content = play, Margin = new Thickness(24) },
+            };
+            playWindow.Show();
+            Pump();
+            Render(playWindow, 96, Path.Combine(directory, "Dark-play-editor.png"));
+            playWindow.Close();
         }
 
         // Suche und "Mehr anzeigen" auf "Schneller".

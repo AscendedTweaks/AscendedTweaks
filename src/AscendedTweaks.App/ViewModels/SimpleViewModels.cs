@@ -42,9 +42,10 @@ public sealed partial class SimpleTweakPageViewModel : PageViewModel
     [ObservableProperty]
     private bool _showAll;
 
-    public SimpleTweakPageViewModel(string titleKey, TweakWorkspace workspace, Func<TweakCardViewModel, bool> filter, string helpKey, IReadOnlyList<object>? extras = null)
+    public SimpleTweakPageViewModel(string titleKey, TweakWorkspace workspace, Func<TweakCardViewModel, bool> filter, string helpKey, IReadOnlyList<object>? extras = null, object? top = null)
         : base(titleKey, showHonestyBanner: false)
     {
+        Top = top;
         _workspace = workspace;
         _filter = filter;
         Help = new HelpViewModel(helpKey);
@@ -56,6 +57,9 @@ public sealed partial class SimpleTweakPageViewModel : PageViewModel
     public HelpViewModel Help { get; }
 
     public IReadOnlyList<object> Extras { get; }
+
+    /// <summary>A card above the search (Gaming page: "Ready to play").</summary>
+    public object? Top { get; }
 
     public ObservableCollection<TweakCardViewModel> Cards { get; } = [];
 
@@ -155,6 +159,9 @@ public sealed record SimplePingCard(NetworkToolsViewModel Tools);
 
 /// <summary>Kleine Karte "Updates" im Einfach-Modus: Stand und Windows Update öffnen.</summary>
 public sealed record SimpleUpdatesCard(UpdatesOverviewViewModel Updates);
+
+/// <summary>Card "Ready to play": close other programs, start music and game in one click.</summary>
+public sealed record SimplePlayCard(PlayViewModel Play);
 
 /// <summary>Card "Clean up background": close programs you do not need before playing.</summary>
 public sealed record SimpleBackgroundCard(BackgroundCleanupViewModel Cleanup);

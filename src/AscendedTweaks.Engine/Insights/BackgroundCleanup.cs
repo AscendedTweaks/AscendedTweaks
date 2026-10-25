@@ -3,7 +3,7 @@ using AscendedTweaks.Core;
 namespace AscendedTweaks.Engine.Insights;
 
 /// <summary>A process in the user's Windows session. Path is null when it cannot be read (elevated or protected).</summary>
-public sealed record RunningProcess(int Id, string Name, string? Path, string? Description, bool HasWindow, long WorkingSetBytes);
+public sealed record RunningProcess(int Id, string Name, string? Path, string? Description, bool HasWindow, long WorkingSetBytes, int ParentId = 0);
 
 /// <summary>Why a program gets no close button.</summary>
 public enum ProgramProtection
@@ -39,6 +39,9 @@ public interface IRunningPrograms
     void ForceClose(int id);
 
     bool IsRunning(int id);
+
+    /// <summary>True while the process shows a main window; a program that hid in the tray has none.</summary>
+    bool HasWindow(int id) => List().FirstOrDefault(p => p.Id == id)?.HasWindow == true;
 }
 
 /// <summary>

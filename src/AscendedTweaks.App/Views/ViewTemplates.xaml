@@ -88,6 +88,7 @@
 
     <DataTemplate DataType="{x:Type vm:SimpleTweakPageViewModel}">
         <StackPanel Margin="0,0,0,24">
+            <ContentControl Content="{Binding Top}" Focusable="False" Visibility="{Binding Top, Converter={StaticResource NullToCollapsed}}" Margin="0,0,0,12" />
             <ContentControl Content="{Binding Help}" Focusable="False" Margin="0,0,0,8" />
             <ui:TextBox Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{s:Loc simple.search}" Icon="{ui:SymbolIcon Search24}"
                         AutomationProperties.Name="{s:Loc simple.search}" MinHeight="40" FontSize="15" Margin="0,0,0,16" />
@@ -105,6 +106,101 @@
             <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{s:Loc simple.autostart.intro}" TextWrapping="Wrap" Margin="0,0,0,8" />
             <ContentControl Content="{Binding Autostart}" Focusable="False" />
         </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SimplePlayCard}">
+        <Border Style="{StaticResource Card}">
+            <StackPanel DataContext="{Binding Play}">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <c:ActionButton Style="{StaticResource Button.Text}" Content="{s:Loc play.customize}" Command="{Binding ToggleEditingCommand}" Margin="0,0,8,0" />
+                        <c:ActionButton Style="{StaticResource Button.Primary}" Content="{s:Loc play.start}" Command="{Binding StartCommand}" IsRunning="{Binding IsRunning}" MinHeight="40" Padding="20,6" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc play.title}" />
+                        <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{Binding Summary}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                    </StackPanel>
+                </DockPanel>
+                <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding ResultText}" TextWrapping="Wrap" Margin="0,8,0,0"
+                           Visibility="{Binding ResultText, Converter={StaticResource NullToCollapsed}}" />
+
+                <StackPanel Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibility}}" Margin="0,12,0,0">
+                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc play.keep.title}" />
+                    <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc play.keep.intro}" TextWrapping="Wrap" Margin="0,2,0,6" />
+                    <ItemsControl ItemsSource="{Binding FixedKeep}" Focusable="False" AutomationProperties.Name="{s:Loc play.keep.fixed}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource TagChip}" ToolTip="{s:Loc play.keep.fixed}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="LockClosed16" FontSize="12" Foreground="{DynamicResource Brush.Accent}" Margin="0,0,4,0" />
+                                        <TextBlock Text="{Binding}" FontSize="12" Foreground="{DynamicResource Brush.Accent}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding Keep}" Focusable="False">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource TagChip}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding}" FontSize="12" Foreground="{DynamicResource Brush.TextPrimary}" VerticalAlignment="Center" />
+                                        <c:ActionButton Style="{StaticResource Button.Text}" Padding="4,0" MinHeight="18" MinWidth="18" Margin="4,0,0,0"
+                                                        Command="{Binding DataContext.RemoveKeepCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                        ToolTip="{s:Loc play.keep.remove}" AutomationProperties.Name="{s:Loc play.keep.remove}">
+                                            <ui:SymbolIcon Symbol="Dismiss12" FontSize="10" />
+                                        </c:ActionButton>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,12">
+                        <ComboBox ItemsSource="{Binding Suggestions}" Text="{Binding NewKeep, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" MinWidth="240"
+                                  AutomationProperties.Name="{s:Loc play.keep.add}" />
+                        <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc play.keep.add}" Command="{Binding AddKeepCommand}" Margin="8,0,0,0" />
+                    </StackPanel>
+
+                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc play.game.title}" />
+                    <ComboBox ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame}" HorizontalAlignment="Left" MinWidth="240" Margin="0,4,0,12"
+                              AutomationProperties.Name="{s:Loc play.game.title}" />
+
+                    <TextBlock Style="{StaticResource Text.BodyStrong}" Text="{s:Loc play.music.title}" />
+                    <ComboBox ItemsSource="{Binding MusicOptions}" SelectedItem="{Binding SelectedMusic}" HorizontalAlignment="Left" MinWidth="240" Margin="0,4,0,6"
+                              AutomationProperties.Name="{s:Loc play.music.title}" />
+                    <StackPanel Visibility="{Binding IsSearchMode, Converter={StaticResource BoolToVisibility}}">
+                        <ui:TextBox Text="{Binding MusicSearch, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{s:Loc play.music.search.hint}" MaxWidth="480" HorizontalAlignment="Left" MinWidth="320" />
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding IsCommandMode, Converter={StaticResource BoolToVisibility}}">
+                        <ui:TextBox Text="{Binding MusicCommand, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{s:Loc play.music.program}" HorizontalAlignment="Left" MinWidth="320" Margin="0,0,0,4" />
+                        <ui:TextBox Text="{Binding MusicArguments, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{s:Loc play.music.arguments}" HorizontalAlignment="Stretch" />
+                        <Expander Margin="0,8,0,0" AutomationProperties.Name="{s:Loc play.tutorial.title}">
+                            <Expander.Header>
+                                <TextBlock Style="{StaticResource Text.Simple.Caption}" Text="{s:Loc play.tutorial.title}" />
+                            </Expander.Header>
+                            <StackPanel Margin="0,8,0,0">
+                                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc play.tutorial.1}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc play.tutorial.2}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc play.tutorial.3}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc play.tutorial.4}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                <TextBlock Style="{StaticResource Text.Secondary}" Text="{s:Loc play.tutorial.5}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+                    <c:ActionButton Style="{StaticResource Button.Secondary}" Content="{s:Loc play.music.test}" Command="{Binding TestMusicCommand}" HorizontalAlignment="Left" Margin="0,8,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:SimpleBackgroundCard}">

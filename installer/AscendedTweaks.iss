@@ -4,7 +4,7 @@
 ; Inno Setup ist dort nicht installiert. Aufruf: ISCC.exe /DAppVersion=... /DSourceDir=<Paketordner> installer\AscendedTweaks.iss
 
 #ifndef AppVersion
-  #define AppVersion "1.1.1"
+  #define AppVersion "1.1.2"
 #endif
 #ifndef SourceDir
   #define SourceDir "..\..\AscendedTweaks"

@@ -4,6 +4,10 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-10-25
+
+Nicht signiert.
+
 ### Hinzugefügt
 - DEB-028 "Xbox Game Bar" in der App-Entfernung (Vorsicht, nie vorausgewählt): entfernt das Overlay hinter Win+G; Spielmodus und Spiele bleiben unberührt, Wiederherstellung über den Microsoft Store.
 - Karte "Microsoft Edge deinstallieren" auf der Apps-Seite: öffnet Einstellungen > Apps, wo Windows in der EU das Deinstallieren selbst anbietet. Die App entfernt Edge nicht selbst (nur so bleiben Suche, Links und Updates heil); die WebView2-Laufzeit bleibt gesperrt.

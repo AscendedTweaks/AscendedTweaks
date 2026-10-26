@@ -155,7 +155,13 @@
           <li class="card reveal"><h3>Check the checksum</h3><p>In PowerShell, compare the result with the line in <code>SHA256SUMS.txt</code>.</p><pre>Get-FileHash .\AscendedTweaks.zip -Algorithm SHA256</pre></li>
           <li class="card reveal"><h3>Start AscendedTweaks.exe</h3><p>Unzip, open the folder and start <code>AscendedTweaks.exe</code>. Choose Install or Try it portable.</p></li>
         </ol>
-        <div class="callout"><strong>Why Windows may warn you:</strong> the files are not code-signed yet, so SmartScreen can show "Windows protected your PC". Check the checksum first. Never turn off Defender or SmartScreen for this or any other app.</div>
+        <div class="callout" id="smartscreen"><strong>Why Windows may warn you:</strong> the files are not code-signed yet, so SmartScreen can show "Windows protected your PC". Check the checksum first, then:
+          <ol>
+            <li>Click <strong>More info</strong>.</li>
+            <li>Check that the app is <code>AscendedTweaks.exe</code> from the folder you just unzipped. "Unknown publisher" is expected until the files are signed.</li>
+            <li>Click <strong>Run anyway</strong>. This lets only this file start; SmartScreen stays on for everything else.</li>
+          </ol>
+          Never turn off Defender or SmartScreen for this or any other app. If the checksum does not match, do not start the file.</div>
       </div>
     </section>
 
@@ -169,7 +175,7 @@
         <details><summary>Will anti-cheat complain?</summary><p>Ascended Tweaks does not touch game files or inject anything into games, and security features such as Secure Boot and memory integrity stay on.</p></details>
         <details><summary>Does it collect data?</summary><p>No. The app sends nothing and only goes online when you click "Check for updates". This website sets no cookies and loads nothing from other servers.</p></details>
         <details><summary>How do I undo?</summary><p>Open Restore in the app and reset a single tweak, a preset or everything. If a change was interrupted, the app detects it on the next start.</p></details>
-        <details><summary>Why is Windows warning me?</summary><p>The files are not code-signed yet. Check the SHA-256 checksum from the release page before you start the app.</p></details>
+        <details><summary>Why is Windows warning me?</summary><p>The files are not code-signed yet. Check the SHA-256 checksum from the release page, then click "More info" and "Run anyway" as shown <a href="#smartscreen">in the download steps</a>.</p></details>
       </div>
     </section>
   </main>

@@ -4,6 +4,10 @@ Format nach Keep a Changelog, Versionen nach Semantic Versioning.
 
 ## [Unreleased]
 
+### Geändert
+- "Bereit zum Spielen" steht jetzt auf der Start-Seite statt auf der Gaming-Seite.
+- Schnellerer Start: Der Zustand der Tweaks wird beim Start nur noch einmal und für mehrere Tweaks gleichzeitig gelesen, Systeminfo und Autostarts laufen parallel dazu, und die Preset-Karten nutzen den gerade gelesenen Stand, statt jeden Tweak erneut zu prüfen.
+
 ## [1.2.0] - 2026-10-26
 
 Nicht signiert.

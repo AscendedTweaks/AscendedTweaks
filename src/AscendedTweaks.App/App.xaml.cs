@@ -343,6 +343,7 @@ public partial class App : Application
                         localizer,
                         TimeProvider.System));
                 start.OpenAutostart = () => GamingNavigator?.Invoke(GamingJump.Autostart);
+                start.Play = PlayCard(localizer);
                 FirstPageLoad ??= start.LoadAsync();
                 return start;
             }),
@@ -356,7 +357,7 @@ public partial class App : Application
                     "simple.faster.help",
                     [new SimpleAutostartCard(new AutostartViewModel(Autostart(), workspace, ProcessSampler ?? new WindowsProcessSampler())), BackgroundCard(dialogs, localizer), new SimplePingCard(tools)]);
             }),
-            new("nav.simple.gaming", SymbolRegular.Games24, () => new SimpleTweakPageViewModel("nav.simple.gaming", workspace, c => c.Tweak.Module is "GAME" or "POWR" or "DEFN" || c.Tweak.Category == "Network.Adapter", "simple.gaming.help", [Loaded(GamingChecks(localizer)), BackgroundCard(dialogs, localizer)], PlayCard(localizer))),
+            new("nav.simple.gaming", SymbolRegular.Games24, () => new SimpleTweakPageViewModel("nav.simple.gaming", workspace, c => c.Tweak.Module is "GAME" or "POWR" or "DEFN" || c.Tweak.Category == "Network.Adapter", "simple.gaming.help", [Loaded(GamingChecks(localizer)), BackgroundCard(dialogs, localizer)])),
             new("nav.simple.cleanup", SymbolRegular.Broom24, () => new SectionPageViewModel("nav.simple.cleanup",
             [
                 (new SectionItem("cleanup", "simple.cleanup.section.junk"), () =>
@@ -619,7 +620,8 @@ public partial class App : Application
 
         try
         {
-            await Task.WhenAny(Task.WhenAll(workspace.RefreshAsync(), FirstPageLoad ?? Task.CompletedTask), Task.Delay(TimeSpan.FromSeconds(15))).ConfigureAwait(true);
+            // The start page reads the tweak states itself; a second read in parallel only slowed both down.
+            await Task.WhenAny(FirstPageLoad ?? workspace.RefreshAsync(), Task.Delay(TimeSpan.FromSeconds(15))).ConfigureAwait(true);
         }
         finally
         {

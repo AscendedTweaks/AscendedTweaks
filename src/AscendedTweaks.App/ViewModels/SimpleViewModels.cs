@@ -42,10 +42,9 @@ public sealed partial class SimpleTweakPageViewModel : PageViewModel
     [ObservableProperty]
     private bool _showAll;
 
-    public SimpleTweakPageViewModel(string titleKey, TweakWorkspace workspace, Func<TweakCardViewModel, bool> filter, string helpKey, IReadOnlyList<object>? extras = null, object? top = null)
+    public SimpleTweakPageViewModel(string titleKey, TweakWorkspace workspace, Func<TweakCardViewModel, bool> filter, string helpKey, IReadOnlyList<object>? extras = null)
         : base(titleKey, showHonestyBanner: false)
     {
-        Top = top;
         _workspace = workspace;
         _filter = filter;
         Help = new HelpViewModel(helpKey);
@@ -57,9 +56,6 @@ public sealed partial class SimpleTweakPageViewModel : PageViewModel
     public HelpViewModel Help { get; }
 
     public IReadOnlyList<object> Extras { get; }
-
-    /// <summary>A card above the search (Gaming page: "Ready to play").</summary>
-    public object? Top { get; }
 
     public ObservableCollection<TweakCardViewModel> Cards { get; } = [];
 

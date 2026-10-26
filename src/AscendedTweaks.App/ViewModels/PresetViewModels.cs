@@ -310,6 +310,9 @@ public sealed partial class SimpleStartViewModel : PageViewModel
     /// <summary>Opens the list of programs that start with Windows (set by the app; null in tests).</summary>
     public Action? OpenAutostart { get; set; }
 
+    /// <summary>Card "Ready to play" below the greeting.</summary>
+    public SimplePlayCard? Play { get; set; }
+
     [RelayCommand]
     private void ShowAutostart() => OpenAutostart?.Invoke();
 
@@ -361,8 +364,12 @@ public sealed partial class SimpleStartViewModel : PageViewModel
 
     public async Task LoadAsync()
     {
+        // System facts and autostarts do not depend on the tweak states; read all three at the same time.
+        var system = Task.Run(_system.Read);
+        var autostartCount = Task.Run(CountAutostarts);
         await _workspace.RefreshAsync().ConfigureAwait(true);
-        var (info, autostarts) = await Task.Run(() => (_system.Read(), CountAutostarts())).ConfigureAwait(true);
+        var info = await system.ConfigureAwait(true);
+        var autostarts = await autostartCount.ConfigureAwait(true);
         var windows = info.Windows?.Edition ?? "Windows";
         var ram = info.Ram is { } r ? MemorySize(r.TotalBytes) : _localizer["anticheat.value.unknown"];
         Status = autostarts is { } n
@@ -419,7 +426,7 @@ public sealed partial class SimpleStartViewModel : PageViewModel
             var profile = card.Profile with { Tweaks = entries };
             plans[level] = entries.Count == 0
                 ? []
-                : await Task.Run(() => ProfilePlanner.Plan(profile, catalog, _workspace.Service.GetStatus, PlainName, _workspace.Text, _localizer, expertMode: false, _hasBattery)).ConfigureAwait(true);
+                : await Task.Run(() => ProfilePlanner.Plan(profile, catalog, _workspace.StatusOf, PlainName, _workspace.Text, _localizer, expertMode: false, _hasBattery)).ConfigureAwait(true);
             cleanup[level] = CleanupFor(card, level).Count;
         }
 

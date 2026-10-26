@@ -191,15 +191,22 @@ public sealed partial class TweakWorkspace : ObservableObject
         OnPropertyChanged(nameof(ExpertMode));
     }
 
+    private IReadOnlyDictionary<string, TweakStatus> _statuses = new Dictionary<string, TweakStatus>();
+
     /// <summary>Liest den Ist-Zustand aller Karten (nur lesend, im Hintergrund).</summary>
     public async Task RefreshAsync()
     {
-        var states = await Task.Run(() => _cards.Keys.ToDictionary(id => id, _service.GetStatus)).ConfigureAwait(true);
+        // Each tweak is read on its own; a few at once shorten the start (network adapter checks take about a second each).
+        var states = await Task.Run(() => _cards.Keys.AsParallel().WithDegreeOfParallelism(4).ToDictionary(id => id, _service.GetStatus)).ConfigureAwait(true);
+        _statuses = states;
         foreach (var (id, status) in states)
         {
             _cards[id].Update(status);
         }
     }
+
+    /// <summary>State of a tweak as of the last refresh (every apply and undo refreshes); read fresh when it has no card.</summary>
+    public TweakStatus StatusOf(string id) => _statuses.TryGetValue(id, out var status) ? status : _service.GetStatus(id);
 
     internal void PendingChanged() => PendingCount = _cards.Values.Count(c => c.IsPending);
 

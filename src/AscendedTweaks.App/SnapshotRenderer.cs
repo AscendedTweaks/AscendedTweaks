@@ -394,7 +394,9 @@ internal static class SnapshotRenderer
         }
 
         // "Ready to play" with the editor open (music as own command, so the tutorial shows).
-        if (shell.CurrentPage is SimpleTweakPageViewModel playPage && playPage.Top is SimplePlayCard play)
+        shell.SelectedItem = shell.Items.First(i => i.Key == "nav.simple.start");
+        Pump();
+        if (shell.CurrentPage is SimpleStartViewModel { Play: { } play })
         {
             play.Play.SelectedMusic = play.Play.MusicOptions.First(m => m.Mode == MusicMode.Command);
             play.Play.ToggleEditingCommand.Execute(null);

@@ -88,7 +88,6 @@
 
     <DataTemplate DataType="{x:Type vm:SimpleTweakPageViewModel}">
         <StackPanel Margin="0,0,0,24">
-            <ContentControl Content="{Binding Top}" Focusable="False" Visibility="{Binding Top, Converter={StaticResource NullToCollapsed}}" Margin="0,0,0,12" />
             <ContentControl Content="{Binding Help}" Focusable="False" Margin="0,0,0,8" />
             <ui:TextBox Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{s:Loc simple.search}" Icon="{ui:SymbolIcon Search24}"
                         AutomationProperties.Name="{s:Loc simple.search}" MinHeight="40" FontSize="15" Margin="0,0,0,16" />
@@ -298,6 +297,8 @@
                 </StackPanel>
             </Border>
             </Grid>
+
+            <ContentControl Content="{Binding Play}" Focusable="False" Margin="0,0,0,24" Visibility="{Binding Play, Converter={StaticResource NullToCollapsed}}" />
 
             <TextBlock Style="{StaticResource Text.Subtitle}" Text="{s:Loc simple.start.presets}" Margin="0,0,0,12" />
             <TextBlock Style="{StaticResource Text.Simple.Body}" Text="{Binding Message}" TextWrapping="Wrap" Margin="0,0,0,12" Visibility="{Binding Message, Converter={StaticResource NullToCollapsed}}" />
